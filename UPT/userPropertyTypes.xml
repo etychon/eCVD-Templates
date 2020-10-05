@@ -1675,6 +1675,7 @@
       <name>wgbPSK</name>
       <displayName>WiFi Uplink (WGB) Pre-shared Key</displayName>
       <description>WiFi Uplink (WGB) Pre-shared Key</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WiFi>WGB</section>
       <required>0</required>
