@@ -3,6 +3,8 @@
 
 <#-- Default BootStrap Configuration -->
 
+<#compress>
+
 <#assign sublist 		= "${far.eid}"?split("+")[0..1]>
 <#assign pid = sublist[0]>
 <#assign model = pid[0..4]>
@@ -779,20 +781,23 @@ ip route 8.8.8.8 255.255.255.255 ${cell_if} tag 786
 ip route 8.8.8.8 255.255.255.255 Null0 3 tag 786
 
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if herIpAddress??>
 ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
 <#if backupHerIpAddress?has_content>
 ip route ${backupHerIpAddress} 255.255.255.255 ${ether_if} dhcp
 </#if>
 </#if>
+</#if>
 
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
 <#-- User defined static routes with either next hop or egress interface -->
+<#if far.staticRoute??>
 <#list far.staticRoute as SR>
   <#if SR['destNetwork']?has_content>
       ip route ${SR['destNetwork']} ${SR['destNetMask']} ${SR['nextInterface']}
   </#if>
 </#list>
-
+</#if>
 !
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
 ip nat inside source route-map RM_Tu2 interface Tunnel2 overload
@@ -862,6 +867,7 @@ line vty 0 4
 <#-- Netflow -->
 
 <#if !section.security_netflow?? || section.security_netflow == "true">
+<#if far.netflowCollectorIP??>
  flow record defaultStealthWatch
   match ipv4 protocol
   match ipv4 source address
@@ -891,6 +897,7 @@ interface ${ether_if}
  ip flow monitor dsw_Gi0_0_0_-63055531 input
 !
 !
+</#if>
 </#if>
 
 <#-- Improve WAN failover performance -->
@@ -934,4 +941,7 @@ action 20 cli command "y"
 !
 !
 </#if>
+
+</#compress>
+
 <#-- End eCVD template -->
