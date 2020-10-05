@@ -49,7 +49,7 @@
 <#-- Network Menu -->
 <#if far.qosBandwidth?has_content>
 <#assign QOSbw = far.qosBandwidth?number>
-</#if> 
+</#if>
 
 <#-- Security Menu -->
 <#if far.umbrellaToken?has_content>
@@ -96,7 +96,7 @@
 <#else>
 <#assign clockTZ	= "edt">
 </#if>
-<#-- assign clockDST	= "${far.clockDST}"--> 
+<#-- assign clockDST	= "${far.clockDST}"-->
 <#if far.ntpIP?has_content>
 <#assign ntpIP 		= "${far.ntpIP}">
 <#else>
@@ -109,10 +109,10 @@
 
 <#-- Binary Conversion of LAN IP-->
 
-<#list lanIP as lann> 
+<#list lanIP as lann>
 <#assign lan=lann?number>
 <#list 1..100 as y>
-<#if lan < 1> 
+<#if lan < 1>
 <#if lan == 0>
 <#list 1..8 as s> <#assign lan_ip=lan_ip+["0"]> </#list> </#if>
 <#if lan_ip?size % 8 != 0> <#list 1..8 as s> <#assign lan_ip=lan_ip+["0"]> <#if lan_ip?size % 8 == 0> <#break> </#if> </#list> </#if>
@@ -122,7 +122,7 @@
 
 <#-- Binary Conversion of NetMask-->
 
-<#list lanNet as lann> 
+<#list lanNet as lann>
 <#assign lan=lann?number>
 <#list 1..100 as y>
 <#if lan < 1 >
@@ -186,7 +186,7 @@ no logging console
 <#if !section.devicesettings_snmp?? || section.devicesettings_snmp == "true">
 <#list far.communityString as CS>
   <#if CS['snmpCommunity']?has_content>
-      snmp-server community ${CS['snmpCommunity']} ${CS['snmpType']} 
+      snmp-server community ${CS['snmpCommunity']} ${CS['snmpType']}
   </#if>
 <#if far.snmpVersion == "3">
   snmp-server  user ${far.snmpV3User} group1 v3 auth md5 ${far.snmpV3Pass}
@@ -212,45 +212,48 @@ ip dhcp excluded-address ${far.lanIPAddress} ${nwk_addr}
 !
 ip dhcp pool subtended
     network ${lanNtwk} ${far.lanNetmask}
-    default-router ${far.lanIPAddress} 
+    default-router ${far.lanIPAddress}
     dns-server ${DNSIP}
     lease 0 0 10
 !
+<#if far.lanIPAddressDHCPexcludeRangeStart?? && far.lanIPAddressDHCPexcludeRangeEnd??>
+ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
+</#if>
 !
 <#list far.Users as user >
 		username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
-</#list> 
+</#list>
 !
-<#-- S2S VPN Configuration -->   
+<#-- S2S VPN Configuration -->
 !
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
 
-crypto ikev2 authorization policy CVPN 
+crypto ikev2 authorization policy CVPN
  	route set interface
  	route accept any distance 70
 !
 crypto ikev2 keyring Flex_key
 !
- peer ${herIpAddress}   
-  address ${herIpAddress} 
+ peer ${herIpAddress}
+  address ${herIpAddress}
   identity key-id ${herIpAddress}
-  pre-shared-key ${herPsk}   
+  pre-shared-key ${herPsk}
 !
 <#if isBackupHer == "true">
- peer ${backupHerIpAddress}   
+ peer ${backupHerIpAddress}
   address ${backupHerIpAddress}
   identity key-id ${backupHerIpAddress}
-  pre-shared-key ${backupHerPsk}   
+  pre-shared-key ${backupHerPsk}
 !
 </#if>
 !
 !
 crypto ikev2 profile CVPN_I2PF
- match identity remote key-id ${herIpAddress} 
+ match identity remote key-id ${herIpAddress}
  <#if isBackupHer == "true">
   match identity remote key-id ${backupHerIpAddress}
 </#if>
- identity local email ${sn}@iotspdev.io  
+ identity local email ${sn}@iotspdev.io
  authentication remote pre-share
  authentication local pre-share
  keyring local Flex_key
@@ -330,7 +333,7 @@ track 41 ip sla 41 reachability
 !
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
 crypto ikev2 client flexvpn Tunnel2
-  peer 1 ${herIpAddress} 
+  peer 1 ${herIpAddress}
 <#if isBackupHer == "true">
   peer 2 ${backupHerIpAddress}
 </#if>
@@ -353,7 +356,7 @@ crypto ikev2 client flexvpn Tunnel2
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
   source 2 ${cell_if2} track 41
 </#if>
-</#if>  
+</#if>
   client connect Tunnel2
 !
 !
@@ -366,42 +369,42 @@ crypto pki trustpoint umbrella
  revocation-check none
 crypto pki certificate chain umbrella
  certificate ca 01FDA3EB6ECA75C888438B724BCFBC91
-  30820494 3082037C A0030201 02021001 FDA3EB6E CA75C888 438B724B CFBC9130 
-  0D06092A 864886F7 0D01010B 05003061 310B3009 06035504 06130255 53311530 
-  13060355 040A130C 44696769 43657274 20496E63 31193017 06035504 0B131077 
-  77772E64 69676963 6572742E 636F6D31 20301E06 03550403 13174469 67694365 
-  72742047 6C6F6261 6C20526F 6F742043 41301E17 0D313330 33303831 32303030 
-  305A170D 32333033 30383132 30303030 5A304D31 0B300906 03550406 13025553 
-  31153013 06035504 0A130C44 69676943 65727420 496E6331 27302506 03550403 
-  131E4469 67694365 72742053 48413220 53656375 72652053 65727665 72204341 
-  30820122 300D0609 2A864886 F70D0101 01050003 82010F00 3082010A 02820101 
-  00DCAE58 904DC1C4 30159035 5B6E3C82 15F52C5C BDE3DBFF 7143FA64 2580D4EE 
-  18A24DF0 66D00A73 6E119836 1764AF37 9DFDFA41 84AFC7AF 8CFE1A73 4DCF3397 
+  30820494 3082037C A0030201 02021001 FDA3EB6E CA75C888 438B724B CFBC9130
+  0D06092A 864886F7 0D01010B 05003061 310B3009 06035504 06130255 53311530
+  13060355 040A130C 44696769 43657274 20496E63 31193017 06035504 0B131077
+  77772E64 69676963 6572742E 636F6D31 20301E06 03550403 13174469 67694365
+  72742047 6C6F6261 6C20526F 6F742043 41301E17 0D313330 33303831 32303030
+  305A170D 32333033 30383132 30303030 5A304D31 0B300906 03550406 13025553
+  31153013 06035504 0A130C44 69676943 65727420 496E6331 27302506 03550403
+  131E4469 67694365 72742053 48413220 53656375 72652053 65727665 72204341
+  30820122 300D0609 2A864886 F70D0101 01050003 82010F00 3082010A 02820101
+  00DCAE58 904DC1C4 30159035 5B6E3C82 15F52C5C BDE3DBFF 7143FA64 2580D4EE
+  18A24DF0 66D00A73 6E119836 1764AF37 9DFDFA41 84AFC7AF 8CFE1A73 4DCF3397
   90A29687 53832BB9 A675482D 1D56377B DA31321A D7ACAB06 F4AA5D4B B74746DD
-  2A93C390 2E798080 EF13046A 143BB59B 92BEC207 654EFCDA FCFF7AAE DC5C7E55 
-  310CE839 07A4D7BE 2FD30B6A D2B1DF5F FE577453 3B3580DD AE8E4498 B39F0ED3 
-  DAE0D7F4 6B29AB44 A74B5884 6D924B81 C3DA738B 12974890 0445751A DD373197 
-  92E8CD54 0D3BE4C1 3F395E2E B8F35C7E 108E8641 008D4566 47B0A165 CEA0AA29 
-  094EF397 EBE82EAB 0F72A730 0EFAC7F4 FD1477C3 A45B2857 C2B3F982 FDB74558 
-  9B020301 0001A382 015A3082 01563012 0603551D 130101FF 04083006 0101FF02 
-  0100300E 0603551D 0F0101FF 04040302 01863034 06082B06 01050507 01010428 
-  30263024 06082B06 01050507 30018618 68747470 3A2F2F6F 6373702E 64696769 
-  63657274 2E636F6D 307B0603 551D1F04 74307230 37A035A0 33863168 7474703A 
-  2F2F6372 6C332E64 69676963 6572742E 636F6D2F 44696769 43657274 476C6F62 
-  616C526F 6F744341 2E63726C 3037A035 A0338631 68747470 3A2F2F63 726C342E 
-  64696769 63657274 2E636F6D 2F446967 69436572 74476C6F 62616C52 6F6F7443 
-  412E6372 6C303D06 03551D20 04363034 30320604 551D2000 302A3028 06082B06 
+  2A93C390 2E798080 EF13046A 143BB59B 92BEC207 654EFCDA FCFF7AAE DC5C7E55
+  310CE839 07A4D7BE 2FD30B6A D2B1DF5F FE577453 3B3580DD AE8E4498 B39F0ED3
+  DAE0D7F4 6B29AB44 A74B5884 6D924B81 C3DA738B 12974890 0445751A DD373197
+  92E8CD54 0D3BE4C1 3F395E2E B8F35C7E 108E8641 008D4566 47B0A165 CEA0AA29
+  094EF397 EBE82EAB 0F72A730 0EFAC7F4 FD1477C3 A45B2857 C2B3F982 FDB74558
+  9B020301 0001A382 015A3082 01563012 0603551D 130101FF 04083006 0101FF02
+  0100300E 0603551D 0F0101FF 04040302 01863034 06082B06 01050507 01010428
+  30263024 06082B06 01050507 30018618 68747470 3A2F2F6F 6373702E 64696769
+  63657274 2E636F6D 307B0603 551D1F04 74307230 37A035A0 33863168 7474703A
+  2F2F6372 6C332E64 69676963 6572742E 636F6D2F 44696769 43657274 476C6F62
+  616C526F 6F744341 2E63726C 3037A035 A0338631 68747470 3A2F2F63 726C342E
+  64696769 63657274 2E636F6D 2F446967 69436572 74476C6F 62616C52 6F6F7443
+  412E6372 6C303D06 03551D20 04363034 30320604 551D2000 302A3028 06082B06
   01050507 0201161C 68747470 733A2F2F 7777772E 64696769 63657274 2E636F6D
-  2F435053 301D0603 551D0E04 1604140F 80611C82 3161D52F 28E78D46 38B42CE1 
-  C6D9E230 1F060355 1D230418 30168014 03DE5035 56D14CBB 66F0A3E2 1B1BC397 
-  B23DD155 300D0609 2A864886 F70D0101 0B050003 82010100 233EDF4B D23142A5 
-  B67E425C 1A44CC69 D168B45D 4BE00421 6C4BE26D CCB1E097 8FA65309 CDAA2A65 
-  E5394F1E 83A56E5C 98A22426 E6FBA1ED 93C72E02 C64D4ABF B042DF78 DAB3A8F9 
-  6DFF2185 5336604C 76CEEC38 DCD65180 F0C5D6E5 D44D2764 AB9BC73E 71FB4897 
-  B8336DC9 1307EE96 A21B1815 F65C4C40 EDB3C2EC FF71C1E3 47FFD4B9 00B43742 
-  DA20C9EA 6E8AEE14 06AE7DA2 599888A8 1B6F2DF4 F2C9145F 26CF2C8D 7EED37C0 
-  A9D539B9 82BF190C EA34AF00 2168F8AD 73E2C932 DA38250B 55D39A1D F06886ED 
-  2E4134EF 7CA5501D BF3AF9D3 C1080CE6 ED1E8A58 25E4B877 AD2D6EF5 52DDB474 
+  2F435053 301D0603 551D0E04 1604140F 80611C82 3161D52F 28E78D46 38B42CE1
+  C6D9E230 1F060355 1D230418 30168014 03DE5035 56D14CBB 66F0A3E2 1B1BC397
+  B23DD155 300D0609 2A864886 F70D0101 0B050003 82010100 233EDF4B D23142A5
+  B67E425C 1A44CC69 D168B45D 4BE00421 6C4BE26D CCB1E097 8FA65309 CDAA2A65
+  E5394F1E 83A56E5C 98A22426 E6FBA1ED 93C72E02 C64D4ABF B042DF78 DAB3A8F9
+  6DFF2185 5336604C 76CEEC38 DCD65180 F0C5D6E5 D44D2764 AB9BC73E 71FB4897
+  B8336DC9 1307EE96 A21B1815 F65C4C40 EDB3C2EC FF71C1E3 47FFD4B9 00B43742
+  DA20C9EA 6E8AEE14 06AE7DA2 599888A8 1B6F2DF4 F2C9145F 26CF2C8D 7EED37C0
+  A9D539B9 82BF190C EA34AF00 2168F8AD 73E2C932 DA38250B 55D39A1D F06886ED
+  2E4134EF 7CA5501D BF3AF9D3 C1080CE6 ED1E8A58 25E4B877 AD2D6EF5 52DDB474
   8FAB492E 9D3B9334 281F78CE 94EAC7BD D3C96D1C DE5C32F3
         quit
 
@@ -426,7 +429,7 @@ ip nbar protocol-discovery
 <#-- Zone based firewall.  Expands on Bootstrap config -->
 
   ip access-list extended eCVD-deny-from-outside
-  
+
 <#assign count = 10>
 <#list far.firewallIP as FW>
   <#if FW['fwType']?has_content>
@@ -442,7 +445,7 @@ ip nbar protocol-discovery
  </#list>
 
   ip access-list extended eCVD-permit-from-outside
-  
+
 <#assign count = 10>
 <#list far.firewallIP as FW>
   <#if FW['fwType']?has_content>
@@ -462,7 +465,7 @@ ip nbar protocol-discovery
 !
  class-map type inspect match-any eCVD-permit-list
    match access-group name eCVD-permit-from-outside
-!   
+!
 !
   policy-map type inspect INTERNET2Any
     class type inspect eCVD-permit-list
@@ -497,7 +500,7 @@ class-map match-any CLASS-GOLD
       match protocol attribute traffic-class ${QOS['qosType']}
      </#if>
   </#if>
-</#list>         
+</#list>
 !
 !
 class-map match-any CLASS-SILVER
@@ -517,7 +520,7 @@ class-map match-any CLASS-BRONZE
       match protocol attribute traffic-class ${QOS['qosType']}
      </#if>
   </#if>
-</#list>   
+</#list>
 !
 !
 policy-map PMAP-LEVEL3
@@ -623,7 +626,7 @@ interface Vlan1
 </#if>
 !
 !
-   
+
 <#-- enabling/disabling of ethernet ports -->
 
 interface FastEthernet0/0/1
@@ -638,14 +641,14 @@ interface FastEthernet0/0/2
     shutdown
 <#else>
 	no shutdown
-</#if>   
+</#if>
 !
 interface FastEthernet0/0/3
 <#if FastEthernet3 != "true">
     shutdown
 <#else>
 	no shutdown
-</#if>    
+</#if>
 !
 interface FastEthernet0/0/4
 <#if FastEthernet4 != "true">
@@ -658,7 +661,7 @@ interface Async0/2/0
     no ip address
     encapsulation scada
 !
-   
+
 
 <#-- Enable IOx -->
 iox
@@ -678,18 +681,18 @@ dialer-list 1 protocol ip permit
 !
 !
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
-route-map RM_WAN_ACL permit 10 
+route-map RM_WAN_ACL permit 10
     match ip address NAT_ACL
     match interface ${cell_if}
 !
 </#if>
-route-map RM_WAN_ACL2 permit 10 
+route-map RM_WAN_ACL2 permit 10
     match ip address NAT_ACL
     match interface ${ether_if}
 !
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
 <#if !section.wan_cell2?? || section.wan_cell2 == "true">
-route-map RM_WAN_ACL3 permit 10 
+route-map RM_WAN_ACL3 permit 10
     match ip address NAT_ACL
     match interface ${cell_if2}
 </#if>
@@ -705,7 +708,7 @@ ip nat inside source route-map RM_WAN_ACL2 interface ${ether_if} overload
 <#if !section.wan_cell2?? || section.wan_cell2 == "true">
 ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#if>
-   
+
 <#-- Use default i/f to set PAT -->
 
 <#list far.portForwarding as PAT>
@@ -724,8 +727,8 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
 no ip route 0.0.0.0 0.0.0.0 ${cell_if} 100
 </#if>
-   
-<#-- add IPSLA tracking to allow i/f failover -->   
+
+<#-- add IPSLA tracking to allow i/f failover -->
 ip route 0.0.0.0 0.0.0.0 ${ether_if} dhcp ${EthernetPriority}
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
 ip route 0.0.0.0 0.0.0.0 ${cell_if} ${Cell0Priority} track 7
@@ -758,7 +761,7 @@ ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
 <#if backupHerIpAddress?has_content>
 ip route ${backupHerIpAddress} 255.255.255.255 ${ether_if} dhcp
 </#if>
-</#if>  
+</#if>
 
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
 <#-- User defined static routes with either next hop or egress interface -->
@@ -807,7 +810,7 @@ ip access-list standard CLOUD
   permit ${lanNtwk} ${lanWild}
 
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
-crypto ikev2 authorization policy CVPN 
+crypto ikev2 authorization policy CVPN
   route set access-list CLOUD
 !
 </#if>
@@ -856,7 +859,7 @@ flow exporter export_Gi0_0_0_-63055531
  source Loopback 1
  transport udp 2055
  template data timeout 60
- 
+
 flow monitor dsw_Gi0_0_0_-63055531
  exporter export_Gi0_0_0_-63055531
  cache timeout active 60
