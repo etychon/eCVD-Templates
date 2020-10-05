@@ -33,14 +33,13 @@
 </#if>
 
 <#-- Set default interface -->
-<#if far.cell0Priority == "1">
+<#if far.cell0Priority?? && (far.cell0Priority == "1")>
 <#assign EthernetPriority = 102>
 <#assign Cell0Priority  = 101>
 <#else>
 <#assign EthernetPriority = 101>
 <#assign Cell0Priority  = 102>
 </#if>
-
 
 <#-- LAN Menu -->
 <#assign lanIP 		= "${far.lanIPAddress}"?split(".")>
@@ -52,21 +51,27 @@
 </#if>
 
 <#-- Security Menu -->
-<#if far.umbrellaToken?has_content>
+<#if far.umbrellaToken?? && far.umbrellaToken?has_content>
 <#assign UmbrellaToken = far.umbrellaToken>
 </#if>
 <#if !section.security_netflow?? || section.security_netflow == "true">
+<#if far.isNetFlow??>
 <#assign isNetFlow = "${far.isNetFlow}">
+</#if>
 </#if>
 
 <#-- VPN Settings Menu -->
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if far.herIpAddress??>
 <#assign herIpAddress 	= "${far.herIpAddress}">
 <#assign herPsk			= "${far.herPsk}">
+</#if>
 <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
 <#assign isBackupHer	= "true">
+<#if far.backupHerIpAddress??>
 <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
 <#assign backupHerPsk	= "${far.backupHerPsk}">
+</#if>
 <#else>
 <#assign isBackupHer = "false">
 </#if>
@@ -168,6 +173,10 @@
 		<#assign offset = y>
 	</#if>
 </#list>
+<#if !offset??>
+	<#-- In case non of the offset matches, defaults to 0-->
+	<#assign offset = 0>
+</#if>
 
 <#-- Configure Device Settings -->
 
@@ -184,6 +193,7 @@ no logging console
 !
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
 <#if !section.devicesettings_snmp?? || section.devicesettings_snmp == "true">
+<#if far.communityString??>
 <#list far.communityString as CS>
   <#if CS['snmpCommunity']?has_content>
       snmp-server community ${CS['snmpCommunity']} ${CS['snmpType']}
@@ -195,6 +205,7 @@ no logging console
      snmp-server host ${far.snmpHost} version ${far.snmpVersion} ${CS['snmpCommunity']}
 </#if>
 </#list>
+</#if>
 </#if>
 !
 clock timezone ${clockTZ} ${offset}
@@ -227,7 +238,7 @@ ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAdd
 <#-- S2S VPN Configuration -->
 !
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
-
+<#if herIpAddress?? && herPsk??>
 crypto ikev2 authorization policy CVPN
  	route set interface
  	route accept any distance 70
@@ -239,7 +250,7 @@ crypto ikev2 keyring Flex_key
   identity key-id ${herIpAddress}
   pre-shared-key ${herPsk}
 !
-<#if isBackupHer == "true">
+<#if isBackupHer?? && backupHerIpAddress?? && backupHerPsk?? && (isBackupHer == "true")>
  peer ${backupHerIpAddress}
   address ${backupHerIpAddress}
   identity key-id ${backupHerIpAddress}
@@ -277,6 +288,7 @@ interface Tunnel2
  tunnel protection ipsec profile CVPN_IPS_PF
 !
 !
+</#if>
 </#if>
 
 <#-- interface priorities -->
@@ -332,6 +344,7 @@ track 41 ip sla 41 reachability
 <#-- FOR ADVANCED: need to add some logic below to allow user to select which WAN interfaces to make available for Tunnel source -->
 !
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if herIpAddress??>
 crypto ikev2 client flexvpn Tunnel2
   peer 1 ${herIpAddress}
 <#if isBackupHer == "true">
@@ -355,6 +368,7 @@ crypto ikev2 client flexvpn Tunnel2
 <#if !section.wan_cell2?? || section.wan_cell2 == "true">
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
   source 2 ${cell_if2} track 41
+</#if>
 </#if>
 </#if>
   client connect Tunnel2
@@ -413,7 +427,9 @@ parameter-map type regex dns_bypass
 pattern .*\.cisco\..*
 !
 parameter-map type umbrella global
+<#if far.umbrellaToken??>
 token ${far.umbrellaToken}
+</#if>
 local-domain dns_bypass
 dnscrypt
 udp-timeout 5
@@ -431,6 +447,7 @@ ip nbar protocol-discovery
   ip access-list extended eCVD-deny-from-outside
 
 <#assign count = 10>
+<#if far.firewallIP??>
 <#list far.firewallIP as FW>
   <#if FW['fwType']?has_content>
    <#if FW['fwType'] == "deny">
@@ -443,10 +460,12 @@ ip nbar protocol-discovery
    </#if>
   </#if>
  </#list>
+</#if>
 
   ip access-list extended eCVD-permit-from-outside
 
 <#assign count = 10>
+<#if far.firewallIP??>
 <#list far.firewallIP as FW>
   <#if FW['fwType']?has_content>
    <#if FW['fwType'] == "allow">
@@ -459,6 +478,7 @@ ip nbar protocol-discovery
    </#if>
   </#if>
  </#list>
+</#if>
 !
  class-map type inspect match-any eCVD-deny-list
    match access-group name eCVD-deny-from-outside
@@ -492,6 +512,7 @@ int ${cell_if2}
 <#-- QOS config -->
 
 <#if !section.network_qos?? || section.network_qos == "true">
+<#if far.qos??>
 class-map match-any CLASS-GOLD
 <#-- traffic class possible values are listed below.  User should be able to place multiple TCs in a class (gold, silver, bronze). -->
 <#list far.qos as QOS>
@@ -567,6 +588,7 @@ interface ${cell_if2}
  service-policy output PMAP-LEVEL1
 </#if>
 !
+</#if>
 </#if>
 
 <#-- Enable GPS  -->

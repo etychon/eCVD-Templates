@@ -730,7 +730,7 @@
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <section>User Management</section>
 	  <sectionLevelInTree>1</sectionLevelInTree>
-  	  <required>1</required>
+  	  <required>0</required>
   	  <validationType>non-empty</validationType>
   	  <dataType>string</dataType>
   	  <min>4</min>
@@ -744,10 +744,10 @@
   	  <displayName>Password</displayName>
   	  <description>Password</description>
   	  <issecure>1</issecure>
-	  <sectionLevelInTree>1</sectionLevelInTree>
+	    <sectionLevelInTree>1</sectionLevelInTree>
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <section>User Management</section>
-  	  <required>1</required>
+  	  <required>0</required>
   	  <validationType>non-empty</validationType>
   	  <min>6</min>
   	  <max>8</max>
@@ -762,16 +762,16 @@
   	  <description>Privilege Level</description>
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <sectionLevelInTree>1</sectionLevelInTree>
-	  <section>User Management</section>
+	    <section>User Management</section>
   	  <required>1</required>
   	  <validationType>non-empty</validationType>
   	  <dataType>array</dataType>
   	  <deviceSpecific>1</deviceSpecific>
-   	   <seedValues>[{ "key": "Provide 'userPriv' per device", "value": "${far.userPriv}" },
+   	  <seedValues>[{ "key": "Provide 'userPriv' per device", "value": "${far.userPriv}" },
 	     	{ "key": "Admin", "value":"15" },
-	        { "key": "User", "value":"5" }
-	]</seedValues>
-   </propertyType>
+	        { "key": "User", "value":"5" }]
+  </seedValues>
+  </propertyType>
 
 	<propertyType>
   	  <name>dnsIP</name>
