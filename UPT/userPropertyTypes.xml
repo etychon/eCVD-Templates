@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<#-- Version 1.1        -->
+
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
