@@ -231,9 +231,10 @@ ip dhcp pool subtended
     dns-server ${DNSIP}
     lease 0 0 10
 !
-<#if far.lanIPAddressDHCPexcludeRangeStart?? && far.lanIPAddressDHCPexcludeRangeEnd??>
-ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
-</#if>
+<#-- PLACEHOLDER AS THIS IS NOT SUPPORTED YET IN UPT -->
+<#-- if far..lanIPAddressDHCPexcludeRangeStart?? && far..lanIPAddressDHCPexcludeRangeEnd?? -->
+<#-- ip dhcp excluded-address ${far..lanIPAddressDHCPexcludeRangeStart} ${far..lanIPAddressDHCPexcludeRangeEnd} -->
+<#-- /#if -->
 !
 <#list far.Users as user >
 		username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
@@ -305,17 +306,18 @@ ip sla 30
 !
 ip sla schedule 30 life forever start-time now
 
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
+<#if section.wan_cell1?? && section.wan_cell1 == "true">
 ip sla 40
  icmp-echo 208.67.220.220 source-interface ${cell_if}
  frequency 50
 !
-</#if>
-
 ip sla schedule 40 life forever start-time now
+track 40 ip sla 40 reachability
+</#if>
 !
 <#-- ADDED 6 LINES BELOW FOR ADVANCED -->
 <#-- IP SLA for Cellular 0/3/0 -->
+
 <#if !section.wan_cell2?? || section.wan_cell2 == "true">
 ip sla 41
  icmp-echo 9.9.9.9 source-interface ${cell_if2}
@@ -323,7 +325,9 @@ ip sla 41
 !
 ip sla schedule 41 life forever start-time now
 !
+track 41 ip sla 41 reachability
 </#if>
+
 track 5 interface ${ether_if} line-protocol
 !
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
@@ -337,15 +341,7 @@ track 8 interface ${cell_if2} line-protocol
 </#if>
 track 30 ip sla 30 reachability
 !
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-track 40 ip sla 40 reachability
-!
-</#if>
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
-track 41 ip sla 41 reachability
-!
-</#if>
 
 <#-- FOR ADVANCED: need to add some logic below to allow user to select which WAN interfaces to make available for Tunnel source -->
 !
@@ -739,6 +735,7 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 
 <#-- Use default i/f to set PAT -->
 
+<#if far.portForwarding??>
 <#list far.portForwarding as PAT>
   <#if PAT['protocol']?has_content>
   <#if EthernetPriority == 101>
@@ -750,6 +747,7 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
   </#if>
   </#if>
 </#list>
+</#if>
 
 <#-- remove this route from the bootstrap config to allow failover -->
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
@@ -931,9 +929,8 @@ action 5 syslog msg "Changing APN Profile"
 action 10 cli command "enable"
 action 15 cli command "${cell_if} lte profile create 1 ${APN1}" pattern "confirm"
 action 20 cli command "y"
-!
-!
 </#if>
+!
 <#-- ADDED 5 LINES BELOW FOR ADVANCED -->
 <#if APN2?has_content>
 event manager applet change_apn2
@@ -942,10 +939,8 @@ action 5 syslog msg "Changing APN Profile for Cellular0/3/0"
 action 10 cli command "enable"
 action 15 cli command "Cellular 0/3/0 lte profile create 1 ${APN2}" pattern "confirm"
 action 20 cli command "y"
-!
-!
 </#if>
-
+!
 </#compress>
 
 <#-- End eCVD template -->
