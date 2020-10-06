@@ -54,7 +54,7 @@
 
 <#-- Security Menu -->
 <#if far.umbrellaToken?? && far.umbrellaToken?has_content>
-<#assign UmbrellaToken = far.umbrellaToken>
+<#assign UmbrellaToken = "${far.umbrellaToken}">
 </#if>
 <#if !section.security_netflow?? || section.security_netflow == "true">
 <#if far.isNetFlow??>
