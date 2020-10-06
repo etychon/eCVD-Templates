@@ -770,7 +770,7 @@
    	  <seedValues>[{ "key": "Provide 'userPriv' per device", "value": "${far.userPriv}" },
 	     	{ "key": "Admin", "value":"15" },
 	        { "key": "User", "value":"5" }]
-  </seedValues>
+      </seedValues>
   </propertyType>
 
 	<propertyType>
@@ -795,7 +795,7 @@
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <section>Device Settings>Host</section>
   	  <required>0</required>
-	  <sectionLevelInTree>1</sectionLevelInTree>
+	    <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>local</defaultValue>
   	  <validationType>non-empty</validationType>
   	  <dataType>string</dataType>
@@ -810,7 +810,7 @@
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <section>Device Settings>Host</section>
   	  <required>0</required>
-	  <sectionLevelInTree>1</sectionLevelInTree>
+	    <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>local</defaultValue>
   	  <validationType>non-empty</validationType>
   	  <dataType>string</dataType>

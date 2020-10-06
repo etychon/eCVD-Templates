@@ -91,7 +91,7 @@
 <#else>
 <#assign dns1 = "208.67.222.222">
 </#if>
-<#if far.lanDNSIPAddress2?has_content>
+<#if far.lanDNSIPAddress2?has_content && far.lanDNSIPAddress2??>
 <#assign dns2 = far.lanDNSIPaddress2>
 <#else>
 <#assign dns2 = "208.67.220.220">
@@ -103,6 +103,7 @@
 <#else>
 <#assign clockTZ	= "edt">
 </#if>
+<#-- Currently clockDST	is not being taken care of -->
 <#-- assign clockDST	= "${far.clockDST}"-->
 <#if far.ntpIP?has_content>
 <#assign ntpIP 		= "${far.ntpIP}">
@@ -264,7 +265,9 @@ crypto ikev2 keyring Flex_key
 crypto ikev2 profile CVPN_I2PF
  match identity remote key-id ${herIpAddress}
  <#if isBackupHer == "true">
+  <#if backupHerIpAddress??>
   match identity remote key-id ${backupHerIpAddress}
+	</#if>
 </#if>
  identity local email ${sn}@iotspdev.io
  authentication remote pre-share
@@ -349,7 +352,7 @@ track 41 ip sla 41 reachability
 <#if herIpAddress??>
 crypto ikev2 client flexvpn Tunnel2
   peer 1 ${herIpAddress}
-<#if isBackupHer == "true">
+<#if isBackupHer == "true" && backupHerIpAddress??>
   peer 2 ${backupHerIpAddress}
 </#if>
 <#if EthernetPriority == 101>
