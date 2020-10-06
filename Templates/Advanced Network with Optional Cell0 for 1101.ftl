@@ -85,14 +85,15 @@
 <#else>
 <#assign domainName = "local">
 </#if>
+
 <#-- Assign Umbrella DNS servers for additional Security -->
 <#if far.lanDNSIPAddress1?has_content>
-<#assign dns1 = far.lanDNSIPAddress1>
+<#assign dns1 = "${far.lanDNSIPAddress1}">
 <#else>
 <#assign dns1 = "208.67.222.222">
 </#if>
-<#if far.lanDNSIPAddress2?has_content && far.lanDNSIPAddress2??>
-<#assign dns2 = far.lanDNSIPaddress2>
+<#if far.lanDNSIPAddress2?has_content>
+<#assign dns2 = "${far.lanDNSIPAddress2}">
 <#else>
 <#assign dns2 = "208.67.220.220">
 </#if>
