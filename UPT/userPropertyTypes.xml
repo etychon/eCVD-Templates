@@ -461,7 +461,7 @@
 
     <propertyType>
        <name>ethernetPriority</name>
-       <displayName>Default WAN priority of Ethernet</displayName>
+       <displayName>Ethernet port WAN priority</displayName>
        <description>Enter priority of the Ethernet Port</description>
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
        <section>WAN></section>
@@ -479,8 +479,8 @@
 
 	<propertyType>
        <name>cell0Priority</name>
-       <displayName>Default WAN interface</displayName>
-       <description>Enter default interface for the WAN</description>
+       <displayName>cell0 interface WAN priority</displayName>
+       <description>Enter priority of the cell0 interface</description>
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
        <section>WAN</section>
        <required>1</required>
@@ -498,8 +498,8 @@
 
 <propertyType>
        <name>cell1Priority</name>
-       <displayName>Default WAN priority of Cellular Modem 1</displayName>
-       <description>Enter priority of the Cellular Modem 1</description>
+       <displayName>cell1 interface WAN priority</displayName>
+       <description>Enter priority of the cell1 interface</description>
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
        <section>WAN>Cell1</section>
        <required>1</required>
