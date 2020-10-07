@@ -349,6 +349,7 @@ track 30 ip sla 30 reachability
 <#if herIpAddress??>
 crypto ikev2 client flexvpn Tunnel2
   peer 1 ${herIpAddress}
+	client connect Tunnel2
 <#if isBackupHer == "true" && backupHerIpAddress??>
   peer 2 ${backupHerIpAddress}
 </#if>
@@ -373,7 +374,6 @@ crypto ikev2 client flexvpn Tunnel2
 </#if>
 </#if>
 </#if>
-  client connect Tunnel2
 !
 !
 </#if>
@@ -594,9 +594,11 @@ interface ${cell_if2}
 </#if>
 
 <#-- Enable GPS  -->
+<#if section.wan_cell1?? && section.wan_cell1 == "true">
 controller ${cell_if}
 	lte gps mode standalone
   	lte gps nmea
+</#if>
 !
 
 interface ${ether_if}
