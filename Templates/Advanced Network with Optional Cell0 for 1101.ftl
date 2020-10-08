@@ -2,6 +2,8 @@
 <#-- ---- Version 1.7 ------------------------ -->
 <#-- ----------------------------------------- -->
 
+<#compress>
+
 <#-- extract PID and SN from EID - ie. IR1101-K9+FCW23510HKN -->
 <#assign sublist 		= "${far.eid}"?split("+")[0..1]>
 <#assign pid = sublist[0]>
@@ -24,25 +26,31 @@
 
 <#-- WAN Menu -->
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
-<#if far.apn1?has_content>
-<#assign APN1			= "${far.apn1}">
-</#if>
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
-<#if far.apn2?has_content>
-<#assign APN2			= "${far.apn2}">
-</#if>
-<#assign cell_if2 = "Cellular 0/3/0" >
-</#if>
+  <#if far.apn1?has_content>
+    <#-- Configuring apn1 possible only if wan_cell1 toggle is true -->
+    <#assign APN1			= "${far.apn1}">
+  </#if>
+  <#if !section.wan_cell2?? || section.wan_cell2 == "true">
+    <#if far.apn2?has_content>
+      <#-- Configuring apn1 possible only if wan_cell1 toggle is true -->
+      <#assign APN2			= "${far.apn2}">
+    </#if>
+    <#assign cell_if2 = "Cellular 0/3/0" >
+  </#if>
 </#if>
 
-<#-- Set default interface - lower number is higher priority -->
+<#-- Interface Priority -->
+
+<#-- Set default interface - lower number means higher priority -->
 <#-- This handles only Cell0 or GigE0/0/0 -->
 <#if !far.cell0Priority?? || far.cell0Priority == "1">
-<#assign EthernetPriority = 102>
-<#assign Cell0Priority  = 101>
+  <#-- Cell0 is being given first priority -->
+  <#assign EthernetPriority = 102>
+  <#assign Cell0Priority  = 101>
 <#else>
-<#assign EthernetPriority = 101>
-<#assign Cell0Priority  = 102>
+  <#-- Cell0 is not being given first priority, prioritise Gig -->
+  <#assign EthernetPriority = 101>
+  <#assign Cell0Priority  = 102>
 </#if>
 
 <#-- LAN Menu -->
@@ -51,54 +59,47 @@
 
 <#-- Network Menu -->
 <#if far.qosBandwidth?has_content>
-<#assign QOSbw = far.qosBandwidth?number>
+  <#assign QOSbw = far.qosBandwidth?number>
 </#if>
 
 <#-- Security Menu -->
-<#if far.umbrellaToken?? && far.umbrellaToken?has_content>
-<#assign UmbrellaToken = "${far.umbrellaToken}">
+<#if far.umbrellaToken?has_content>
+  <#assign UmbrellaToken = "${far.umbrellaToken}">
 </#if>
+
 <#if !section.security_netflow?? || section.security_netflow == "true">
-<#if far.isNetFlow??>
-<#assign isNetFlow = "${far.isNetFlow}">
-</#if>
+  <#assign isNetFlow = far.isNetFlow!"false">
 </#if>
 
 <#-- VPN Settings Menu -->
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
-<#if far.herIpAddress??>
-<#assign herIpAddress 	= "${far.herIpAddress}">
-<#assign herPsk			= "${far.herPsk}">
-</#if>
-<#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
-<#assign isBackupHer	= "true">
-<#if far.backupHerIpAddress??>
-<#assign backupHerIpAddress = "${far.backupHerIpAddress}">
-<#assign backupHerPsk	= "${far.backupHerPsk}">
-</#if>
-<#else>
-<#assign isBackupHer = "false">
-</#if>
+  <#if far.herIpAddress??>
+    <#assign herIpAddress 	= "${far.herIpAddress}">
+    <#assign herPsk			= "${far.herPsk}">
+  </#if>
+  <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+    <#assign isBackupHer	= "true">
+    <#if far.backupHerIpAddress??>
+      <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
+      <#assign backupHerPsk	= "${far.backupHerPsk}">
+    </#if>
+  <#else>
+    <#assign isBackupHer = "false">
+  </#if>
 </#if>
 
 <#-- Device Settings Menu -->
 <#if far.localDomainName?has_content>
-<#assign domainName = "${far.localDomainName}">
+  <#assign domainName = "${far.localDomainName}">
 <#else>
-<#assign domainName = "local">
+  <#assign domainName = "local">
 </#if>
 
-<#-- Assign Umbrella DNS servers for additional Security -->
-<#if far.lanDNSIPAddress1?has_content>
-<#assign dns1 = "${far.lanDNSIPAddress1}">
-<#else>
-<#assign dns1 = "208.67.222.222">
-</#if>
-<#if far.lanDNSIPAddress2?has_content>
-<#assign dns2 = "${far.lanDNSIPAddress2}">
-<#else>
-<#assign dns2 = "208.67.220.220">
-</#if>
+<#-- If no DNS specified, assign Umbrella DNS servers -->
+<#assign umbrella_dns1_ip = "208.67.222.222">
+<#assign umbrella_dns2_ip = "208.67.220.220">
+<#assign dns1 = far.lanDNSIPAddress1!umbrella_dns1_ip>
+<#assign dns2 = far.lanDNSIPAddress2!umbrella_dns2_ip>
 <#assign DNSIP		= "${dns1} ${dns2}">
 
 <#if far.clockTZ?has_content>
@@ -303,14 +304,14 @@ interface Tunnel2
 <#-- interface priorities -->
 
 ip sla 30
- icmp-echo 208.67.222.222 source-interface ${ether_if}
+ icmp-echo ${umbrella_dns1_ip} source-interface ${ether_if}
  frequency 10
 !
 ip sla schedule 30 life forever start-time now
 
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
 ip sla 40
- icmp-echo 208.67.220.220 source-interface ${cell_if}
+ icmp-echo ${umbrella_dns2_ip} source-interface ${cell_if}
  frequency 50
 !
 ip sla schedule 40 life forever start-time now
@@ -768,9 +769,9 @@ ip route 0.0.0.0 0.0.0.0 ${cell_if} ${Cell0Priority} track 7
 ip route 0.0.0.0 0.0.0.0 ${cell_if2} 103 track 8
 </#if>
 
-ip route 208.67.222.222 255.255.255.255 dhcp
+ip route ${umbrella_dns1_ip} 255.255.255.255 dhcp
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
-ip route 208.67.220.220 255.255.255.255 ${cell_if} track 7
+ip route ${umbrella_dns2_ip} 255.255.255.255 ${cell_if} track 7
 </#if>
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
 <#if !section.wan_cell2?? || section.wan_cell2 == "true">
@@ -778,8 +779,8 @@ ip route 9.9.9.9 255.255.255.255 ${cell_if2} track 8
 </#if>
 
 
-<#-- ip route 208.67.220.220 255.255.255.255 Null0 3 -->
-<#-- ip route 208.67.222.222 255.255.255.255 Null0 3 -->
+<#-- ip route ${umbrella_dns2_ip} 255.255.255.255 Null0 3 -->
+<#-- ip route ${umbrella_dns1_ip} 255.255.255.255 Null0 3 -->
 <#-- ip route 8.8.8.8 255.255.255.255 Null0 3 tag 786 -->
 
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
@@ -946,5 +947,7 @@ action 15 cli command "Cellular 0/3/0 lte profile create 1 ${APN2}" pattern "con
 action 20 cli command "y"
 </#if>
 !
+
+</#compress>
 
 <#-- End eCVD template -->
