@@ -102,18 +102,9 @@
 <#assign dns2 = far.lanDNSIPAddress2!umbrella_dns2_ip>
 <#assign DNSIP		= "${dns1} ${dns2}">
 
-<#if far.clockTZ?has_content>
-<#assign clockTZ 	= "${far.clockTZ}">
-<#else>
-<#assign clockTZ	= "edt">
-</#if>
-<#-- Currently clockDST	is not being taken care of -->
-<#-- assign clockDST	= "${far.clockDST}"-->
-<#if far.ntpIP?has_content>
-<#assign ntpIP 		= "${far.ntpIP}">
-<#else>
-<#assign ntpIP		= "time.nist.gov">
-</#if>
+<#-- Setting up time zone settings -->
+<#assign clockTZ 	= far.clockTZ!"edt">
+<#assign ntpIP 		= far.ntpIP!"time.nist.gov">
 
 <#-- Calculate Netmasks -->
 
