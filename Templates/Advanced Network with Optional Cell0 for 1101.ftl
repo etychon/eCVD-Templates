@@ -103,8 +103,17 @@
 <#assign DNSIP		= "${dns1} ${dns2}">
 
 <#-- Setting up time zone settings -->
-<#assign clockTZ 	= far.clockTZ!"edt">
-<#assign ntpIP 		= far.ntpIP!"time.nist.gov">
+<#if far.clockTZ?has_content>
+  <#assign clockTZ = far.clockTZ>
+<#else>
+  <#assign clockTZ = "gmt">
+</#if>
+
+<#if far.ntpIP?has_content>
+  <#assign ntpIP = far.ntpIP>
+<#else>
+  <#assign ntpIP = "time.nist.gov">
+</#if>
 
 <#-- Calculate Netmasks -->
 
@@ -191,23 +200,24 @@ service call-home
 platform qfp utilization monitor load 80
 no platform punt-keepalive disable-kernel-core
 !
-no logging console
+<#-- #TODO We may need to disable logging console later in production -->
+<#-- no logging console -->
 !
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
 <#if !section.devicesettings_snmp?? || section.devicesettings_snmp == "true">
-<#if far.communityString??>
-<#list far.communityString as CS>
-  <#if CS['snmpCommunity']?has_content>
-      snmp-server community ${CS['snmpCommunity']} ${CS['snmpType']}
+  <#if far.communityString??>
+    <#list far.communityString as CS>
+      <#if CS['snmpCommunity']?has_content>
+        snmp-server community ${CS['snmpCommunity']} ${CS['snmpType']}
+      </#if>
+      <#if far.snmpVersion == "3">
+        snmp-server  user ${far.snmpV3User} group1 v3 auth md5 ${far.snmpV3Pass}
+        snmp-server  host ${far.snmpHost} version ${far.snmpVersion} auth ${CS['snmpCommunity']}
+      <#else>
+        snmp-server host ${far.snmpHost} version ${far.snmpVersion} ${CS['snmpCommunity']}
+      </#if>
+    </#list>
   </#if>
-<#if far.snmpVersion == "3">
-  snmp-server  user ${far.snmpV3User} group1 v3 auth md5 ${far.snmpV3Pass}
-  snmp-server  host ${far.snmpHost} version ${far.snmpVersion} auth ${CS['snmpCommunity']}
-<#else>
-     snmp-server host ${far.snmpHost} version ${far.snmpVersion} ${CS['snmpCommunity']}
-</#if>
-</#list>
-</#if>
 </#if>
 !
 clock timezone ${clockTZ} ${offset}
