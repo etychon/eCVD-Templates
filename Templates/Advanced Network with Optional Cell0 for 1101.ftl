@@ -75,7 +75,7 @@
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
   <#if far.herIpAddress??>
     <#assign herIpAddress 	= "${far.herIpAddress}">
-    <#assign herPsk			= "${far.herPsk}">
+    <#assign herPsk			    = "${far.herPsk}">
   </#if>
   <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
     <#assign isBackupHer	= "true">
@@ -164,8 +164,6 @@
 </#list>
 <#assign netid_bit=lan_netID?reverse>
 
-<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
-
 <#--Binary to Decimal conversion of Logical AND product-->
 
 <#assign netid=[]>
@@ -244,47 +242,53 @@ ip dhcp pool subtended
 <#-- ip dhcp excluded-address ${far..lanIPAddressDHCPexcludeRangeStart} ${far..lanIPAddressDHCPexcludeRangeEnd} -->
 <#-- /#if -->
 !
-<#list far.Users as user >
+<#if far.Users?has_content>
+  <#list far.Users as user >
+		<#if user['userName'] == "admin">
+		  <#-- "admin" user is already used by IoT OC, ignore -->
+		  <#continue>
+		</#if>
 		username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
-</#list>
+  </#list>
+</#if>
 !
 <#-- S2S VPN Configuration -->
 !
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
-<#if herIpAddress?? && herPsk??>
-crypto ikev2 authorization policy CVPN
- 	route set interface
- 	route accept any distance 70
+  <#if herIpAddress?has_content && herPsk?has_content>
+    crypto ikev2 authorization policy CVPN
+ 	    route set interface
+ 	    route accept any distance 70
 !
-crypto ikev2 keyring Flex_key
+    crypto ikev2 keyring Flex_key
 !
- peer ${herIpAddress}
-  address ${herIpAddress}
-  identity key-id ${herIpAddress}
-  pre-shared-key ${herPsk}
+    peer ${herIpAddress}
+      address ${herIpAddress}
+      identity key-id ${herIpAddress}
+      pre-shared-key ${herPsk}
 !
-<#if isBackupHer?? && backupHerIpAddress?? && backupHerPsk?? && (isBackupHer == "true")>
- peer ${backupHerIpAddress}
-  address ${backupHerIpAddress}
-  identity key-id ${backupHerIpAddress}
-  pre-shared-key ${backupHerPsk}
+    <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+		  <#if backupHerIpAddress?has_content && backupHerPsk?has_content>
+        peer ${backupHerIpAddress}
+        address ${backupHerIpAddress}
+        identity key-id ${backupHerIpAddress}
+        pre-shared-key ${backupHerPsk}
+      </#if>
+		</#if>
 !
-</#if>
-!
-!
-crypto ikev2 profile CVPN_I2PF
- match identity remote key-id ${herIpAddress}
- <#if isBackupHer == "true">
-  <#if backupHerIpAddress??>
-  match identity remote key-id ${backupHerIpAddress}
-	</#if>
-</#if>
- identity local email ${sn}@iotspdev.io
- authentication remote pre-share
- authentication local pre-share
- keyring local Flex_key
- dpd 29 2 periodic
- aaa authorization group psk list CVPN CVPN
+  crypto ikev2 profile CVPN_I2PF
+    match identity remote key-id ${herIpAddress}
+    <#if isBackupHer == "true">
+      <#if backupHerIpAddress?has_content>
+        match identity remote key-id ${backupHerIpAddress}
+	    </#if>
+    </#if>
+    identity local email ${sn}@iotspdev.io
+    authentication remote pre-share
+    authentication local pre-share
+    keyring local Flex_key
+    dpd 29 2 periodic
+    aaa authorization group psk list CVPN CVPN
 !
 !
 crypto ipsec profile CVPN_IPS_PF
@@ -305,6 +309,8 @@ interface Tunnel2
 !
 </#if>
 </#if>
+
+<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
 
 <#-- interface priorities -->
 
