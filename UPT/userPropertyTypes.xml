@@ -1685,5 +1685,18 @@
       <seedValues>[{ "key": "Provide 'wgbPSK' per device", "value": "${far.wgbPSK}" }]</seedValues>
   </propertyType>
 
+  <propertyType>
+      <name>Log all variables</name>
+      <displayName>Log all variables</displayName>
+      <description>Logs all parameters and variables in IOS config</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Debug</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+  </propertyType>
+
   </propertyTypes>
 </cgms>
