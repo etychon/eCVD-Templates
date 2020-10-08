@@ -108,35 +108,41 @@
 
 <#-- Calculate Netmasks -->
 
+<#function ipv4_to_binary ipaddr>
+  <#assign bin_ip=[]>
+  <#list ipaddr as lann>
+    <#assign lan=lann?number>
+    <#list 1..100 as y>
+      <#if lan < 1 >
+        <#if lan == 0>
+          <#list 1..8 as s>
+            <#assign bin_ip=bin_ip+["0"]>
+          </#list>
+	      </#if>
+        <#if bin_ip?size % 8 != 0>
+          <#list 1..8 as s>
+	          <#assign bin_ip=bin_ip+["0"]>
+	          <#if bin_ip?size % 8 == 0>
+	            <#break>
+            </#if>
+	        </#list>
+	      </#if>
+        <#break>
+      </#if>
+      <#assign x=lan%2 st=x?string bin_ip=bin_ip+[st] lan=lan/2>
+    </#list>
+  </#list>
+  <#return (bin_ip)>
+</#function>
+
 <#assign  lan_ip=[]  lan_netmask=[]>
 
 <#-- Binary Conversion of LAN IP-->
 
-<#list lanIP as lann>
-<#assign lan=lann?number>
-<#list 1..100 as y>
-<#if lan < 1>
-<#if lan == 0>
-<#list 1..8 as s> <#assign lan_ip=lan_ip+["0"]> </#list> </#if>
-<#if lan_ip?size % 8 != 0> <#list 1..8 as s> <#assign lan_ip=lan_ip+["0"]> <#if lan_ip?size % 8 == 0> <#break> </#if> </#list> </#if>
-<#assign ip_bit = lan_ip?reverse> <#break> </#if>
-
-<#assign x=lan%2 st=x?string lan_ip=lan_ip+[st] lan=lan/2> </#list></#list>
-
-<#-- Binary Conversion of NetMask-->
-
-<#list lanNet as lann>
-<#assign lan=lann?number>
-<#list 1..100 as y>
-<#if lan < 1 >
-<#if lan == 0>
-<#list 1..8 as s> <#assign lan_netmask=lan_netmask+["0"]> </#list> </#if>
-<#if lan_netmask?size % 8 != 0>
-<#list 1..8 as s> <#assign lan_netmask=lan_netmask+["0"]> <#if lan_netmask?size % 8 == 0> <#break>
-</#if> </#list> </#if>
-<#assign subnet_bit= lan_netmask?reverse> <#break> </#if>
-
-<#assign x=lan%2 st=x?string lan_netmask=lan_netmask+[st] lan=lan/2> </#list> </#list>
+<#assign lan_ip=ipv4_to_binary(lanIP)>
+<#assign ip_bit = lan_ip?reverse>
+<#assign lan_netmask=ipv4_to_binary(lanNet)>
+<#assign subnet_bit=lan_netmask?reverse>
 
 <#-- Logical AND operation between IP and NetMask-->
 
@@ -148,6 +154,8 @@
 <#if rev_index?string == "0" && subnet_bit[rev_index?index] == "0"><#assign lan_netID=lan_netID+["0"]></#if>
 </#list>
 <#assign netid_bit=lan_netID?reverse>
+
+<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
 
 <#--Binary to Decimal conversion of Logical AND product-->
 
