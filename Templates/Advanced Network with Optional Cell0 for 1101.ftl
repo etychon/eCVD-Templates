@@ -1,25 +1,26 @@
-<#-- Begin eCVD template -->
-<#-- Version 1.6        -->
+<#-- ---- Begin eCVD template for IR1101 ----- -->
+<#-- ---- Version 1.7 ------------------------ -->
+<#-- ----------------------------------------- -->
 
-<#-- Default BootStrap Configuration -->
-
-<#compress>
-
+<#-- extract PID and SN from EID - ie. IR1101-K9+FCW23510HKN -->
 <#assign sublist 		= "${far.eid}"?split("+")[0..1]>
 <#assign pid = sublist[0]>
-<#assign model = pid[0..4]>
+<#assign model = pid[0..5]>
 <#assign sn = sublist[1]>
 
-<#assign model = "IR1101">
+<#if pid != "IR1101-K9" && pid != "IR1101-A-K9">
+  ${provisioningFailed("This template does not support ${pid}")}
+</#if>
+
 <#assign ether_if = "GigabitEthernet 0/0/0">
 <#assign cell_if = "Cellular 0/1/0">
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
 
-<#-- Interface Menu -->
-<#assign FastEthernet1 = "${far.fastEthernet1}">
-<#assign FastEthernet2 = "${far.fastEthernet2}">
-<#assign FastEthernet3 = "${far.fastEthernet3}">
-<#assign FastEthernet4 = "${far.fastEthernet4}">
+<#-- Interface Menu - which Ethernet interfaces are enabled? -->
+<#assign FastEthernet1_enabled = far.fastEthernet1!"true">
+<#assign FastEthernet2_enabled = far.fastEthernet2!"true">
+<#assign FastEthernet3_enabled = far.fastEthernet3!"true">
+<#assign FastEthernet4_enabled = far.fastEthernet4!"true">
 
 <#-- WAN Menu -->
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
@@ -34,8 +35,9 @@
 </#if>
 </#if>
 
-<#-- Set default interface -->
-<#if far.cell0Priority?? && (far.cell0Priority == "1")>
+<#-- Set default interface - lower number is higher priority -->
+<#-- This handles only Cell0 or GigE0/0/0 -->
+<#if !far.cell0Priority?? || far.cell0Priority == "1">
 <#assign EthernetPriority = 102>
 <#assign Cell0Priority  = 101>
 <#else>
@@ -306,7 +308,7 @@ ip sla 30
 !
 ip sla schedule 30 life forever start-time now
 
-<#if section.wan_cell1?? && section.wan_cell1 == "true">
+<#if !section.wan_cell1?? || section.wan_cell1 == "true">
 ip sla 40
  icmp-echo 208.67.220.220 source-interface ${cell_if}
  frequency 50
@@ -594,10 +596,10 @@ interface ${cell_if2}
 </#if>
 
 <#-- Enable GPS  -->
-<#if section.wan_cell1?? && section.wan_cell1 == "true">
-controller ${cell_if}
-	lte gps mode standalone
-  	lte gps nmea
+<#if !section.wan_cell1?? || section.wan_cell1 == "true">
+!! controller ${cell_if}
+!! 	lte gps mode standalone
+!!  lte gps nmea
 </#if>
 !
 
@@ -656,28 +658,28 @@ interface Vlan1
 <#-- enabling/disabling of ethernet ports -->
 
 interface FastEthernet0/0/1
-<#if FastEthernet1 != "true">
+<#if FastEthernet1_enabled != "true">
     shutdown
 <#else>
 	no shutdown
 </#if>
 !
 interface FastEthernet0/0/2
-<#if FastEthernet2 != "true">
+<#if FastEthernet2_enabled != "true">
     shutdown
 <#else>
 	no shutdown
 </#if>
 !
 interface FastEthernet0/0/3
-<#if FastEthernet3 != "true">
+<#if FastEthernet3_enabled != "true">
     shutdown
 <#else>
 	no shutdown
 </#if>
 !
 interface FastEthernet0/0/4
-<#if FastEthernet4 != "true">
+<#if FastEthernet4_enabled != "true">
     shutdown
 <#else>
 	no shutdown
@@ -774,15 +776,16 @@ ip route 208.67.220.220 255.255.255.255 ${cell_if} track 7
 <#if !section.wan_cell2?? || section.wan_cell2 == "true">
 ip route 9.9.9.9 255.255.255.255 ${cell_if2} track 8
 </#if>
-ip route 208.67.220.220 255.255.255.255 Null0 3
-ip route 208.67.222.222 255.255.255.255 Null0 3
+
+
+<#-- ip route 208.67.220.220 255.255.255.255 Null0 3 -->
+<#-- ip route 208.67.222.222 255.255.255.255 Null0 3 -->
+<#-- ip route 8.8.8.8 255.255.255.255 Null0 3 tag 786 -->
 
 <#if !section.wan_cell1?? || section.wan_cell1 == "true">
 ip route 1.1.1.1 255.255.255.255 ${cell_if} 99 track 10
 ip route 8.8.8.8 255.255.255.255 ${cell_if} tag 786
 </#if>
-
-ip route 8.8.8.8 255.255.255.255 Null0 3 tag 786
 
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
 <#if herIpAddress??>
@@ -943,6 +946,5 @@ action 15 cli command "Cellular 0/3/0 lte profile create 1 ${APN2}" pattern "con
 action 20 cli command "y"
 </#if>
 !
-</#compress>
 
 <#-- End eCVD template -->
