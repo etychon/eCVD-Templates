@@ -420,25 +420,57 @@
   	  <deviceSpecific>1</deviceSpecific>
 	</propertyType>
 
-	<propertyType>
-  	  <name>isCell1</name>
-  	  <displayName>Is Cell1 enabled</displayName>
-  	  <description>Enable/Disable Cell1</description>
-  	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
-  	  <section>WAN>Cell1</section>
-  	  <required>0</required>
-  	  <defaultValue>true</defaultValue>
-  	  <validationType>non-empty</validationType>
-  	  <dataType>boolean</dataType>
-  	  <deviceSpecific>1</deviceSpecific>
-	</propertyType>
+  <propertyType>
+    <name>isEthernetEnable</name>
+    <displayName>Enable Ethernet WAN</displayName>
+    <description>Enable Ethernet WAN</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>WAN>Ethernet</section>
+    <sectionLevelInTree>1</sectionLevelInTree>
+    <defaultValue>true</defaultValue>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'isEthernetEnable' per device", "value": "${far.isEthernetEnable}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+      <name>isFirstCell</name>
+      <displayName>Enable Primary Cellular Radio</displayName>
+      <description>Enable Primary Cellular Radio</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN>Cellular1</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>false</defaultValue>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'isFirstCell' per device", "value": "${far.isFirstCell}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+      <name>isSecondCell</name>
+      <displayName>Enable Secondary Cellular Radio</displayName>
+      <description>Enable Secondary Cellular Radio</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN>Cellular2</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>false</defaultValue>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'isSecondCell' per device", "value": "${far.isSecondCell}" }]</seedValues>
+  </propertyType>
 
    <propertyType>
        <name>apn1</name>
        <displayName>Primary Cellular Access Point Name</displayName>
        <description>Enter the Primary Cellular Access Point Name</description>
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
-       <section>WAN>Cell1</section>
+       <section>WAN>Cellular1</section>
        <required>0</required>
        <validationType>non-empty</validationType>
        <dataType>string</dataType>
@@ -451,7 +483,7 @@
        <displayName>Secondary Cellular Access Point Name</displayName>
        <description>Enter the Secondary Cellular Access Point Name</description>
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
-       <section>WAN>Cell2</section>
+       <section>WAN>Cellular2</section>
        <required>0</required>
        <validationType>non-empty</validationType>
        <dataType>string</dataType>
@@ -460,77 +492,137 @@
     </propertyType>
 
     <propertyType>
-       <name>ethernetPriority</name>
-       <displayName>Ethernet port WAN priority</displayName>
-       <description>Enter priority of the Ethernet Port</description>
-       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-       <section>WAN></section>
-       <required>1</required>
-       <validationType>non-empty</validationType>
-       <dataType>array</dataType>
-       <deviceSpecific>1</deviceSpecific>
-       <seedValues>[{ "key": "Provide 'ethernetPriority' per device", "value": "${far.ethernetPriority}" },
-       				{ "key": "First", "value": "1" },
-       				{ "key": "Second", "value": "2" },
-       				{ "key": "Third", "value": "3" },
-       				{ "key": "Fourth", "value": "4" }
-       ]</seedValues>
+         <name>ethernetPriority</name>
+         <displayName>Ethernet port WAN priority</displayName>
+         <description>Enter priority of the Ethernet Port</description>
+         <exportAsTemplateKeys>1</exportAsTemplateKeys>
+         <section>WAN>Ethernet</section>
+         <required>1</required>
+         <validationType>non-empty</validationType>
+         <dataType>array</dataType>
+         <deviceSpecific>1</deviceSpecific>
+         <seedValues>[{ "key": "Provide 'ethernetPriority' per device", "value": "${far.ethernetPriority}" },
+         				{ "key": "First", "value": "1" },
+         				{ "key": "Second", "value": "2" },
+         				{ "key": "Third", "value": "3" },
+         				{ "key": "Fourth", "value": "4" }
+         ]</seedValues>
+      </propertyType>
+
+    <propertyType>
+        <name>firstCellularIntPriority</name>
+        <displayName>First cellular interface WAN priority</displayName>
+        <description>Enter priority of the first cellular interface</description>
+        <exportAsTemplateKeys>1</exportAsTemplateKeys>
+        <section>WAN>Cellular1</section>
+        <required>1</required>
+        <validationType>non-empty</validationType>
+        <defaultValue>Second</defaultValue>
+        <dataType>array</dataType>
+        <deviceSpecific>1</deviceSpecific>
+        <seedValues>[{ "key": "Provide 'firstCellularIntPriority' per device", "value": "${far.firstCellularIntPriority}" },
+      			{ "key": "First", "value": "1" },
+           	{ "key": "Second", "value": "2" },
+           	{ "key": "Third", "value": "3" },
+           	{ "key": "Fourth", "value": "4" }]
+        </seedValues>
     </propertyType>
 
-	<propertyType>
-       <name>cell0Priority</name>
-       <displayName>cell0 interface WAN priority</displayName>
-       <description>Enter priority of the cell0 interface</description>
-       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-       <section>WAN</section>
-       <required>1</required>
-       <validationType>non-empty</validationType>
-       <defaultValue>Second</defaultValue>
-       <dataType>array</dataType>
-       <deviceSpecific>1</deviceSpecific>
-       <seedValues>[{ "key": "Provide 'cell0Priority' per device", "value": "${far.cell0Priority}" },
-       				{ "key": "First", "value": "1" },
-       				{ "key": "Second", "value": "2" },
-       				{ "key": "Third", "value": "3" },
-       				{ "key": "Fourth", "value": "4" }
-       ]</seedValues>
-   	</propertyType>
-
-<propertyType>
-       <name>cell1Priority</name>
-       <displayName>cell1 interface WAN priority</displayName>
-       <description>Enter priority of the cell1 interface</description>
-       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-       <section>WAN>Cell1</section>
-       <required>1</required>
-       <validationType>non-empty</validationType>
-       <dataType>array</dataType>
-       <deviceSpecific>1</deviceSpecific>
-       <seedValues>[{ "key": "Provide 'cell1Priority' per device", "value": "${far.cell1Priority}" },
-       				{ "key": "First", "value": "1" },
-       				{ "key": "Second", "value": "2" },
-       				{ "key": "Third", "value": "3" },
-       				{ "key": "Fourth", "value": "4" }
-       ]</seedValues>
+    <propertyType>
+        <name>secondCellularIntPriority</name>
+        <displayName>Second cellular interface WAN priority</displayName>
+        <description>Enter priority of the second cellular interface</description>
+        <exportAsTemplateKeys>1</exportAsTemplateKeys>
+        <section>WAN>Cellular2</section>
+        <required>1</required>
+        <validationType>non-empty</validationType>
+        <dataType>array</dataType>
+        <deviceSpecific>1</deviceSpecific>
+        <seedValues>[{ "key": "Provide 'secondCellularIntPriority' per device", "value": "${far.secondCellularIntPriority}" },
+        				{ "key": "First", "value": "1" },
+        				{ "key": "Second", "value": "2" },
+         				{ "key": "Third", "value": "3" },
+         				{ "key": "Fourth", "value": "4" }]
+        </seedValues>
     </propertyType>
 
-<propertyType>
-       <name>wgbPriority</name>
-       <displayName>Default WAN priority of WGB Uplink</displayName>
-       <description>Enter priority of WGB Uplink</description>
-       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-       <section>WAN</section>
-       <required>1</required>
-       <validationType>non-empty</validationType>
-       <dataType>array</dataType>
-       <deviceSpecific>1</deviceSpecific>
-       <seedValues>[{ "key": "Provide 'wgbPriority' per device", "value": "${far.wgbPriority}" },
-       				{ "key": "First", "value": "1" },
-       				{ "key": "Second", "value": "2" },
-       				{ "key": "Third", "value": "3" },
-       				{ "key": "Fourth", "value": "4" }
-       ]</seedValues>
+    <propertyType>
+           <name>wgbPriority</name>
+           <displayName>Default WAN priority of WGB Uplink</displayName>
+           <description>Enter priority of WGB Uplink</description>
+           <exportAsTemplateKeys>1</exportAsTemplateKeys>
+           <section>WAN>WGB</section>
+           <required>1</required>
+           <validationType>non-empty</validationType>
+           <dataType>array</dataType>
+           <deviceSpecific>1</deviceSpecific>
+           <seedValues>[{ "key": "Provide 'wgbPriority' per device", "value": "${far.wgbPriority}" },
+           			{ "key": "First", "value": "1" },
+                { "key": "Second", "value": "2" },
+              	{ "key": "Third", "value": "3" },
+         				{ "key": "Fourth", "value": "4" }]
+           </seedValues>
     </propertyType>
+
+    <propertyType>
+       <name>enableTunnelOverEthernet</name>
+       <displayName>Enable VPN Tunnel over Ethernet WAN</displayName>
+       <description>Enable VPN Tunnel over Ethernet WAN</description>
+       <exportAsTemplateKeys>1</exportAsTemplateKeys>
+       <section>VPN</section>
+       <sectionLevelInTree>1</sectionLevelInTree>
+       <defaultValue>false</defaultValue>
+       <required>0</required>
+       <validationType>non-empty</validationType>
+       <dataType>boolean</dataType>
+       <deviceSpecific>1</deviceSpecific>
+       <seedValues>[{ "key": "Provide 'enableTunnelOverEthernet' per device", "value": "${far.enableTunnelOverEthernet}" }]</seedValues>
+     </propertyType>
+
+     <propertyType>
+       <name>enableTunnelOverCell1</name>
+       <displayName>Enable VPN Tunnel over First Cellular WAN</displayName>
+       <description>Enable VPN Tunnel over First Cellular WAN</description>
+       <exportAsTemplateKeys>1</exportAsTemplateKeys>
+       <section>VPN</section>
+       <sectionLevelInTree>1</sectionLevelInTree>
+       <defaultValue>false</defaultValue>
+       <required>0</required>
+       <validationType>non-empty</validationType>
+       <dataType>boolean</dataType>
+       <deviceSpecific>1</deviceSpecific>
+       <seedValues>[{ "key": "Provide 'enableTunnelOverCell1' per device", "value": "${far.enableTunnelOverCell1}" }]</seedValues>
+     </propertyType>
+
+     <propertyType>
+       <name>enableTunnelOverCell2</name>
+       <displayName>Enable VPN Tunnel over Second Cellular WAN</displayName>
+       <description>Enable VPN Tunnel over Second Cellular WAN</description>
+       <exportAsTemplateKeys>1</exportAsTemplateKeys>
+       <section>VPN</section>
+       <sectionLevelInTree>1</sectionLevelInTree>
+       <defaultValue>false</defaultValue>
+       <required>0</required>
+       <validationType>non-empty</validationType>
+       <dataType>boolean</dataType>
+       <deviceSpecific>1</deviceSpecific>
+       <seedValues>[{ "key": "Provide 'enableTunnelOverCell2' per device", "value": "${far.enableTunnelOverCell2}" }]</seedValues>
+     </propertyType>
+
+     <propertyType>
+       <name>enableTunnelOverWGB</name>
+       <displayName>Enable VPN Tunnel over WGB WAN</displayName>
+       <description>Enable VPN Tunnel over WGB WAN</description>
+       <exportAsTemplateKeys>1</exportAsTemplateKeys>
+       <section>VPN</section>
+       <sectionLevelInTree>1</sectionLevelInTree>
+       <defaultValue>false</defaultValue>
+       <required>0</required>
+       <validationType>non-empty</validationType>
+       <dataType>boolean</dataType>
+       <deviceSpecific>1</deviceSpecific>
+       <seedValues>[{ "key": "Provide 'enableTunnelOverWGB' per device", "value": "${far.enableTunnelOverWGB}" }]</seedValues>
+     </propertyType>
 
     <propertyType>
       <name>lanNetwork</name>
