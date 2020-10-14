@@ -465,6 +465,21 @@
       <seedValues>[{ "key": "Provide 'isSecondCell' per device", "value": "${far.isSecondCell}" }]</seedValues>
   </propertyType>
 
+  <propertyType>
+      <name>isWgbEnable</name>
+      <displayName>Enable Workgroup Bridge WAN</displayName>
+      <description>Enable Workgroup Bridge WAN</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN>WGB</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>false</defaultValue>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'isWgbEnable' per device", "value": "${far.isWgbEnable}" }]</seedValues>
+  </propertyType>
+
    <propertyType>
        <name>apn1</name>
        <displayName>Primary Cellular Access Point Name</displayName>
@@ -571,7 +586,7 @@
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
        <section>VPN</section>
        <sectionLevelInTree>1</sectionLevelInTree>
-       <defaultValue>false</defaultValue>
+       <defaultValue>true</defaultValue>
        <required>0</required>
        <validationType>non-empty</validationType>
        <dataType>boolean</dataType>
