@@ -1849,13 +1849,14 @@
   </propertyType>
 
   <propertyType>
-      <name>Log all variables</name>
+      <name>logAllVariables</name>
       <displayName>Log all variables</displayName>
       <description>Logs all parameters and variables in IOS config</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Debug</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <required>0</required>
+      <defaultValue>false</defaultValue>
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
