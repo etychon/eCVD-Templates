@@ -1125,7 +1125,7 @@
       <displayName>Enable Secondary Cellular Radio</displayName>
       <description>Enable Secondary Cellular Radio</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>WAN>Cell2</section>
+      <section>WAN>Cellular2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>false</defaultValue>
       <required>0</required>
