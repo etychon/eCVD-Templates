@@ -580,6 +580,62 @@
     </propertyType>
 
     <propertyType>
+      <name>IcmpReachableIPaddress1</name>
+      <displayName>First reachable IPv4 address for IP SLA test</displayName>
+      <description>First IPv4 address for IP SLA ICMP ping test</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN>ICMP</section>
+      <required>1</required>
+      <defaultValue>4.2.2.1</defaultValue>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'IcmpReachableIPaddress1' per device", "value": "${far.IcmpReachableIPaddress1}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>IcmpReachableIPaddress2</name>
+      <displayName>Second reachable IPv4 address for IP SLA test</displayName>
+      <description>Second IPv4 address for IP SLA ICMP ping test</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN>ICMP</section>
+      <required>1</required>
+      <defaultValue>4.2.2.2</defaultValue>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'IcmpReachableIPaddress2' per device", "value": "${far.IcmpReachableIPaddress2}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>IcmpReachableIPaddress3</name>
+      <displayName>Third reachable IPv4 address for IP SLA test</displayName>
+      <description>Third IPv4 address for IP SLA ICMP ping test</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN>ICMP</section>
+      <required>1</required>
+      <defaultValue>9.9.9.10</defaultValue>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'IcmpReachableIPaddress3' per device", "value": "${far.IcmpReachableIPaddress3}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>IcmpReachableIPaddress4</name>
+      <displayName>Fourth reachable IPv4 address for IP SLA test</displayName>
+      <description>Fourth IPv4 address for IP SLA ICMP ping test</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN>ICMP</section>
+      <required>1</required>
+      <defaultValue>9.9.9.11</defaultValue>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'IcmpReachableIPaddress4' per device", "value": "${far.IcmpReachableIPaddress4}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
        <name>enableTunnelOverEthernet</name>
        <displayName>Enable VPN Tunnel over Ethernet WAN</displayName>
        <description>Enable VPN Tunnel over Ethernet WAN</description>
