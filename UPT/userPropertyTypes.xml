@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.12        -->
+<!-- Version 1.13        -->
 
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -640,7 +640,7 @@
        <displayName>Enable VPN Tunnel over Ethernet WAN</displayName>
        <description>Enable VPN Tunnel over Ethernet WAN</description>
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
-       <section>VPN</section>
+       <section>VPN>Interfaces</section>
        <sectionLevelInTree>1</sectionLevelInTree>
        <defaultValue>true</defaultValue>
        <required>0</required>
@@ -655,7 +655,7 @@
        <displayName>Enable VPN Tunnel over First Cellular WAN</displayName>
        <description>Enable VPN Tunnel over First Cellular WAN</description>
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
-       <section>VPN</section>
+       <section>VPN>Interfaces</section>
        <sectionLevelInTree>1</sectionLevelInTree>
        <defaultValue>false</defaultValue>
        <required>0</required>
@@ -670,7 +670,7 @@
        <displayName>Enable VPN Tunnel over Second Cellular WAN</displayName>
        <description>Enable VPN Tunnel over Second Cellular WAN</description>
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
-       <section>VPN</section>
+       <section>VPN>Interfaces</section>
        <sectionLevelInTree>1</sectionLevelInTree>
        <defaultValue>false</defaultValue>
        <required>0</required>
@@ -685,7 +685,7 @@
        <displayName>Enable VPN Tunnel over WGB WAN</displayName>
        <description>Enable VPN Tunnel over WGB WAN</description>
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
-       <section>VPN</section>
+       <section>VPN>Interfaces</section>
        <sectionLevelInTree>1</sectionLevelInTree>
        <defaultValue>false</defaultValue>
        <required>0</required>
@@ -986,7 +986,7 @@
       <displayName>Enable Port Forwarding</displayName>
       <description>Enable Port Forwarding</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Network>Enable Port Forwarding</section>
+      <section>Network>Port Forwarding</section>
 	  <sectionLevelInTree>1</sectionLevelInTree>
       <required>1</required>
 	   <defaultValue>false</defaultValue>
@@ -1244,7 +1244,7 @@
       <displayName>SNMP Community String</displayName>
   	  <description>SNMP Community String</description>
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
-  	  <section>Device Settings>SNMP>Community</section>
+  	  <section>Device Settings>SNMP</section>
   	  <required>0</required>
 	  <sectionLevelInTree>1</sectionLevelInTree>
   	  <validationType>non-empty</validationType>
@@ -1260,7 +1260,7 @@
   	  <description>Enter SNMP Community String</description>
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <sectionLevelInTree>1</sectionLevelInTree>
-	  <section>Device Settings>SNMP>Community</section>
+	  <section>Device Settings>SNMP</section>
   	  <required>0</required>
   	  <validationType>non-empty</validationType>
   	  <dataType>string</dataType>
@@ -1275,7 +1275,7 @@
   	  <description>Select RW/RO</description>
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <sectionLevelInTree>1</sectionLevelInTree>
-	  <section>Device Settings>SNMP>Community</section>
+	  <section>Device Settings>SNMP</section>
   	  <required>0</required>
   	  <validationType>non-empty</validationType>
   	  <dataType>array</dataType>
@@ -1319,8 +1319,8 @@
 
    <propertyType>
       <name>isUmbrella</name>
-      <displayName>Enable SNMP</displayName>
-      <description>Enable SNMP</description>
+      <displayName>Enable Cisco Umbrella</displayName>
+      <description>Enable Cisco Umbrella</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Security>Umbrella</section>
       <sectionLevelInTree>1</sectionLevelInTree>
@@ -1416,7 +1416,7 @@
   	  <description>Select IP Protocol</description>
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <sectionLevelInTree>1</sectionLevelInTree>
-	  <section>Security>Firewall</section>
+	    <section>Security>Firewall</section>
   	  <required>0</required>
   	  <validationType>non-empty</validationType>
       <defaultValue>IP</defaultValue>
@@ -1450,7 +1450,7 @@
       <displayName>Enable Wifi</displayName>
       <description>Enable Wifi</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>WiFi</section>
+      <section>WiFi>WiFi</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>false</defaultValue>
       <required>0</required>
@@ -1458,6 +1458,27 @@
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'isWifi' per device", "value": "${far.isWifi}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wifiOperationalMode</name>
+      <displayName>WiFi Operational Mode</displayName>
+      <description>WiFi Mode</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <section>WiFi>WiFi</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <defaultValue>OFF</defaultValue>
+      <dataType>array</dataType>
+      <deviceSpecific>1</deviceSpecific>
+       <seedValues>[{ "key": "Provide 'wifiOperationalMode' per device", "value": "${far.wifiOperationalMode}" },
+        { "key": "OFF", "value":"OFF" },
+        { "key": "WiFi Hotspot (PSK)", "value":"HSPSK" },
+        { "key": "WGB + WiFi Hotspot (PSK)", "value":"WGB_HSPSK"},
+        { "key": "WGB Only", "value":"WGB"},
+        { "key": "WiFi Hotspot (Captive Portal)", "value":"WIFICP"}
+    ]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -1798,7 +1819,7 @@
       <displayName>Splash Page Successful Redirect URL</displayName>
       <description>Splash Page Successful Redirect URL</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>WiFi>Advanced</section>
+      <section>WiFi>Captive Portal</section>
       <required>0</required>
       <defaultValue>http://www.google.com</defaultValue>
       <validationType>non-empty</validationType>
@@ -1812,7 +1833,7 @@
       <displayName>Splash Page Banner Message</displayName>
       <description>Splash Page Banner Message</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>WiFi>Advanced</section>
+      <section>WiFi>Captive Portal</section>
       <required>0</required>
       <defaultValue>Welcome to Cisco IOT WiFi!</defaultValue>
       <validationType>non-empty</validationType>
