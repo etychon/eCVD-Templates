@@ -25,12 +25,12 @@
 <#assign FastEthernet4_enabled = far.fastEthernet4!"true">
 
 <#-- WAN Menu -->
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
   <#if far.apn1?has_content>
     <#-- Configuring apn1 possible only if wan_cell1 toggle is true -->
     <#assign APN1			= "${far.apn1}">
   </#if>
-  <#if !section.wan_cell2?? || section.wan_cell2 == "true">
+  <#if !section.isSecondCell?? || section.isSecondCell == "true">
     <#if far.apn2?has_content>
       <#-- Configuring apn1 possible only if wan_cell1 toggle is true -->
       <#assign APN2			= "${far.apn2}">
@@ -43,7 +43,7 @@
 
 <#-- Set default interface - lower number means higher priority -->
 <#-- This handles only Cell0 or GigE0/0/0 -->
-<#if !far.cell0Priority?? || far.cell0Priority == "1">
+<#if !far.firstCellularIntPriority?? || far.firstCellularIntPriority == "1">
   <#-- Cell0 is being given first priority -->
   <#assign EthernetPriority = 102>
   <#assign Cell0Priority  = 101>
@@ -958,6 +958,31 @@ action 15 cli command "Cellular 0/3/0 lte profile create 1 ${APN2}" pattern "con
 action 20 cli command "y"
 </#if>
 !
+
+<#-- ------------------------------ -->
+
+event manager applet ListAllParams
+<#assign i = 100>
+<#list far as key, value>
+  <#if value??>
+    <#if value?is_string>
+      action ${i} cli command "${key} = ${value}"
+      <#assign i = i + 1>
+    <#elseif value?is_sequence>
+        <#assign subi = 0>
+      <#list value as val>
+        <#list val as subkey, subvalue>
+        action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+        <#assign i = i + 1>
+        </#list>
+        <#assign subi = subi + 1>
+      </#list>
+    </#if>
+  <#elseif !value??>
+      action ${i} cli command "${key} = *null*"
+      <#assign i = i + 1>
+  </#if>
+</#list>
 
 </#compress>
 
