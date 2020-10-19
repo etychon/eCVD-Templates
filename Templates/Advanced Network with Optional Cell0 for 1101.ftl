@@ -14,8 +14,34 @@
   ${provisioningFailed("This template does not support ${pid}")}
 </#if>
 
+<#-- PLATFORM SPECIFIC VARIABLES -->
 <#assign ether_if = "GigabitEthernet 0/0/0">
-<#assign cell_if = "Cellular 0/1/0">
+<#assign cell_if1 = "Cellular 0/1/0">
+<#assign cell_if2 = "Cellular 0/3/0">
+<#assign wgb_if = "Vlan 50">
+
+<#-- TEMPLATE CONSTANTS -->
+<#assign umbrella_dns1_ip = "208.67.222.222">
+<#assign umbrella_dns2_ip = "208.67.220.220">
+
+<#-- VARIABLES INITIALIZATION -->
+<#assign highestPriorityIfName = 1>
+<#assign priorityIfNameTable = []>
+<#assign isTunnelEnabledTable = []>
+<#assign isCellIntTable = []>
+<#assign EthernetPortPriority = 200>
+<#assign WgbIntPriority = 200>
+<#assign Cell2PortPriority = 200>
+<#assign Cell1PortPriority = 200>
+
+
+<#-- IP SLA destination IP addresses -->
+
+<#assign ipslaDestIPaddress = [far.IcmpReachableIPaddress1!"4.2.2.1",
+    far.IcmpReachableIPaddress2!"4.2.2.2",
+    far.IcmpReachableIPaddress3!"9.9.9.10",
+    far.IcmpReachableIPaddress4!"9.9.9.11"]>
+
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
 
 <#-- Interface Menu - which Ethernet interfaces are enabled? -->
@@ -27,30 +53,15 @@
 <#-- WAN Menu -->
 <#if !section.isFirstCell?? || section.isFirstCell == "true">
   <#if far.apn1?has_content>
-    <#-- Configuring apn1 possible only if wan_cell1 toggle is true -->
+    <#-- Configuring apn1 possible only if isFirstCell toggle is true -->
     <#assign APN1			= "${far.apn1}">
   </#if>
   <#if !section.isSecondCell?? || section.isSecondCell == "true">
     <#if far.apn2?has_content>
-      <#-- Configuring apn1 possible only if wan_cell1 toggle is true -->
+      <#-- Configuring apn1 possible only if isFirstCell toggle is true -->
       <#assign APN2			= "${far.apn2}">
     </#if>
-    <#assign cell_if2 = "Cellular 0/3/0" >
   </#if>
-</#if>
-
-<#-- Interface Priority -->
-
-<#-- Set default interface - lower number means higher priority -->
-<#-- This handles only Cell0 or GigE0/0/0 -->
-<#if !far.firstCellularIntPriority?? || far.firstCellularIntPriority == "1">
-  <#-- Cell0 is being given first priority -->
-  <#assign EthernetPriority = 102>
-  <#assign Cell0Priority  = 101>
-<#else>
-  <#-- Cell0 is not being given first priority, prioritise Gig -->
-  <#assign EthernetPriority = 101>
-  <#assign Cell0Priority  = 102>
 </#if>
 
 <#-- LAN Menu -->
@@ -310,89 +321,71 @@ interface Tunnel2
 </#if>
 </#if>
 
-<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
-
 <#-- interface priorities -->
 
-ip sla 30
- icmp-echo ${umbrella_dns1_ip} source-interface ${ether_if}
- frequency 10
-!
-ip sla schedule 30 life forever start-time now
+<#list 1..4 as p>
+  <#if far.isEthernetEnable?has_content && far.isEthernetEnable == "true"
+        && ether_if?? && far.ethernetPriority?has_content
+        && far.ethernetPriority == p?string>
+    <#assign priorityIfNameTable += [ether_if]>
+    <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
+    <#assign isCellIntTable += ["false"]>
+    <#assign EthernetPortPriority = 100+p>
+  <#elseif far.isWgbEnable?has_content && far.isWgbEnable == "true"
+        && wgb_if?? && far.wgbPriority?has_content
+        && far.wgbPriority == p?string>
+    <#assign priorityIfNameTable += [wgb_if]>
+    <#assign isTunnelEnabledTable += [far.enableTunnelOverWGB!"false"]>
+    <#assign isCellIntTable += ["false"]>
+    <#assign WgbIntPriority = 100+p>
+  <#elseif far.isFirstCell?has_content && far.isFirstCell == "true"
+        && cell_if1?? && far.firstCellularIntPriority?has_content
+        && far.firstCellularIntPriority == p?string>
+    <#assign priorityIfNameTable += [cell_if1]>
+    <#assign isTunnelEnabledTable += [far.enableTunnelOverCell1!"false"]>
+    <#assign isCellIntTable += ["true"]>
+    <#assign Cell1PortPriority = 100+p>
+  <#elseif far.isSecondCell?has_content && far.isSecondCell == "true"
+        && cell_if2?? && far.secondCellularIntPriority?has_content
+        && far.secondCellularIntPriority == p?string>
+    <#assign priorityIfNameTable += [cell_if2]>
+    <#assign isTunnelEnabledTable += [far.enableTunnelOverCell2!"false"]>
+    <#assign Cell2PortPriority = 100+p>
+  </#if>
+</#list>
 
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-ip sla 40
- icmp-echo ${umbrella_dns2_ip} source-interface ${cell_if}
- frequency 50
-!
-ip sla schedule 40 life forever start-time now
-track 40 ip sla 40 reachability
-</#if>
-!
-<#-- ADDED 6 LINES BELOW FOR ADVANCED -->
-<#-- IP SLA for Cellular 0/3/0 -->
-
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
-ip sla 41
- icmp-echo 9.9.9.9 source-interface ${cell_if2}
- frequency 50
-!
-ip sla schedule 41 life forever start-time now
-!
-track 41 ip sla 41 reachability
-</#if>
-
-track 5 interface ${ether_if} line-protocol
-!
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-track 7 interface ${cell_if} line-protocol
-!
-</#if>
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
-track 8 interface ${cell_if2} line-protocol
-!
-</#if>
-track 30 ip sla 30 reachability
-!
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-
-<#-- FOR ADVANCED: need to add some logic below to allow user to select which WAN interfaces to make available for Tunnel source -->
-!
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
-<#if herIpAddress??>
-crypto ikev2 client flexvpn Tunnel2
-  peer 1 ${herIpAddress}
-	client connect Tunnel2
-<#if isBackupHer == "true" && backupHerIpAddress??>
-  peer 2 ${backupHerIpAddress}
-</#if>
-<#if EthernetPriority == 101>
-  source 1 ${ether_if} track 30
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-  source 2 ${cell_if}  track 40
-</#if>
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
-  source 3 ${cell_if2} track 41
-</#if>
+<#if priorityIfNameTable?size <=0>
+  <#-- No interface in the priority table
+       This scenario should never happen -->
+  Provisioning failed
 <#else>
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-  source 1 ${cell_if} track 40
-</#if>
-<#-- CHANGED 1 LINES BELOW FOR ADVANCED -->
-  source 3 ${ether_if} track 30
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-  source 2 ${cell_if2} track 41
-</#if>
-</#if>
-</#if>
-!
-!
+  <#-- Iterate over interface table list, by configured priority from 1 to 4 -->
+  <#list 0 .. (priorityIfNameTable?size-1) as p>
+    !
+    ! ***** ${priorityIfNameTable[p]} configuration *****
+    !
+    <#-- Config for Cell interface are slightly different -->
+    <#if isCellIntTable[p] == "true">
+      track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
+      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+10}
+    <#else>
+      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${100+p}
+    </#if>
+    ip sla ${p+40}
+      icmp-echo ${ipslaDestIPaddress[p]} source-interface ${priorityIfNameTable[p]}
+      frequency <#if isCellIntTable[p] == "true">50<#else>10</#if>
+    !
+    ip sla schedule ${p+40} life forever start-time now
+    track ${p+40} ip sla ${p+40} reachability
+    int ${priorityIfNameTable[p]}
+      zone-member security INTERNET
+    <#if isTunnelEnabledTable[p] == "true">
+      crypto ikev2 client flexvpn Tunnel2
+      source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
+    </#if>
+  </#list>
 </#if>
 
-<#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- Umbrella DNS -->
 <#if !section.security_umbrella?? || section.security_umbrella == "true">
 crypto pki trustpoint umbrella
@@ -457,7 +450,6 @@ ip nbar protocol-discovery
 !
 </#if>
 
-<#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- Zone based firewall.  Expands on Bootstrap config -->
 
   ip access-list extended eCVD-deny-from-outside
@@ -512,18 +504,27 @@ ip nbar protocol-discovery
 int ${ether_if}
   zone-member security INTERNET
   !
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-int ${cell_if}
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
+int ${cell_if1}
   zone-member security INTERNET
   !
 </#if>
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
+<#if !section.isSecondCell?? || section.isSecondCell == "true">
 int ${cell_if2}
   zone-member security INTERNET
   !
   !
 </#if>
 !
+
+<#-- ---------------------------------------------- -->
+<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
+<#-- ---------------------------------------------- -->
+
+<#-- ------------------------------------------ -->
+
+
+
 <#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- QOS config -->
 
@@ -594,12 +595,12 @@ policy-map PMAP-LEVEL1
   service-policy PMAP-LEVEL2
 !
 
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-interface ${cell_if}
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
+interface ${cell_if1}
  service-policy output PMAP-LEVEL1
 !
 </#if>
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
+<#if !section.isSecondCell?? || section.isSecondCell == "true">
 interface ${cell_if2}
  service-policy output PMAP-LEVEL1
 </#if>
@@ -608,8 +609,8 @@ interface ${cell_if2}
 </#if>
 
 <#-- Enable GPS  -->
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-!! controller ${cell_if}
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
+!! controller ${cell_if1}
 !! 	lte gps mode standalone
 !!  lte gps nmea
 </#if>
@@ -626,8 +627,8 @@ interface ${ether_if}
 </#if>
 !
 !
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-interface ${cell_if}
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
+interface ${cell_if1}
     ip address negotiated
     ip nat outside
     dialer in-band
@@ -641,7 +642,7 @@ interface ${cell_if}
 !
 </#if>
 <#-- ADDED 8 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
+<#if !section.isSecondCell?? || section.isSecondCell == "true">
 interface ${cell_if2}
     ip address negotiated
     ip nat outside
@@ -720,10 +721,10 @@ route-map RM_Tu2 permit 10
 dialer-list 1 protocol ip permit
 !
 !
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
 route-map RM_WAN_ACL permit 10
     match ip address NAT_ACL
-    match interface ${cell_if}
+    match interface ${cell_if1}
 !
 </#if>
 route-map RM_WAN_ACL2 permit 10
@@ -731,7 +732,7 @@ route-map RM_WAN_ACL2 permit 10
     match interface ${ether_if}
 !
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
+<#if !section.isSecondCell?? || section.isSecondCell == "true">
 route-map RM_WAN_ACL3 permit 10
     match ip address NAT_ACL
     match interface ${cell_if2}
@@ -740,12 +741,12 @@ route-map RM_WAN_ACL3 permit 10
 
 ip forward-protocol nd
 !
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-ip nat inside source route-map RM_WAN_ACL interface ${cell_if} overload
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
+ip nat inside source route-map RM_WAN_ACL interface ${cell_if1} overload
 </#if>
 ip nat inside source route-map RM_WAN_ACL2 interface ${ether_if} overload
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
+<#if !section.isSecondCell?? || section.isSecondCell == "true">
 ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#if>
 
@@ -754,11 +755,11 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 <#if far.portForwarding??>
 <#list far.portForwarding as PAT>
   <#if PAT['protocol']?has_content>
-  <#if EthernetPriority == 101>
+  <#if EthernetPortPriority == 101>
         ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${ether_if} ${PAT['publicPort']}
   <#else>
-     <#if !section.wan_cell1?? || section.wan_cell1 == "true">
-      ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${cell_if} ${PAT['publicPort']}
+     <#if !section.isFirstCell?? || section.isFirstCell == "true">
+      ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${cell_if1} ${PAT['publicPort']}
      </#if>
   </#if>
   </#if>
@@ -766,26 +767,26 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#if>
 
 <#-- remove this route from the bootstrap config to allow failover -->
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-no ip route 0.0.0.0 0.0.0.0 ${cell_if} 100
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
+no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
 </#if>
 
 <#-- add IPSLA tracking to allow i/f failover -->
-ip route 0.0.0.0 0.0.0.0 ${ether_if} dhcp ${EthernetPriority}
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-ip route 0.0.0.0 0.0.0.0 ${cell_if} ${Cell0Priority} track 7
+ip route 0.0.0.0 0.0.0.0 ${ether_if} dhcp ${EthernetPortPriority}
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
+ip route 0.0.0.0 0.0.0.0 ${cell_if1} ${Cell1PortPriority} track 7
 </#if>
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
+<#if !section.isSecondCell?? || section.isSecondCell == "true">
 ip route 0.0.0.0 0.0.0.0 ${cell_if2} 103 track 8
 </#if>
 
 ip route ${umbrella_dns1_ip} 255.255.255.255 dhcp
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-ip route ${umbrella_dns2_ip} 255.255.255.255 ${cell_if} track 7
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
+ip route ${umbrella_dns2_ip} 255.255.255.255 ${cell_if1} track 7
 </#if>
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cell2?? || section.wan_cell2 == "true">
+<#if !section.isSecondCell?? || section.isSecondCell == "true">
 ip route 9.9.9.9 255.255.255.255 ${cell_if2} track 8
 </#if>
 
@@ -794,9 +795,9 @@ ip route 9.9.9.9 255.255.255.255 ${cell_if2} track 8
 <#-- ip route ${umbrella_dns1_ip} 255.255.255.255 Null0 3 -->
 <#-- ip route 8.8.8.8 255.255.255.255 Null0 3 tag 786 -->
 
-<#if !section.wan_cell1?? || section.wan_cell1 == "true">
-ip route 1.1.1.1 255.255.255.255 ${cell_if} 99 track 10
-ip route 8.8.8.8 255.255.255.255 ${cell_if} tag 786
+<#if !section.isFirstCell?? || section.isFirstCell == "true">
+ip route 1.1.1.1 255.255.255.255 ${cell_if1} 99 track 10
+ip route 8.8.8.8 255.255.255.255 ${cell_if1} tag 786
 </#if>
 
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
@@ -944,7 +945,7 @@ event manager applet change_apn
 event timer countdown time 10
 action 5 syslog msg "Changing APN Profile"
 action 10 cli command "enable"
-action 15 cli command "${cell_if} lte profile create 1 ${APN1}" pattern "confirm"
+action 15 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confirm"
 action 20 cli command "y"
 </#if>
 !
