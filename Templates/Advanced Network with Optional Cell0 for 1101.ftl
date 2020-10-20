@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR1101 ----- -->
-<#-- ---- Version 1.7 ------------------------ -->
+<#-- ---- Version 1.71 ------------------------ -->
 <#-- ----------------------------------------- -->
 
 <#compress>
@@ -538,7 +538,6 @@ int ${cell_if2}
         </#if>
       </#list>
 !
-!
       class-map match-any CLASS-SILVER
       <#list far.qos as QOS>
         <#if QOS['qosType']?has_content>
@@ -547,7 +546,6 @@ int ${cell_if2}
           </#if>
         </#if>
       </#list>
-!
 !
       class-map match-any CLASS-BRONZE
       <#list far.qos as QOS>
@@ -558,6 +556,14 @@ int ${cell_if2}
         </#if>
       </#list>
 !
+      class-map match-any CLASS-SILVER-BRONZE
+      <#list far.qos as QOS>
+        <#if QOS['qosType']?has_content>
+          <#if QOS['qosPriority'] == "med" || QOS['qosPriority'] == "low">
+            match protocol attribute traffic-class ${QOS['qosType']}
+          </#if>
+        </#if>
+      </#list>
 !
       policy-map PMAP-LEVEL3
         class CLASS-SILVER
@@ -569,7 +575,6 @@ int ${cell_if2}
         <#-- calculate based on 62.5% of SILVER-BRONZE bandwidth, units of Kbps -->
         <#assign qosbwkb = QOSbw * 0.625>
           bandwidth ${qosbwkb?int?c}
-!
 !
       policy-map PMAP-LEVEL2
         class CLASS-GOLD
@@ -590,7 +595,9 @@ int ${cell_if2}
       policy-map PMAP-LEVEL1
         class class-default
         <#-- input value from user based on real-world upstream throughput. Units of bits per second -->
-        shape average ${QOSbw}
+        bandwidth ${QOSbw}
+        <#assign qbw = QOSbw * 1000>
+        shape average ${qbw?int?c}
         service-policy PMAP-LEVEL2
 !
 

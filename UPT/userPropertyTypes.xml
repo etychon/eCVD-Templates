@@ -1498,8 +1498,8 @@
 
     <propertyType>
   	  <name>qosBandwidth</name>
-  	  <displayName>Enter Typical Cellular Interface Bandwidth in Kbps</displayName>
-  	  <description>Enter Typical Cellular Interface Bandwidth in Kbps</description>
+  	  <displayName>Enter Typical Cellular Interface Bandwidth (in kbps)</displayName>
+  	  <description>Enter Typical Cellular Interface Bandwidth (in kbps)</description>
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <sectionLevelInTree>1</sectionLevelInTree>
 	    <section>Network>QoS</section>
