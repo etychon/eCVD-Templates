@@ -51,16 +51,15 @@
 <#assign FastEthernet4_enabled = far.fastEthernet4!"true">
 
 <#-- WAN Menu -->
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
+<#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
   <#if far.apn1?has_content>
-    <#-- Configuring apn1 possible only if isFirstCell toggle is true -->
     <#assign APN1			= "${far.apn1}">
   </#if>
-  <#if !section.isSecondCell?? || section.isSecondCell == "true">
-    <#if far.apn2?has_content>
-      <#-- Configuring apn1 possible only if isFirstCell toggle is true -->
-      <#assign APN2			= "${far.apn2}">
-    </#if>
+</#if>
+
+<#if section.wan_cellular2?has_content && section.wan_cellular2 == "true">
+  <#if far.apn2?has_content>
+    <#assign APN2			= "${far.apn2}">
   </#if>
 </#if>
 
@@ -69,13 +68,12 @@
 <#assign lanNet 	= "${far.lanNetmask}"?split(".")>
 
 <#-- Network Menu -->
-<#if far.qosBandwidth?has_content>
-  <#assign QOSbw = far.qosBandwidth?number>
-</#if>
 
 <#-- Security Menu -->
-<#if far.umbrellaToken?has_content>
-  <#assign UmbrellaToken = "${far.umbrellaToken}">
+<#if !section.security_umbrella?? || section.security_umbrella == "true">
+  <#if far.umbrellaToken?has_content>
+    <#assign UmbrellaToken = "${far.umbrellaToken}">
+  </#if>
 </#if>
 
 <#if !section.security_netflow?? || section.security_netflow == "true">
@@ -214,7 +212,7 @@ no platform punt-keepalive disable-kernel-core
 !
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
 <#if !section.devicesettings_snmp?? || section.devicesettings_snmp == "true">
-  <#if far.communityString??>
+  <#if far.communityString?has_content>
     <#list far.communityString as CS>
       <#if CS['snmpCommunity']?has_content>
         snmp-server community ${CS['snmpCommunity']} ${CS['snmpType']}
@@ -338,14 +336,14 @@ interface Tunnel2
     <#assign isTunnelEnabledTable += [far.enableTunnelOverWGB!"false"]>
     <#assign isCellIntTable += ["false"]>
     <#assign WgbIntPriority = 100+p>
-  <#elseif far.isFirstCell?has_content && far.isFirstCell == "true"
+  <#elseif far.wan_cellular1?has_content && far.wan_cellular1 == "true"
         && cell_if1?? && far.firstCellularIntPriority?has_content
         && far.firstCellularIntPriority == p?string>
     <#assign priorityIfNameTable += [cell_if1]>
     <#assign isTunnelEnabledTable += [far.enableTunnelOverCell1!"false"]>
     <#assign isCellIntTable += ["true"]>
     <#assign Cell1PortPriority = 100+p>
-  <#elseif far.isSecondCell?has_content && far.isSecondCell == "true"
+  <#elseif far.wan_cellular2?has_content && far.wan_cellular2 == "true"
         && cell_if2?? && far.secondCellularIntPriority?has_content
         && far.secondCellularIntPriority == p?string>
     <#assign priorityIfNameTable += [cell_if2]>
@@ -436,9 +434,10 @@ parameter-map type regex dns_bypass
 pattern .*\.cisco\..*
 !
 parameter-map type umbrella global
-<#if far.umbrellaToken??>
-token ${far.umbrellaToken}
+<#if UmbrellaToken?has_content>
+  token ${UmbrellaToken}
 </#if>
+
 local-domain dns_bypass
 dnscrypt
 udp-timeout 5
@@ -504,12 +503,12 @@ ip nbar protocol-discovery
 int ${ether_if}
   zone-member security INTERNET
   !
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
+<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
 int ${cell_if1}
   zone-member security INTERNET
   !
 </#if>
-<#if !section.isSecondCell?? || section.isSecondCell == "true">
+<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
 int ${cell_if2}
   zone-member security INTERNET
   !
@@ -521,95 +520,99 @@ int ${cell_if2}
 <#-- etychon - ok until here on  IR1101-FCW23510HKN -->
 <#-- ---------------------------------------------- -->
 
+<#-- ADDED LINES BELOW FOR ADVANCED -->
+<#-- QOS config -->
+
+<#if section.network_qos?has_content && section.network_qos == "true">
+  <#if far.qosBandwidth?has_content>
+    <#assign QOSbw = far.qosBandwidth?number>
+
+    <#if far.qos?has_content>
+      class-map match-any CLASS-GOLD
+      <#-- traffic class possible values are listed below.  User should be able to place multiple TCs in a class (gold, silver, bronze). -->
+      <#list far.qos as QOS>
+        <#if QOS['qosType']?has_content>
+          <#if QOS['qosPriority'] == "hi">
+            match protocol attribute traffic-class ${QOS['qosType']}
+          </#if>
+        </#if>
+      </#list>
+!
+!
+      class-map match-any CLASS-SILVER
+      <#list far.qos as QOS>
+        <#if QOS['qosType']?has_content>
+          <#if QOS['qosPriority'] == "med">
+            match protocol attribute traffic-class ${QOS['qosType']}
+          </#if>
+        </#if>
+      </#list>
+!
+!
+      class-map match-any CLASS-BRONZE
+      <#list far.qos as QOS>
+        <#if QOS['qosType']?has_content>
+          <#if QOS['qosPriority'] == "low">
+            match protocol attribute traffic-class ${QOS['qosType']}
+          </#if>
+        </#if>
+      </#list>
+!
+!
+      policy-map PMAP-LEVEL3
+        class CLASS-SILVER
+        <#-- calculate based on 37.5% of SILVER-BRONZE bandwidth, units of Kbps -->
+        <#assign qosbwkb = QOSbw * 0.375>
+        bandwidth ${qosbwkb?int?c}
+!
+        class CLASS-BRONZE
+        <#-- calculate based on 62.5% of SILVER-BRONZE bandwidth, units of Kbps -->
+        <#assign qosbwkb = QOSbw * 0.625>
+          bandwidth ${qosbwkb?int?c}
+!
+!
+      policy-map PMAP-LEVEL2
+        class CLASS-GOLD
+        priority 100
+        class CLASS-SILVER-BRONZE
+        <#-- calculate based on 25% of total upstream throughput, units of Kbps -->
+          <#assign qosbwkb = QOSbw * 0.25>
+          bandwidth ${qosbwkb?int?c}
+          <#-- calculate based on 25% of total upstream throughput units of bits per second-->
+          <#assign qbw = QOSbw * 0.25 * 1000>
+          shape average ${qbw?int?c}
+
+      service-policy PMAP-LEVEL3
+        class class-default
+        fair-queue
+        random-detect dscp-based
+!
+      policy-map PMAP-LEVEL1
+        class class-default
+        <#-- input value from user based on real-world upstream throughput. Units of bits per second -->
+        shape average ${QOSbw}
+        service-policy PMAP-LEVEL2
+!
+
+      <#if section.wan_cellular1?? && section.wan_cellular1 == "true">
+        interface ${cell_if1}
+          service-policy output PMAP-LEVEL1
+      </#if>
+
+      <#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
+        interface ${cell_if2}
+          service-policy output PMAP-LEVEL1
+      </#if>
+    </#if>
+  </#if>
+</#if>
+
 <#-- ------------------------------------------ -->
 
 
 
-<#-- ADDED LINES BELOW FOR ADVANCED -->
-<#-- QOS config -->
-
-<#if !section.network_qos?? || section.network_qos == "true">
-<#if far.qos??>
-class-map match-any CLASS-GOLD
-<#-- traffic class possible values are listed below.  User should be able to place multiple TCs in a class (gold, silver, bronze). -->
-<#list far.qos as QOS>
-  <#if QOS['qosType']?has_content>
-   <#if QOS['qosQuality'] == "hi">
-      match protocol attribute traffic-class ${QOS['qosType']}
-     </#if>
-  </#if>
-</#list>
-!
-!
-class-map match-any CLASS-SILVER
-<#list far.qos as QOS>
-  <#if QOS['qosType']?has_content>
-   <#if QOS['qosQuality'] == "med">
-      match protocol attribute traffic-class ${QOS['qosType']}
-     </#if>
-  </#if>
- </#list>
-!
-!
-class-map match-any CLASS-BRONZE
-<#list far.qos as QOS>
-  <#if QOS['qosType']?has_content>
-   <#if QOS['qosQuality'] == "low">
-      match protocol attribute traffic-class ${QOS['qosType']}
-     </#if>
-  </#if>
-</#list>
-!
-!
-policy-map PMAP-LEVEL3
- class CLASS-SILVER
-<#-- calculate based on 37.5% of SILVER-BRONZE bandwidth, units of Kbps -->
-<#assign qosbwkb = QOSbw / 37.5 / 1024>
-  bandwidth qosbwkb
-!
- class CLASS-BRONZE
-<#-- calculate based on 62.5% of SILVER-BRONZE bandwidth, units of Kbps -->
-<#assign qosbwkb = QOSbw / 62.5 / 1024>
-  bandwidth qosbwkb
-!
-!
-policy-map PMAP-LEVEL2
- class CLASS-GOLD
-  priority 100
- class CLASS-SILVER-BRONZE
-<#-- calculate based on 25% of total upstream throughput, units of Kbps -->
-<#assign qosbwkb = QOSbw / 25 / 1024>
-  bandwidth qosbwkb
-<#-- calculate based on 25% of total upstream throughput units of bits per second-->
-<#assign gbw = QOSbw / 25>
-  shape average ${qbw}
-   service-policy PMAP-LEVEL3
- class class-default
-  fair-queue
-  random-detect dscp-based
-!
-policy-map PMAP-LEVEL1
- class class-default
-<#-- input value from user based on real-world upstream throughput. Units of bits per second -->
-  shape average ${QOSbw}
-  service-policy PMAP-LEVEL2
-!
-
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
-interface ${cell_if1}
- service-policy output PMAP-LEVEL1
-!
-</#if>
-<#if !section.isSecondCell?? || section.isSecondCell == "true">
-interface ${cell_if2}
- service-policy output PMAP-LEVEL1
-</#if>
-!
-</#if>
-</#if>
-
 <#-- Enable GPS  -->
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
+<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
 !! controller ${cell_if1}
 !! 	lte gps mode standalone
 !!  lte gps nmea
@@ -627,7 +630,7 @@ interface ${ether_if}
 </#if>
 !
 !
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
+<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
 interface ${cell_if1}
     ip address negotiated
     ip nat outside
@@ -642,7 +645,7 @@ interface ${cell_if1}
 !
 </#if>
 <#-- ADDED 8 LINES BELOW FOR ADVANCED -->
-<#if !section.isSecondCell?? || section.isSecondCell == "true">
+<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
 interface ${cell_if2}
     ip address negotiated
     ip nat outside
@@ -721,7 +724,7 @@ route-map RM_Tu2 permit 10
 dialer-list 1 protocol ip permit
 !
 !
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
+<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
 route-map RM_WAN_ACL permit 10
     match ip address NAT_ACL
     match interface ${cell_if1}
@@ -732,7 +735,7 @@ route-map RM_WAN_ACL2 permit 10
     match interface ${ether_if}
 !
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
-<#if !section.isSecondCell?? || section.isSecondCell == "true">
+<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
 route-map RM_WAN_ACL3 permit 10
     match ip address NAT_ACL
     match interface ${cell_if2}
@@ -741,12 +744,12 @@ route-map RM_WAN_ACL3 permit 10
 
 ip forward-protocol nd
 !
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
+<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
 ip nat inside source route-map RM_WAN_ACL interface ${cell_if1} overload
 </#if>
 ip nat inside source route-map RM_WAN_ACL2 interface ${ether_if} overload
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.isSecondCell?? || section.isSecondCell == "true">
+<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
 ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#if>
 
@@ -758,7 +761,7 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
   <#if EthernetPortPriority == 101>
         ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${ether_if} ${PAT['publicPort']}
   <#else>
-     <#if !section.isFirstCell?? || section.isFirstCell == "true">
+     <#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
       ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${cell_if1} ${PAT['publicPort']}
      </#if>
   </#if>
@@ -767,26 +770,26 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#if>
 
 <#-- remove this route from the bootstrap config to allow failover -->
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
+<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
 no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
 </#if>
 
 <#-- add IPSLA tracking to allow i/f failover -->
 ip route 0.0.0.0 0.0.0.0 ${ether_if} dhcp ${EthernetPortPriority}
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
+<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
 ip route 0.0.0.0 0.0.0.0 ${cell_if1} ${Cell1PortPriority} track 7
 </#if>
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.isSecondCell?? || section.isSecondCell == "true">
+<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
 ip route 0.0.0.0 0.0.0.0 ${cell_if2} 103 track 8
 </#if>
 
 ip route ${umbrella_dns1_ip} 255.255.255.255 dhcp
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
+<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
 ip route ${umbrella_dns2_ip} 255.255.255.255 ${cell_if1} track 7
 </#if>
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.isSecondCell?? || section.isSecondCell == "true">
+<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
 ip route 9.9.9.9 255.255.255.255 ${cell_if2} track 8
 </#if>
 
@@ -795,7 +798,7 @@ ip route 9.9.9.9 255.255.255.255 ${cell_if2} track 8
 <#-- ip route ${umbrella_dns1_ip} 255.255.255.255 Null0 3 -->
 <#-- ip route 8.8.8.8 255.255.255.255 Null0 3 tag 786 -->
 
-<#if !section.isFirstCell?? || section.isFirstCell == "true">
+<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
 ip route 1.1.1.1 255.255.255.255 ${cell_if1} 99 track 10
 ip route 8.8.8.8 255.255.255.255 ${cell_if1} tag 786
 </#if>

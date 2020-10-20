@@ -1498,14 +1498,14 @@
 
     <propertyType>
   	  <name>qosBandwidth</name>
-  	  <displayName>Enter Typical Cellular Interface Bandwidth</displayName>
-  	  <description>Enter Typical Cellular Interface Bandwidth</description>
+  	  <displayName>Enter Typical Cellular Interface Bandwidth in Kbps</displayName>
+  	  <description>Enter Typical Cellular Interface Bandwidth in Kbps</description>
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <sectionLevelInTree>1</sectionLevelInTree>
-	  <section>Network>QoS</section>
+	    <section>Network>QoS</section>
   	  <required>0</required>
   	  <validationType>non-empty</validationType>
-  	  <dataType>string</dataType>
+  	  <dataType>integer</dataType>
   	  <deviceSpecific>1</deviceSpecific>
    	   <seedValues>[{ "key": "Provide 'qosBandwidth' per device", "value": "${far.qosBandwidth}" }
    	   	]</seedValues>
