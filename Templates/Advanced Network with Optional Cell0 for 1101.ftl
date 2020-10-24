@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR1101 ----- -->
-<#-- ---- Version 1.71 ------------------------ -->
+<#-- ---- Version 1.72 ------------------------ -->
 <#-- ----------------------------------------- -->
 
 <#compress>
@@ -50,17 +50,38 @@
 <#assign FastEthernet3_enabled = far.fastEthernet3!"true">
 <#assign FastEthernet4_enabled = far.fastEthernet4!"true">
 
+<#-- Allows the template to prompt for "admin" password.
+     IoTOC will generate one by default during claim but
+     can be changed here -->
+<#-- may cause issues if not net, password NULL -->
+<#-- assign adminPassword = far..adminPassword --->
+
 <#-- WAN Menu -->
+
+<#if section.wan_ethernet?has_content && section.wan_ethernet == "true">
+  <#assign isEthernetEnable = "true">
+<#else>
+  <#assign isEthernetEnable = "false">
+</#if>
+
+<#if section.wan_wgb?has_content && section.wan_wgb == "true">
+  <#assign isWgbEnable = "true">
+<#else>
+  <#assign isWgbEnable = "false">
+</#if>
+
 <#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
-  <#if far.apn1?has_content>
-    <#assign APN1			= "${far.apn1}">
-  </#if>
+  <#assign isFirstCell = "true">
+  <#assign APN1			= "${far.apn1}">
+<#else>
+    <#assign isFirstCell = "false">
 </#if>
 
 <#if section.wan_cellular2?has_content && section.wan_cellular2 == "true">
-  <#if far.apn2?has_content>
-    <#assign APN2			= "${far.apn2}">
-  </#if>
+  <#assign isSecondCell = "true">
+  <#assign APN2			= "${far.apn2}">
+<#else>
+  <#assign isSecondCell = "false">
 </#if>
 
 <#-- LAN Menu -->
@@ -70,31 +91,43 @@
 <#-- Network Menu -->
 
 <#-- Security Menu -->
-<#if !section.security_umbrella?? || section.security_umbrella == "true">
+<#if section.security_umbrella?? && section.security_umbrella == "true">
+  <#assign isUmbrella = "true">
   <#if far.umbrellaToken?has_content>
     <#assign UmbrellaToken = "${far.umbrellaToken}">
   </#if>
+<#else>
+  <#assign isUmbrella = "false">
 </#if>
 
-<#if !section.security_netflow?? || section.security_netflow == "true">
-  <#assign isNetFlow = far.isNetFlow!"false">
+<#if section.security_netflow?? && section.security_netflow == "true">
+  <#assign isNetFlow = "true">
+  <#if far.netflowCollectorIP?has_content>
+    <#assign netflowCollectorIP = far.netflowCollectorIP>
+  </#if>
+<#else>
+  <#assign isNetFlow = "false">
 </#if>
 
 <#-- VPN Settings Menu -->
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
-  <#if far.herIpAddress??>
+  <#assign isPrimaryHeadEndEnable = "true">
+  <#if far.herIpAddress?has_content && far.herPsk?has_content>
     <#assign herIpAddress 	= "${far.herIpAddress}">
     <#assign herPsk			    = "${far.herPsk}">
   </#if>
   <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
-    <#assign isBackupHer	= "true">
+    <#assign isSecondaryHeadEndEnable = "false">
     <#if far.backupHerIpAddress??>
       <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
       <#assign backupHerPsk	= "${far.backupHerPsk}">
     </#if>
   <#else>
-    <#assign isBackupHer = "false">
+    <#assign isSecondaryHeadEndEnable = "false">
   </#if>
+<#else>
+  <#assign isPrimaryHeadEndEnable = "false">
+  <#assign isSecondaryHeadEndEnable = "false">
 </#if>
 
 <#-- Device Settings Menu -->
@@ -196,6 +229,21 @@
 	</#if>
 </#list>
 
+<#if !section.devicesettings_snmp?? || section.devicesettings_snmp == "true">
+  <#assign isSnmp = "true">
+    <#if far.communityString?has_content>
+      <#assign communityString = far.communityString>
+    </#if>
+    <#if far.snmpVersion?has_content>
+      <#assign snmpVersion = far.snmpVersion>
+      <#if snmpVersion == "3">
+        <#assign snmpV3User = far.snmpV3User>
+      </#if>
+    </#if>
+<#else>
+  <#assign isSnmp = "false">
+</#if>
+
 <#-- Configure Device Settings -->
 
 service tcp-keepalives-in
@@ -211,13 +259,13 @@ no platform punt-keepalive disable-kernel-core
 <#-- no logging console -->
 !
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
-<#if !section.devicesettings_snmp?? || section.devicesettings_snmp == "true">
-  <#if far.communityString?has_content>
-    <#list far.communityString as CS>
+<#if isSnmp == "true">
+  <#if communityString?has_content>
+    <#list communityString as CS>
       <#if CS['snmpCommunity']?has_content>
         snmp-server community ${CS['snmpCommunity']} ${CS['snmpType']}
       </#if>
-      <#if far.snmpVersion == "3">
+      <#if snmpVersion == "3">
         snmp-server  user ${far.snmpV3User} group1 v3 auth md5 ${far.snmpV3Pass}
         snmp-server  host ${far.snmpHost} version ${far.snmpVersion} auth ${CS['snmpCommunity']}
       <#else>
@@ -263,7 +311,7 @@ ip dhcp pool subtended
 !
 <#-- S2S VPN Configuration -->
 !
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if isPrimaryHeadEndEnable == "true">
   <#if herIpAddress?has_content && herPsk?has_content>
     crypto ikev2 authorization policy CVPN
  	    route set interface
@@ -276,7 +324,7 @@ ip dhcp pool subtended
       identity key-id ${herIpAddress}
       pre-shared-key ${herPsk}
 !
-    <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+    <#if isSecondaryHeadEndEnable == "true">
 		  <#if backupHerIpAddress?has_content && backupHerPsk?has_content>
         peer ${backupHerIpAddress}
         address ${backupHerIpAddress}
@@ -287,7 +335,7 @@ ip dhcp pool subtended
 !
   crypto ikev2 profile CVPN_I2PF
     match identity remote key-id ${herIpAddress}
-    <#if isBackupHer == "true">
+    <#if isSecondaryHeadEndEnable == "true">
       <#if backupHerIpAddress?has_content>
         match identity remote key-id ${backupHerIpAddress}
 	    </#if>
@@ -322,28 +370,28 @@ interface Tunnel2
 <#-- interface priorities -->
 
 <#list 1..4 as p>
-  <#if far.isEthernetEnable?has_content && far.isEthernetEnable == "true"
+  <#if isEthernetEnable == "true"
         && ether_if?? && far.ethernetPriority?has_content
         && far.ethernetPriority == p?string>
     <#assign priorityIfNameTable += [ether_if]>
     <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
     <#assign isCellIntTable += ["false"]>
     <#assign EthernetPortPriority = 100+p>
-  <#elseif far.isWgbEnable?has_content && far.isWgbEnable == "true"
+  <#elseif isWgbEnable?has_content && isWgbEnable == "true"
         && wgb_if?? && far.wgbPriority?has_content
         && far.wgbPriority == p?string>
     <#assign priorityIfNameTable += [wgb_if]>
     <#assign isTunnelEnabledTable += [far.enableTunnelOverWGB!"false"]>
     <#assign isCellIntTable += ["false"]>
     <#assign WgbIntPriority = 100+p>
-  <#elseif far.wan_cellular1?has_content && far.wan_cellular1 == "true"
+  <#elseif isFirstCell == "true"
         && cell_if1?? && far.firstCellularIntPriority?has_content
         && far.firstCellularIntPriority == p?string>
     <#assign priorityIfNameTable += [cell_if1]>
     <#assign isTunnelEnabledTable += [far.enableTunnelOverCell1!"false"]>
     <#assign isCellIntTable += ["true"]>
     <#assign Cell1PortPriority = 100+p>
-  <#elseif far.wan_cellular2?has_content && far.wan_cellular2 == "true"
+  <#elseif isSecondCell == "true"
         && cell_if2?? && far.secondCellularIntPriority?has_content
         && far.secondCellularIntPriority == p?string>
     <#assign priorityIfNameTable += [cell_if2]>
@@ -355,7 +403,7 @@ interface Tunnel2
 <#if priorityIfNameTable?size <=0>
   <#-- No interface in the priority table
        This scenario should never happen -->
-  Provisioning failed
+   ${provisioningFailed("Need at least one WAN interface enabled on ${far.eid}")}
 <#else>
   <#-- Iterate over interface table list, by configured priority from 1 to 4 -->
   <#list 0 .. (priorityIfNameTable?size-1) as p>
@@ -503,12 +551,12 @@ ip nbar protocol-discovery
 int ${ether_if}
   zone-member security INTERNET
   !
-<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
+<#if isFirstCell == "true">
 int ${cell_if1}
   zone-member security INTERNET
   !
 </#if>
-<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
+<#if isSecondCell == "true">
 int ${cell_if2}
   zone-member security INTERNET
   !
@@ -601,12 +649,12 @@ int ${cell_if2}
         service-policy PMAP-LEVEL2
 !
 
-      <#if section.wan_cellular1?? && section.wan_cellular1 == "true">
+      <#if isFirstCell == "true">
         interface ${cell_if1}
           service-policy output PMAP-LEVEL1
       </#if>
 
-      <#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
+      <#if isSecondCell == "true">
         interface ${cell_if2}
           service-policy output PMAP-LEVEL1
       </#if>
@@ -619,7 +667,7 @@ int ${cell_if2}
 
 
 <#-- Enable GPS  -->
-<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
+<#if isFirstCell == "true">
 !! controller ${cell_if1}
 !! 	lte gps mode standalone
 !!  lte gps nmea
@@ -637,7 +685,7 @@ interface ${ether_if}
 </#if>
 !
 !
-<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
+<#if isFirstCell == "true">
 interface ${cell_if1}
     ip address negotiated
     ip nat outside
@@ -652,7 +700,7 @@ interface ${cell_if1}
 !
 </#if>
 <#-- ADDED 8 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
+<#if isSecondCell == "true">
 interface ${cell_if2}
     ip address negotiated
     ip nat outside
@@ -722,7 +770,7 @@ ip access-list extended NAT_ACL
      permit ip ${lanNtwk} ${lanWild} any
      permit ip ${nwk_addr} 0.0.0.31 any
 !
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
      match ip address NAT_ACL
      match interface Tunnel2
@@ -731,7 +779,7 @@ route-map RM_Tu2 permit 10
 dialer-list 1 protocol ip permit
 !
 !
-<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
+<#if isFirstCell == "true">
 route-map RM_WAN_ACL permit 10
     match ip address NAT_ACL
     match interface ${cell_if1}
@@ -742,7 +790,7 @@ route-map RM_WAN_ACL2 permit 10
     match interface ${ether_if}
 !
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
+<#if isSecondCell == "true">
 route-map RM_WAN_ACL3 permit 10
     match ip address NAT_ACL
     match interface ${cell_if2}
@@ -751,12 +799,12 @@ route-map RM_WAN_ACL3 permit 10
 
 ip forward-protocol nd
 !
-<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
+<#if isFirstCell == "true">
 ip nat inside source route-map RM_WAN_ACL interface ${cell_if1} overload
 </#if>
 ip nat inside source route-map RM_WAN_ACL2 interface ${ether_if} overload
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
+<#if isSecondCell == "true">
 ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#if>
 
@@ -768,7 +816,7 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
   <#if EthernetPortPriority == 101>
         ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${ether_if} ${PAT['publicPort']}
   <#else>
-     <#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
+     <#if isFirstCell == "true">
       ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${cell_if1} ${PAT['publicPort']}
      </#if>
   </#if>
@@ -777,26 +825,25 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#if>
 
 <#-- remove this route from the bootstrap config to allow failover -->
-<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
+<#if isSecondCell == "true">
 no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
 </#if>
 
 <#-- add IPSLA tracking to allow i/f failover -->
 ip route 0.0.0.0 0.0.0.0 ${ether_if} dhcp ${EthernetPortPriority}
-<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
+<#if isFirstCell == "true">
 ip route 0.0.0.0 0.0.0.0 ${cell_if1} ${Cell1PortPriority} track 7
 </#if>
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
+<#if isSecondCell == "true">
 ip route 0.0.0.0 0.0.0.0 ${cell_if2} 103 track 8
 </#if>
 
 ip route ${umbrella_dns1_ip} 255.255.255.255 dhcp
-<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
+<#if isFirstCell == "true">
 ip route ${umbrella_dns2_ip} 255.255.255.255 ${cell_if1} track 7
 </#if>
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.wan_cellular2?? || section.wan_cellular2 == "true">
+<#if isSecondCell == "true">
 ip route 9.9.9.9 255.255.255.255 ${cell_if2} track 8
 </#if>
 
@@ -805,12 +852,12 @@ ip route 9.9.9.9 255.255.255.255 ${cell_if2} track 8
 <#-- ip route ${umbrella_dns1_ip} 255.255.255.255 Null0 3 -->
 <#-- ip route 8.8.8.8 255.255.255.255 Null0 3 tag 786 -->
 
-<#if !section.wan_cellular1?? || section.wan_cellular1 == "true">
+<#if isFirstCell == "true">
 ip route 1.1.1.1 255.255.255.255 ${cell_if1} 99 track 10
 ip route 8.8.8.8 255.255.255.255 ${cell_if1} tag 786
 </#if>
 
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if isPrimaryHeadEndEnable == "true">
 <#if herIpAddress??>
 ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
 <#if backupHerIpAddress?has_content>
@@ -829,7 +876,7 @@ ip route ${backupHerIpAddress} 255.255.255.255 ${ether_if} dhcp
 </#list>
 </#if>
 !
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if isPrimaryHeadEndEnable == "true">
 ip nat inside source route-map RM_Tu2 interface Tunnel2 overload
 </#if>
 !
@@ -854,7 +901,7 @@ ip access-list extended filter-internet
 
 <#-- ADDED 11 LINES BELOW FOR ADVANCED -->
 <#-- OPTIONALLY remove NAT overload config and config and setup routing over FlexVPN S2SVPN -->
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if isPrimaryHeadEndEnable == "true">
 no ip nat inside source route-map RM_Tu2 interface Tunnel2 overload
 no route-map RM_Tu2 permit 10
 
@@ -866,7 +913,7 @@ interface Tunnel2
 ip access-list standard CLOUD
   permit ${lanNtwk} ${lanWild}
 
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if isPrimaryHeadEndEnable == "true">
 crypto ikev2 authorization policy CVPN
   route set access-list CLOUD
 !
@@ -896,8 +943,8 @@ line vty 0 4
 <#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- Netflow -->
 
-<#if !section.security_netflow?? || section.security_netflow == "true">
-<#if far.netflowCollectorIP??>
+<#if isNetflow == "true">
+<#if netflowCollectorIP?has_content>
  flow record defaultStealthWatch
   match ipv4 protocol
   match ipv4 source address
@@ -913,7 +960,7 @@ line vty 0 4
   collect timestamp sys-uptime last
 
 flow exporter export_Gi0_0_0_-63055531
- destination ${far.netflowCollectorIP}
+ destination ${netflowCollectorIP}
  source Loopback 1
  transport udp 2055
  template data timeout 60
