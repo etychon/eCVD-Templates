@@ -377,7 +377,7 @@ interface Tunnel2
     <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
     <#assign isCellIntTable += ["false"]>
     <#assign EthernetPortPriority = 100+p>
-  <#elseif isWgbEnable?has_content && isWgbEnable == "true"
+  <#elseif isWgbEnable == "true"
         && wgb_if?? && far.wgbPriority?has_content
         && far.wgbPriority == p?string>
     <#assign priorityIfNameTable += [wgb_if]>
@@ -396,6 +396,7 @@ interface Tunnel2
         && far.secondCellularIntPriority == p?string>
     <#assign priorityIfNameTable += [cell_if2]>
     <#assign isTunnelEnabledTable += [far.enableTunnelOverCell2!"false"]>
+    <#assign isCellIntTable += ["true"]>
     <#assign Cell2PortPriority = 100+p>
   </#if>
 </#list>
@@ -413,7 +414,7 @@ interface Tunnel2
     <#-- Config for Cell interface are slightly different -->
     <#if isCellIntTable[p] == "true">
       track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
-      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+10}
+      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
     <#else>
       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${100+p}
     </#if>
