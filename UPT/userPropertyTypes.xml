@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.13        -->
+<!-- Version 1.14        -->
 
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -529,6 +529,7 @@
          <section>WAN>Ethernet</section>
          <required>1</required>
          <validationType>non-empty</validationType>
+         <defaultValue>1</defaultValue>
          <dataType>array</dataType>
          <deviceSpecific>1</deviceSpecific>
          <seedValues>[{ "key": "Provide 'ethernetPriority' per device", "value": "${far.ethernetPriority}" },
@@ -547,7 +548,7 @@
         <section>WAN>Cellular1</section>
         <required>1</required>
         <validationType>non-empty</validationType>
-        <defaultValue>Second</defaultValue>
+        <defaultValue>3</defaultValue>
         <dataType>array</dataType>
         <deviceSpecific>1</deviceSpecific>
         <seedValues>[{ "key": "Provide 'firstCellularIntPriority' per device", "value": "${far.firstCellularIntPriority}" },
@@ -566,6 +567,7 @@
         <section>WAN>Cellular2</section>
         <required>1</required>
         <validationType>non-empty</validationType>
+        <defaultValue>4</defaultValue>
         <dataType>array</dataType>
         <deviceSpecific>1</deviceSpecific>
         <seedValues>[{ "key": "Provide 'secondCellularIntPriority' per device", "value": "${far.secondCellularIntPriority}" },
@@ -584,6 +586,7 @@
            <section>WAN>WGB</section>
            <required>1</required>
            <validationType>non-empty</validationType>
+           <defaultValue>2</defaultValue>
            <dataType>array</dataType>
            <deviceSpecific>1</deviceSpecific>
            <seedValues>[{ "key": "Provide 'wgbPriority' per device", "value": "${far.wgbPriority}" },
@@ -1550,7 +1553,6 @@
 	  <section>Network>QoS</section>
   	  <required>0</required>
   	  <validationType>non-empty</validationType>
-      <defaultValue>IP</defaultValue>
   	  <dataType>array</dataType>
   	  <deviceSpecific>1</deviceSpecific>
    	   <seedValues>[{ "key": "Provide 'qosType' per device", "value": "${far.qosType}" },
@@ -1576,7 +1578,6 @@
 	  <section>Network>QoS</section>
   	  <required>0</required>
   	  <validationType>non-empty</validationType>
-      <defaultValue>IP</defaultValue>
   	  <dataType>array</dataType>
   	  <deviceSpecific>1</deviceSpecific>
    	   <seedValues>[{ "key": "Provide 'qosPriority' per device", "value": "${far.qosPriority}" },
@@ -1610,7 +1611,6 @@
 	  <section>Network>Static Routes</section>
   	  <required>0</required>
   	  <validationType>non-empty</validationType>
-      <defaultValue>IP</defaultValue>
   	  <dataType>array</dataType>
   	  <deviceSpecific>1</deviceSpecific>
    	   <seedValues>[{ "key": "Provide 'nextInterface' per device", "value": "${far.nextInterface}" },
