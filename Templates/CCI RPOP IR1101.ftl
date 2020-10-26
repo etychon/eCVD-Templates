@@ -1,5 +1,5 @@
-<#if far.isRunningIos()>
 <#-- Enable periodic inventory notification every 30 mins to report metrics. -->
+<#if far.isRunningIos()>
     cgna profile cg-nms-periodic
       no active
       interval 30
@@ -173,78 +173,62 @@ ipv6 unicast-routing
 <#-- Virtual Networks-->
 
 <#assign vnNumber = 101>
-<#list far.VirtualNetworks as VN>
-  <#if VN['vnName']?has_content>
-      vrf definition ${VN['vnName']}
-       rd 1:4${vnNumber}
-       !
-       address-family ipv4
-        import ipv4 unicast map SS-NETWORK-TO-VRF
-        route-target export 1:4${vnNumber}
-        route-target import 1:4${vnNumber}
-       exit-address-family
-      !
-      interface Tunnel${vnNumber}
-       description Tunnel for ${VN['vnName']}
-       vrf forwarding ${VN['vnName']}
-       ip address ${VN['vnTunnelLocalIP']} 255.255.255.0
-       no ip redirects
-       ip nhrp map ${VN['vnNHRPip']} ${VN['vnNHRPnbmaIP']}
-       ip nhrp network-id ${vnNumber}
-       ip nhrp nhs ${VN['vnNHRPip']}
-       ip nhrp registration timeout 30
-       tunnel source Loopback${vnNumber}
-       tunnel mode gre multipoint
-      !
-      interface Vlan${vnNumber}
-       vrf forwarding ${VN['vnName']}
-       ip address 172.10.25.1 255.255.255.0
-       ip helper-address 10.10.100.20
-      !
-      router bgp 65550
-       bgp log-neighbor-changes
-       !
-       address-family ipv4 vrf ${VN['vnName']}
-        redistribute connected
-        redistribute static
-        neighbor ${VN['vnNHRPip']} remote-as 65550
-        neighbor ${VN['vnNHRPip']} update-source Tunnel${vnNumber}
-        neighbor ${VN['vnNHRPip']} activate
-       exit-address-family
-       !
-      interface Loopback${vnNumber}
-       description Tunnel${vnNumber} source IP
-       ip address 10.22.22.${vnNumber}
-      !
-      !
-      ip access-list standard FlexVPN_Client_Default_IPv4_Route
-       permit 10.22.22.${vnNumber}
-       permit 10.254.254.${vnNumber}
-      !
-       <#assign vnNumber = vnNumber + 1>
-   </#if>
-</#list>
-
+<#if far.VirtualNetworks?has_content>
+  <#list far.VirtualNetworks as VN>
+    <#if VN['vnName']?has_content>
+        vrf definition ${VN['vnName']}
+        rd 1:4${vnNumber}
+        !
+        address-family ipv4
+          import ipv4 unicast map SS-NETWORK-TO-VRF
+          route-target export 1:4${vnNumber}
+          route-target import 1:4${vnNumber}
+        exit-address-family
+        !
+        interface Tunnel${vnNumber}
+          description Tunnel for ${VN['vnName']}
+          vrf forwarding ${VN['vnName']}
+          ip address ${VN['vnTunnelLocalIP']} 255.255.255.0
+          no ip redirects
+          ip nhrp map ${VN['vnNHRPip']} ${VN['vnNHRPnbmaIP']}
+          ip nhrp network-id ${vnNumber}
+          ip nhrp nhs ${VN['vnNHRPip']}
+          ip nhrp registration timeout 30
+          tunnel source Loopback${vnNumber}
+          tunnel mode gre multipoint
+        !
+        interface Vlan${vnNumber}
+          vrf forwarding ${VN['vnName']}
+          ip address 172.10.25.1 255.255.255.0
+          ip helper-address 10.10.100.20
+        !
+        router bgp 65550
+          bgp log-neighbor-changes
+        !
+          address-family ipv4 vrf ${VN['vnName']}
+            redistribute connected
+            redistribute static
+            neighbor ${VN['vnNHRPip']} remote-as 65550
+            neighbor ${VN['vnNHRPip']} update-source Tunnel${vnNumber}
+            neighbor ${VN['vnNHRPip']} activate
+          exit-address-family
+        !
+        interface Loopback${vnNumber}
+          description Tunnel${vnNumber} source IP
+          ip address 10.22.22.${vnNumber} 255.255.255.255
+        !
+        !
+        ip access-list standard FlexVPN_Client_Default_IPv4_Route
+          permit 10.22.22.${vnNumber}
+          permit 10.254.254.${vnNumber}
+        !
+        <#assign vnNumber = vnNumber + 1>
+    </#if>  
+  </#list>
+</#if>
 !
 !
 !
-!
-!
-!
-!
-!
-!
-!
-!
-crypto pki trustpoint SLA-TrustPoint
- enrollment pkcs12
- revocation-check crl
-!
-crypto pki trustpoint TP-self-signed-49885493
- enrollment selfsigned
- subject-name cn=IOS-Self-Signed-Certificate-49885493
- revocation-check none
- rsakeypair TP-self-signed-49885493
 !
 crypto pki trustpoint LDevID
  enrollment retry count 4
@@ -291,7 +275,6 @@ crypto ikev2 proposal FlexVPN_IKEv2_Proposal_Cert
 crypto ikev2 policy FlexVPN_IKEv2_Policy_Cert
  proposal FlexVPN_IKEv2_Proposal_Cert
 !
-!
 crypto ikev2 profile FlexVPN_IKEv2_Profile_Cert
  match identity remote fqdn CCI-HER-1
  identity local fqdn spoke-18-flexVPN
@@ -302,6 +285,22 @@ crypto ikev2 profile FlexVPN_IKEv2_Profile_Cert
  aaa authorization group cert list FlexVPN_Author FlexVPN_Author_Policy
 !
 crypto ikev2 fragmentation
+!
+crypto ipsec transform-set FlexVPN_IPsec_Transform_Set esp-aes esp-sha-hmac
+ mode transport
+!
+crypto ipsec profile FlexVPN_IPsec_Profile_Cer
+ set transform-set FlexVPN_IPsec_Transform_Set
+ set pfs group14
+ set ikev2-profile FlexVPN_IKEv2_Profile_Cert
+!
+interface Tunnel100
+ ip unnumbered Loopback39
+ ipv6 unnumbered Loopback39
+ tunnel source Cellular0/1/0
+ tunnel destination dynamic
+ tunnel protection ipsec profile FlexVPN_IPsec_Profile_Cer
+
 crypto ikev2 client flexvpn FlexVPN_Client
   peer 1 ${herIpAddress}
   client connect Tunnel100
@@ -314,30 +313,12 @@ controller Cellular 0/3/0
 !
 vlan internal allocation policy ascending
 !
-vlan 1022
+vlan 1022,125,425,225
 lldp run
 !
 !
 !
-!
-!
-!
-!
 crypto isakmp invalid-spi-recovery
-!
-!
-crypto ipsec transform-set FlexVPN_IPsec_Transform_Set esp-aes esp-sha-hmac
- mode transport
-!
-crypto ipsec profile FlexVPN_IPsec_Profile_Cer
- set transform-set FlexVPN_IPsec_Transform_Set
- set pfs group14
- set ikev2-profile FlexVPN_IKEv2_Profile_Cert
-!
-!
-!
-!
-!
 !
 !
 !
@@ -346,19 +327,14 @@ interface Loopback39
  ipv6 address 2001:DB8:BABA:FACE::39/64
  ipv6 enable
 !
-
-interface Tunnel100
- ip unnumbered Loopback39
- ipv6 unnumbered Loopback39
- tunnel source Cellular0/1/0
- tunnel destination dynamic
- tunnel protection ipsec profile FlexVPN_IPsec_Profile_Cer
 !
+<#--
 interface GigabitEthernet0/0/0
  switchport
  switchport access vlan 125
  switchport mode access
- media-type rj45
+ media-type rj45 
+ -->
 !
 interface FastEthernet0/0/1
  switchport access vlan 1022
@@ -393,8 +369,6 @@ interface FastEthernet0/0/4
 <#else>
 	no shutdown
 </#if>
-!
-interface GigabitEthernet0/0/5
 !
 interface Cellular0/1/0
  description Cellular Connection to Firewall Public IP
@@ -432,7 +406,7 @@ ip forward-protocol nd
 ip http server
 ip http authentication local
 ip http secure-server
-ip route 0.0.0.0 0.0.0.0 Cellular0/1/0
+ip route 0.0.0.0 0.0.0.0 Cellular0/1/0 100
 !
 !
 !
