@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR1101 ----- -->
-<#-- ---- Version 1.72 ------------------------ -->
+<#-- ---- Version 1.73 ------------------------ -->
 <#-- ----------------------------------------- -->
 
 <#compress>
@@ -78,7 +78,13 @@
   <#-- TODO: this will need to change to support LTE modules
   with no GPS support. Use far...isGpsEnabled toggle in updated
   UPT version 1.14 -->
-  <#assign isGpsEnabled = "true">
+  <#if far.cellFirmwareVersion1?has_content && far.cellFirmwareVersion1?starts_with("SWI")>
+    <#-- taking wild guess that if Sierra Wireless firmware it
+       probably has GPS capability. -->
+    <#assign isGpsEnabled = "true">
+  <#else>
+    <#assign isGpsEnabled = "false">
+  </#if>
 <#else>
     <#assign isFirstCell = "false">
 </#if>
@@ -99,43 +105,38 @@
 <#-- Network Menu -->
 
 <#-- Security Menu -->
+<#assign isUmbrella = "false">
 <#if section.security_umbrella?? && section.security_umbrella == "true">
   <#assign isUmbrella = "true">
   <#if far.umbrellaToken?has_content>
     <#assign UmbrellaToken = "${far.umbrellaToken}">
   </#if>
-<#else>
-  <#assign isUmbrella = "false">
 </#if>
 
+<#assign isNetFlow = "false">
 <#if section.security_netflow?? && section.security_netflow == "true">
   <#assign isNetFlow = "true">
   <#if far.netflowCollectorIP?has_content>
     <#assign netflowCollectorIP = far.netflowCollectorIP>
   </#if>
-<#else>
-  <#assign isNetFlow = "false">
 </#if>
 
 <#-- VPN Settings Menu -->
+<#assign isPrimaryHeadEndEnable = "false">
+<#assign isSecondaryHeadEndEnable = "false">
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
-  <#assign isPrimaryHeadEndEnable = "true">
   <#if far.herIpAddress?has_content && far.herPsk?has_content>
     <#assign herIpAddress 	= "${far.herIpAddress}">
     <#assign herPsk			    = "${far.herPsk}">
+    <#assign isPrimaryHeadEndEnable = "true">
   </#if>
   <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
-    <#assign isSecondaryHeadEndEnable = "false">
-    <#if far.backupHerIpAddress??>
+    <#if far.backupHerIpAddress?has_content && far.backupHerPsk?has_content>
       <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
       <#assign backupHerPsk	= "${far.backupHerPsk}">
+      <#assign isSecondaryHeadEndEnable = "true">
     </#if>
-  <#else>
-    <#assign isSecondaryHeadEndEnable = "false">
   </#if>
-<#else>
-  <#assign isPrimaryHeadEndEnable = "false">
-  <#assign isSecondaryHeadEndEnable = "false">
 </#if>
 
 <#-- Device Settings Menu -->
@@ -423,15 +424,24 @@ interface Tunnel2
     <#if isCellIntTable[p] == "true">
       track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
+      ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
     <#else>
       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${100+p}
+      ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
     </#if>
+    ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
     ip sla ${p+40}
       icmp-echo ${ipslaDestIPaddress[p]} source-interface ${priorityIfNameTable[p]}
       frequency <#if isCellIntTable[p] == "true">50<#else>10</#if>
     !
+    !
     ip sla schedule ${p+40} life forever start-time now
     track ${p+40} ip sla ${p+40} reachability
+    event manager applet failover_${p+40}
+      event track ${p+40} state any
+      action 0.1 syslog msg "${priorityIfNameTable[p]} connectivity change, clearing NAT translations"
+      action 0.2 cli command "enable"
+      action 1.0 cli command "clear ip nat translation *"
     int ${priorityIfNameTable[p]}
       zone-member security INTERNET
       ip nat outside
@@ -667,10 +677,6 @@ int ${cell_if2}
 
 <#-- --- END OF QoS CONFIG ----------------------------- -->
 
-<#-- ---------------------------------------------- -->
-<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
-<#-- ---------------------------------------------- -->
-
 <#-- Enable GPS  -->
 <#if isFirstCell == "true" && isGpsEnabled?has_content && isGpsEnabled == "true">
 controller ${cell_if1}
@@ -706,12 +712,6 @@ interface Vlan1
   </#if>
 !
 !
-
-<#-- ------------------------------------------ -->
-<#-- ------------------------------------------ -->
-<#-- ------------------------------------------ -->
-
-
 <#-- enabling/disabling of ethernet ports -->
 
 interface FastEthernet0/0/1
@@ -782,7 +782,6 @@ route-map RM_WAN_ACL3 permit 10
     match interface ${cell_if2}
 </#if>
 !
-
 ip forward-protocol nd
 !
 <#if isFirstCell == "true">
@@ -796,7 +795,7 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 
 <#-- Use default i/f to set PAT -->
 
-<#if far.portForwarding??>
+<#if far.portForwarding?has_content>
 <#list far.portForwarding as PAT>
   <#if PAT['protocol']?has_content>
   <#if EthernetPortPriority == 101>
@@ -811,50 +810,20 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#if>
 
 <#-- remove this route from the bootstrap config to allow failover -->
-<#if isSecondCell == "true">
-no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
-</#if>
-
-<#-- add IPSLA tracking to allow i/f failover -->
-ip route 0.0.0.0 0.0.0.0 ${ether_if} dhcp ${EthernetPortPriority}
 <#if isFirstCell == "true">
-ip route 0.0.0.0 0.0.0.0 ${cell_if1} ${Cell1PortPriority} track 7
-</#if>
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if isSecondCell == "true">
-ip route 0.0.0.0 0.0.0.0 ${cell_if2} 103 track 8
+  no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
 </#if>
 
-ip route ${umbrella_dns1_ip} 255.255.255.255 dhcp
-<#if isFirstCell == "true">
-ip route ${umbrella_dns2_ip} 255.255.255.255 ${cell_if1} track 7
-</#if>
-<#if isSecondCell == "true">
-ip route 9.9.9.9 255.255.255.255 ${cell_if2} track 8
-</#if>
-
-
-<#-- ip route ${umbrella_dns2_ip} 255.255.255.255 Null0 3 -->
-<#-- ip route ${umbrella_dns1_ip} 255.255.255.255 Null0 3 -->
-<#-- ip route 8.8.8.8 255.255.255.255 Null0 3 tag 786 -->
-
-<#if isFirstCell == "true">
-ip route 1.1.1.1 255.255.255.255 ${cell_if1} 99 track 10
-ip route 8.8.8.8 255.255.255.255 ${cell_if1} tag 786
-</#if>
-
-<#if isPrimaryHeadEndEnable == "true">
-<#if herIpAddress??>
-ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
-<#if backupHerIpAddress?has_content>
-ip route ${backupHerIpAddress} 255.255.255.255 ${ether_if} dhcp
-</#if>
-</#if>
+<#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
+  ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
+  <#if isSecondaryHeadEndEnable == "true" && backupHerIpAddress?has_content>
+    ip route ${backupHerIpAddress} 255.255.255.255 ${ether_if} dhcp
+  </#if>
 </#if>
 
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
 <#-- User defined static routes with either next hop or egress interface -->
-<#if far.staticRoute??>
+<#if far.staticRoute?has_content>
 <#list far.staticRoute as SR>
   <#if SR['destNetwork']?has_content>
       ip route ${SR['destNetwork']} ${SR['destNetMask']} ${SR['nextInterface']}
@@ -877,11 +846,11 @@ ip access-list extended filter-internet
  permit icmp any any packet-too-big
  permit icmp any any ttl-exceeded
  permit udp any eq bootps host 255.255.255.255 eq bootpc
-<#if primaryHerIpAddress?has_content>
+<#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
  permit esp host ${herIpAddress} any
-</#if>
-<#if backupHerIpAddress?has_content>
-  permit esp host ${backupHerIpAddress} any
+  <#if isSecondaryHeadEndEnable == "true" && backupHerIpAddress?has_content>
+    permit esp host ${backupHerIpAddress} any
+  </#if>
 </#if>
 !
 
@@ -925,12 +894,15 @@ line vty 0 4
     length 0
     transport input ssh
 
+
+<#-- ---------------------------------------------- -->
+<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
+<#-- ---------------------------------------------- -->
 !
 <#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- Netflow -->
 
-<#if isNetflow == "true">
-<#if netflowCollectorIP?has_content>
+<#if isNetflow?has_content && isNetflow == "true" && netflowCollectorIP?has_content>
  flow record defaultStealthWatch
   match ipv4 protocol
   match ipv4 source address
@@ -961,49 +933,34 @@ interface ${ether_if}
 !
 !
 </#if>
-</#if>
 
-<#-- Improve WAN failover performance -->
-event manager applet Eth-to-cell-failover
- event track 30 state any
- action 0.1 syslog msg "Gig0/0/0 connecitivity change. Clearing NAT translations."
- action 0.2 cli command "enable"
- action 1.0 cli command "clear ip nat translation *"
-event manager applet Cell-to-eth-failover
- event track 40 state any
- action 0.1 syslog msg "Cell0/1/0 connectivity change. Clearing NAT translations."
- action 0.2 cli command "enable"
- action 1.0 cli command "clear ip nat translation *"
-<#-- ADDED 5 LINES BELOW FOR ADVANCED -->
-event manager applet Cell2-to-eth-failover
- event track 41 state any
- action 0.1 syslog msg "Cell0/3/0 connectivity change. Clearing NAT translations."
- action 0.2 cli command "enable"
- action 1.0 cli command "clear ip nat translation *"
+<#-- ------------------------------------------ -->
+<#-- ------------------------------------------ -->
+<#-- ------------------------------------------ -->
+
 
 <#-- Set APN -->
 
-<#if APN1?has_content>
-event manager applet change_apn
-event timer countdown time 10
-action 5 syslog msg "Changing APN Profile"
-action 10 cli command "enable"
-action 15 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confirm"
-action 20 cli command "y"
+<#if isFirstCell == "true" && APN1?has_content>
+  event manager applet change_apn_cell1
+  event timer countdown time 10
+  action 5 syslog msg "Changing APN Profile"
+  action 10 cli command "enable"
+  action 15 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confirm"
+  action 20 cli command "y"
 </#if>
 !
-<#-- ADDED 5 LINES BELOW FOR ADVANCED -->
-<#if APN2?has_content>
-event manager applet change_apn2
-event timer countdown time 10
-action 5 syslog msg "Changing APN Profile for Cellular0/3/0"
-action 10 cli command "enable"
-action 15 cli command "Cellular 0/3/0 lte profile create 1 ${APN2}" pattern "confirm"
-action 20 cli command "y"
+<#if isSecondCell == "true" && APN2?has_content>
+  event manager applet change_apn_cell2
+  event timer countdown time 10
+  action 5 syslog msg "Changing APN Profile for Cellular0/3/0"
+  action 10 cli command "enable"
+  action 15 cli command "${cell_if2} lte profile create 1 ${APN2}" pattern "confirm"
+  action 20 cli command "y"
 </#if>
 !
 
-<#-- ------------------------------ -->
+<#-- -- LOGGING ONLY ------------------------- -->
 
 <#if far.logAllVariables?has_content && far.logAllVariables == "true">
   event manager applet ListAllParams
