@@ -451,6 +451,21 @@
   </propertyType>
 
   <propertyType>
+      <name>isGpsEnabled</name>
+      <displayName>Enable GPS on Primary Cellular Radio</displayName>
+      <description>Enable GPS on Primary Cellular Radio</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN>Cellular1</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>false</defaultValue>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'isGpsEnabled' per device", "value": "${far.isGpsEnabled}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
       <name>isSecondCell</name>
       <displayName>Enable Secondary Cellular Radio</displayName>
       <description>Enable Secondary Cellular Radio</description>

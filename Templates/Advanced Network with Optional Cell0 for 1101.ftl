@@ -75,6 +75,10 @@
   <#if far.apn1?has_content>
     <#assign APN1			= "${far.apn1}">
   </#if>
+  <#-- TODO: this will need to change to support LTE modules
+  with no GPS support. Use far...isGpsEnabled toggle in updated
+  UPT version 1.14 -->
+  <#assign isGpsEnabled = "true">
 <#else>
     <#assign isFirstCell = "false">
 </#if>
@@ -430,6 +434,11 @@ interface Tunnel2
     track ${p+40} ip sla ${p+40} reachability
     int ${priorityIfNameTable[p]}
       zone-member security INTERNET
+      ip nat outside
+      no shutdown
+      <#if isUmbrella == "true">
+           umbrella out
+      </#if>
     <#if isTunnelEnabledTable[p] == "true">
       crypto ikev2 client flexvpn Tunnel2
       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
@@ -569,16 +578,12 @@ int ${cell_if2}
 </#if>
 !
 
-<#-- ---------------------------------------------- -->
-<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
-<#-- ---------------------------------------------- -->
-
 <#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- QOS config -->
 
 <#if section.network_qos?has_content && section.network_qos == "true">
-  <#if far.qosBandwidth?has_content && far.qosBandwidth?is_number>
-    <#assign QOSbw = far.qosBandwidth>
+  <#if far.qosBandwidth?has_content>
+    <#assign QOSbw = far.qosBandwidth?number>
 
     <#if far.qos?has_content>
       class-map match-any CLASS-GOLD
@@ -662,69 +667,50 @@ int ${cell_if2}
 
 <#-- --- END OF QoS CONFIG ----------------------------- -->
 
-<#-- ------------------------------------------ -->
-
-
+<#-- ---------------------------------------------- -->
+<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
+<#-- ---------------------------------------------- -->
 
 <#-- Enable GPS  -->
-<#if isFirstCell == "true">
-!! controller ${cell_if1}
-!! 	lte gps mode standalone
-!!  lte gps nmea
+<#if isFirstCell == "true" && isGpsEnabled?has_content && isGpsEnabled == "true">
+controller ${cell_if1}
+ 	lte gps mode standalone
+  lte gps nmea
 </#if>
-!
-
-interface ${ether_if}
-    ip dhcp client route track 30
-    ip address dhcp
-    no shutdown
-    ip nat outside
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.security_umbrella?? || section.security_umbrella == "true">
-     umbrella out
-</#if>
-!
 !
 <#if isFirstCell == "true">
 interface ${cell_if1}
     ip address negotiated
-    ip nat outside
     dialer in-band
     dialer idle-timeout 0
     dialer-group 1
     pulse-time 1
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.security_umbrella?? || section.security_umbrella == "true">
-     umbrella out
 </#if>
 !
-</#if>
-<#-- ADDED 8 LINES BELOW FOR ADVANCED -->
 <#if isSecondCell == "true">
 interface ${cell_if2}
     ip address negotiated
-    ip nat outside
     dialer in-band
     dialer idle-timeout 0
     dialer-group 1
     pulse-time 1
-<#if !section.security_umbrella?? || section.security_umbrella == "true">
-    umbrella out
 </#if>
 !
-</#if>
-
 interface Vlan1
     ip address ${far.lanIPAddress} ${far.lanNetmask}
     ip nbar protocol-discovery
     ip nat inside
     ip verify unicast source reachable-via rx
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-<#if !section.security_umbrella?? || section.security_umbrella == "true">
-     umbrella in my_tag
-</#if>
+  <#if isUmbrella == "true">
+       umbrella in my_tag
+  </#if>
 !
 !
+
+<#-- ------------------------------------------ -->
+<#-- ------------------------------------------ -->
+<#-- ------------------------------------------ -->
+
 
 <#-- enabling/disabling of ethernet ports -->
 
@@ -1019,28 +1005,30 @@ action 20 cli command "y"
 
 <#-- ------------------------------ -->
 
-event manager applet ListAllParams
-<#assign i = 100>
-<#list far as key, value>
-  <#if value??>
-    <#if value?is_string>
-      action ${i} cli command "${key} = ${value}"
-      <#assign i = i + 1>
-    <#elseif value?is_sequence>
-        <#assign subi = 0>
-      <#list value as val>
-        <#list val as subkey, subvalue>
-        action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+<#if far.logAllVariables?has_content && far.logAllVariables == "true">
+  event manager applet ListAllParams
+  <#assign i = 100>
+  <#list far as key, value>
+    <#if value??>
+      <#if value?is_string>
+        action ${i} cli command "${key} = ${value}"
         <#assign i = i + 1>
+      <#elseif value?is_sequence>
+          <#assign subi = 0>
+        <#list value as val>
+          <#list val as subkey, subvalue>
+          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+          <#assign i = i + 1>
+          </#list>
+          <#assign subi = subi + 1>
         </#list>
-        <#assign subi = subi + 1>
-      </#list>
+      </#if>
+    <#elseif !value??>
+        action ${i} cli command "${key} = *null*"
+        <#assign i = i + 1>
     </#if>
-  <#elseif !value??>
-      action ${i} cli command "${key} = *null*"
-      <#assign i = i + 1>
-  </#if>
-</#list>
+  </#list>
+</#if>
 
 </#compress>
 
