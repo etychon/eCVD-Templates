@@ -72,14 +72,18 @@
 
 <#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
   <#assign isFirstCell = "true">
-  <#assign APN1			= "${far.apn1}">
+  <#if far.apn1?has_content>
+    <#assign APN1			= "${far.apn1}">
+  </#if>
 <#else>
     <#assign isFirstCell = "false">
 </#if>
 
 <#if section.wan_cellular2?has_content && section.wan_cellular2 == "true">
   <#assign isSecondCell = "true">
-  <#assign APN2			= "${far.apn2}">
+  <#if far.apn2?has_content>
+    <#assign APN2			= "${far.apn2}">
+  </#if>
 <#else>
   <#assign isSecondCell = "false">
 </#if>
@@ -573,8 +577,8 @@ int ${cell_if2}
 <#-- QOS config -->
 
 <#if section.network_qos?has_content && section.network_qos == "true">
-  <#if far.qosBandwidth?has_content>
-    <#assign QOSbw = far.qosBandwidth?number>
+  <#if far.qosBandwidth?has_content && far.qosBandwidth?is_number>
+    <#assign QOSbw = far.qosBandwidth>
 
     <#if far.qos?has_content>
       class-map match-any CLASS-GOLD
@@ -586,6 +590,7 @@ int ${cell_if2}
           </#if>
         </#if>
       </#list>
+!
 !
       class-map match-any CLASS-SILVER
       <#list far.qos as QOS>
@@ -614,54 +619,48 @@ int ${cell_if2}
         </#if>
       </#list>
 !
-      policy-map PMAP-LEVEL3
+      policy-map SUB-CLASS-SILVER-BRONZE
         class CLASS-SILVER
-        <#-- calculate based on 37.5% of SILVER-BRONZE bandwidth, units of Kbps -->
-        <#assign qosbwkb = QOSbw * 0.375>
+        <#-- calculate based on 40% of upstream bandwidth, in kbps -->
+        <#assign qosbwkb = QOSbw * 0.40>
         bandwidth ${qosbwkb?int?c}
 !
         class CLASS-BRONZE
-        <#-- calculate based on 62.5% of SILVER-BRONZE bandwidth, units of Kbps -->
-        <#assign qosbwkb = QOSbw * 0.625>
-          bandwidth ${qosbwkb?int?c}
+        <#-- calculate based on 50% of upstream bandwidth, in kbps -->
+        <#assign qosbwkb = QOSbw * 0.50>
+        bandwidth ${qosbwkb?int?c}
 !
-      policy-map PMAP-LEVEL2
+      policy-map CELL_WAN_QOS
         class CLASS-GOLD
-        priority 100
+          <#-- kbps.  10% of user entered upstream bandwidth -->
+          <#assign qosbwkb = QOSbw * 0.10>
+          priority ${qosbwkb?int?c}
         class CLASS-SILVER-BRONZE
-        <#-- calculate based on 25% of total upstream throughput, units of Kbps -->
-          <#assign qosbwkb = QOSbw * 0.25>
-          bandwidth ${qosbwkb?int?c}
-          <#-- calculate based on 25% of total upstream throughput units of bits per second-->
-          <#assign qbw = QOSbw * 0.25 * 1000>
+          <#-- calculate based on 90% of total upstream in bps -->
+          <#assign qbw = QOSbw * 0.90 * 1000>
           shape average ${qbw?int?c}
-
-      service-policy PMAP-LEVEL3
+          bandwidth remaining ratio 7
+          service-policy SUB-CLASS-SILVER-BRONZE
         class class-default
-        fair-queue
-        random-detect dscp-based
-!
-      policy-map PMAP-LEVEL1
-        class class-default
-        <#-- input value from user based on real-world upstream throughput. Units of bits per second -->
-        bandwidth ${QOSbw}
-        <#assign qbw = QOSbw * 1000>
-        shape average ${qbw?int?c}
-        service-policy PMAP-LEVEL2
-!
+          fair-queue
+          random-detect dscp-based
+          bandwidth remaining ratio 3
 
-      <#if isFirstCell == "true">
+      <#if isFirstCell?has_content && isFirstCell == "true">
         interface ${cell_if1}
-          service-policy output PMAP-LEVEL1
+          service-policy output CELL_WAN_QOS
       </#if>
 
-      <#if isSecondCell == "true">
+      <#if isSecondCell?has_content && isSecondCell == "true">
         interface ${cell_if2}
-          service-policy output PMAP-LEVEL1
+          service-policy output CELL_WAN_QOS
       </#if>
+
     </#if>
   </#if>
 </#if>
+
+<#-- --- END OF QoS CONFIG ----------------------------- -->
 
 <#-- ------------------------------------------ -->
 
