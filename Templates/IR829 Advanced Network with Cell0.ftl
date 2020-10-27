@@ -1,4 +1,4 @@
-<#-- ---- Begin eCVD template for IR1101 -----
+<#-- ---- Begin eCVD template for IR829 -----
      ---- Version 1.74 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
@@ -49,7 +49,6 @@
     far.IcmpReachableIPaddress2!"4.2.2.2",
     far.IcmpReachableIPaddress3!"9.9.9.10",
     far.IcmpReachableIPaddress4!"9.9.9.11"]>
-
 
 <#-- Interface Menu -->
 <#-- assign GigEthernet1_enabled = far..gigEthernet1!"true" -->
@@ -383,11 +382,6 @@ interface Tunnel2
 </#if>
 </#if>
 
-<#-- --------------------------------------- -->
-<#-- --------------------------------------- -->
-<#-- --------------------------------------- -->
-
-
 <#-- interface priorities -->
 
 <#list 1..4 as p>
@@ -467,6 +461,11 @@ interface Tunnel2
     </#if>
   </#list>
 </#if>
+
+<#-- --------------------------------------- -->
+<#-- --------------------------------------- -->
+<#-- --------------------------------------- -->
+
 
 <#-- Umbrella DNS -->
 <#if !section.security_umbrella?? || section.security_umbrella == "true">
@@ -726,42 +725,37 @@ interface Vlan1
 !
 <#-- enabling/disabling of ethernet ports -->
 
-interface FastEthernet0/0/1
-<#if FastEthernet1_enabled != "true">
+interface GigabitEthernet1
+<#if isEthernetEnable != "true">
     shutdown
 <#else>
+  description UPLINK
 	no shutdown
 </#if>
 !
-interface FastEthernet0/0/2
-<#if FastEthernet2_enabled != "true">
+interface GigabitEthernet2
+<#if GigEthernet2_enabled != "true">
     shutdown
 <#else>
+  description SUBTENDED NETWORK
 	no shutdown
 </#if>
 !
-interface FastEthernet0/0/3
-<#if FastEthernet3_enabled != "true">
+interface GigabitEthernet3
+<#if GigEthernet3_enabled != "true">
     shutdown
 <#else>
+  description SUBTENDED NETWORK
 	no shutdown
 </#if>
 !
-interface FastEthernet0/0/4
-<#if FastEthernet4_enabled != "true">
+interface GigabitEthernet4
+<#if GigEthernet4_enabled != "true">
     shutdown
 <#else>
+  description SUBTENDED NETWORK
 	no shutdown
 </#if>
-
-interface Async0/2/0
-    no ip address
-    encapsulation scada
-!
-
-
-<#-- Enable IOx -->
-iox
 
 <#-- Enable NAT and routing -->
 ip access-list extended NAT_ACL
@@ -888,13 +882,8 @@ crypto ikev2 authorization policy CVPN
 
 <#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- Reverse telnet to serial port at TCP port 2050 -->
-
-interface Async0/2/0
-  no ip address
-  encapsulation relay-line
 !
-line 0/2/0
-  transport input telnet
+line console 0
   transport output none
   databits 8
   parity none
@@ -906,11 +895,6 @@ line vty 0 4
     length 0
     transport input ssh
 
-
-<#-- ---------------------------------------------- -->
-<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
-<#-- ---------------------------------------------- -->
-!
 <#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- Netflow -->
 
