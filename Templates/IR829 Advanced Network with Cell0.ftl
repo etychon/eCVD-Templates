@@ -11,17 +11,21 @@
 <#-- extract PID and SN from EID - ie. IR1101-K9+FCW23510HKN -->
 <#assign sublist 		= "${far.eid}"?split("+")[0..1]>
 <#assign pid = sublist[0]>
-<#assign model = pid[0..5]>
+<#assign model = pid[0..4]>
 <#assign sn = sublist[1]>
 
-<#if pid != "IR1101-K9" && pid != "IR1101-A-K9">
-  ${provisioningFailed("This template is for IR1101 and does not support ${pid}")}
+<#if ! pid?starts_with("IR829")>
+  ${provisioningFailed("This template is for IR829 and does not support ${pid}")}
 </#if>
 
 <#-- PLATFORM SPECIFIC VARIABLES -->
-<#assign ether_if = "GigabitEthernet 0/0/0">
-<#assign cell_if1 = "Cellular 0/1/0">
-<#assign cell_if2 = "Cellular 0/3/0">
+<#assign ether_if = "vlan10">
+<#if pid?contains("2LTE")>
+  <#assign cell_if1 = "Cellular 0/0">
+  <#assign cell_if2 = "Cellular 1/0">
+<#else>
+  <#assign cell_if1 = "Cellular 0">
+</#if>
 <#assign wgb_if = "Vlan 50">
 
 <#-- TEMPLATE CONSTANTS -->
@@ -46,13 +50,12 @@
     far.IcmpReachableIPaddress3!"9.9.9.10",
     far.IcmpReachableIPaddress4!"9.9.9.11"]>
 
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
 
-<#-- Interface Menu - which Ethernet interfaces are enabled? -->
-<#assign FastEthernet1_enabled = far.fastEthernet1!"true">
-<#assign FastEthernet2_enabled = far.fastEthernet2!"true">
-<#assign FastEthernet3_enabled = far.fastEthernet3!"true">
-<#assign FastEthernet4_enabled = far.fastEthernet4!"true">
+<#-- Interface Menu -->
+<#-- assign GigEthernet1_enabled = far..gigEthernet1!"true" -->
+<#assign GigEthernet2_enabled = far.gigEthernet2!"true">
+<#assign GigEthernet3_enabled = far.gigEthernet3!"true">
+<#assign GigEthernet4_enabled = far.gigEthernet4!"true">
 
 <#-- Allows the template to prompt for "admin" password.
      IoTOC will generate one by default during claim but
@@ -78,16 +81,6 @@
   <#assign isFirstCell = "true">
   <#if far.apn1?has_content>
     <#assign APN1			= "${far.apn1}">
-  </#if>
-  <#-- TODO: this will need to change to support LTE modules
-  with no GPS support. Use far...isGpsEnabled toggle in updated
-  UPT version 1.14 -->
-  <#if far.cellFirmwareVersion1?has_content && far.cellFirmwareVersion1?starts_with("SWI")>
-    <#-- taking wild guess that if Sierra Wireless firmware it
-       probably has GPS capability. -->
-    <#assign isGpsEnabled = "true">
-  <#else>
-    <#assign isGpsEnabled = "false">
   </#if>
 <#else>
     <#assign isFirstCell = "false">
@@ -277,8 +270,6 @@ service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
 service call-home
-platform qfp utilization monitor load 80
-no platform punt-keepalive disable-kernel-core
 !
 <#-- #TODO We may need to disable logging console later in production -->
 <#-- no logging console -->
@@ -391,6 +382,11 @@ interface Tunnel2
 !
 </#if>
 </#if>
+
+<#-- --------------------------------------- -->
+<#-- --------------------------------------- -->
+<#-- --------------------------------------- -->
+
 
 <#-- interface priorities -->
 

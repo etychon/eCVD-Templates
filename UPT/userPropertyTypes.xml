@@ -961,7 +961,7 @@
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <section>Device Settings>Host</section>
   	  <required>0</required>
-	 <sectionLevelInTree>1</sectionLevelInTree>
+	    <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>208.67.222.222</defaultValue>
   	  <validationType>non-empty</validationType>
   	  <dataType>string</dataType>
@@ -1594,7 +1594,7 @@
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <section>Network>Static Routes</section>
   	  <required>0</required>
-	  <sectionLevelInTree>1</sectionLevelInTree>
+	    <sectionLevelInTree>1</sectionLevelInTree>
   	  <validationType>non-empty</validationType>
   	  <dataType>table</dataType>
   	  <deviceSpecific>1</deviceSpecific>
