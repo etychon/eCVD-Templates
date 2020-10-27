@@ -31,8 +31,28 @@
 <#assign FastEthernet4 = "${far.fastEthernet4}">
 
 <#-- WAN Menu -->
-<#if far.apn?has_content>
-<#assign APN			= "${far.apn}">
+<#if section.wan_ethernet?has_content && section.wan_ethernet == "true">
+  <#assign isEthernetEnable = "true">
+<#else>
+  <#assign isEthernetEnable = "false">
+</#if>
+
+<#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
+  <#assign isFirstCell = "true">
+  <#if far.apn1?has_content>
+    <#assign APN1			= "${far.apn1}">
+  </#if>
+<#else>
+    <#assign isFirstCell = "false">
+</#if>
+
+<#if section.wan_cellular2?has_content && section.wan_cellular2 == "true">
+  <#assign isSecondCell = "true">
+  <#if far.apn2?has_content>
+    <#assign APN2			= "${far.apn2}">
+  </#if>
+<#else>
+  <#assign isSecondCell = "false">
 </#if>
 
 <#-- LAN Menu -->
@@ -40,28 +60,38 @@
 <#assign lanNet 	= "${far.lanNetmask}"?split(".")>
 
 <#-- VPN Settings Menu -->
-<#assign herIpAddress 	= "${far.herIpAddress}">
-<#assign herPsk			= "${far.herPsk}">
+<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+  <#assign herIpAddress 	= "${far.herIpAddress}">
+  <#assign herPsk			= "${far.herPsk}">
+  <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+    <#assign isBackupHer	= "true">
+    <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
+    <#assign backupHerPsk	= "${far.backupHerPsk}">
+  <#else>
+    <#assign isBackupHer = "false">
+  </#if>
+</#if>
 
 <#-- Device Settings Menu -->
 <#if far.localDomainName?has_content>
-<#assign domainName = "${far.localDomainName}">
+  <#assign domainName = "${far.localDomainName}">
 <#else>
-<#assign domainName = "local">
+  <#assign domainName = "local">
 </#if>
+
 <#-- Assign Umbrella DNS servers for additional Security -->
 <#assign DNSIP		= "208.67.222.222 208.67.220.220">
 
 <#if far.clockTZ?has_content>
-<#assign clockTZ 	= "${far.clockTZ}">
+  <#assign clockTZ 	= "${far.clockTZ}">
 <#else>
-<#assign clockTZ	= "edt">
+  <#assign clockTZ	= "edt">
 </#if>
 <#-- assign clockDST	= "${far.clockDST}"--> 
 <#if far.ntpIP?has_content>
-<#assign ntpIP 		= "${far.ntpIP}">
+  <#assign ntpIP 		= "${far.ntpIP}">
 <#else>
-<#assign ntpIP		= "time.nist.gov">
+  <#assign ntpIP		= "time.nist.gov">
 </#if>
   
 <#-- Calculate Netmasks -->
@@ -111,7 +141,7 @@
 
 <#assign netid=[]>
 <#list netid_bit?chunk(8) as row> <#assign num=0 pow=1> <#list row as bit> <#assign num=num+pow*bit?number pow=pow*2> </#list>
-<#assign netid=netid+[num]>
+  <#assign netid=netid+[num]>
 </#list>
 
 <#--Network Address-->
@@ -156,7 +186,8 @@ no aaa new-model
 !
 ip host cci-fnd-oracle.cimconccibgl.cisco.com 10.10.100.90
 ip host rsaca.cimconccibgl.cisco.com 172.17.70.10
-no ip domain lookup
+<#-- removed next line, it kills rainier connection-->
+<#-- no ip domain lookup-->
 ip domain name ${domainName}
 !
 !
@@ -406,7 +437,23 @@ ip forward-protocol nd
 ip http server
 ip http authentication local
 ip http secure-server
-ip route 0.0.0.0 0.0.0.0 Cellular0/1/0 100
+
+<#-- remove this route from the bootstrap config to allow failover -->
+no ip route 0.0.0.0 0.0.0.0 ${cell_if} 100
+   
+<#-- add IPSLA tracking to allow i/f failover -->   
+ip route 0.0.0.0 0.0.0.0 ${ether_if} dhcp 102
+ip route 0.0.0.0 0.0.0.0 ${cell_if} 101
+
+ip route 208.67.222.222 255.255.255.255 dhcp
+ip route 208.67.220.220 255.255.255.255 dhcp
+!
+<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+  ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
+  <#if backupHerIpAddress?has_content>
+    ip route ${backupHerIpAddress} 255.255.255.255 ${ether_if} dhcp
+  </#if>
+</#if>  
 !
 !
 !
