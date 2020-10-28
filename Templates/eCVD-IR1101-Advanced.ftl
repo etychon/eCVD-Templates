@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR1101 -----
-     ---- Version 1.74 -----------------------
+     ---- Version 1.75 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -76,7 +76,7 @@
 
 <#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
   <#assign isFirstCell = "true">
-  <#if far.apn1?has_content>
+  <#if far.apn1?has_content && far.apn1 != "null">
     <#assign APN1			= "${far.apn1}">
   </#if>
   <#-- TODO: this will need to change to support LTE modules
@@ -95,7 +95,7 @@
 
 <#if section.wan_cellular2?has_content && section.wan_cellular2 == "true">
   <#assign isSecondCell = "true">
-  <#if far.apn2?has_content>
+  <#if far.apn2?has_content && far.apn2 != "null">
     <#assign APN2			= "${far.apn2}">
   </#if>
 <#else>
@@ -460,6 +460,10 @@ interface Tunnel2
       action 1.0 cli command "clear ip nat translation *"
     int ${priorityIfNameTable[p]}
       zone-member security INTERNET
+      <#if isCellIntTable[p] != "true">
+        ip dhcp client route track ${p+40}
+        ip address dhcp
+      </#if>
       ip nat outside
       no shutdown
       <#if isUmbrella == "true">
