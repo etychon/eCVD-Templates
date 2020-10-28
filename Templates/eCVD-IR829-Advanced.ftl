@@ -26,7 +26,10 @@
 <#else>
   <#assign cell_if1 = "Cellular 0">
 </#if>
-<#assign wgb_if = "Vlan 50">
+<#assign cell_if1_contr = "Cellular 0">
+<#assign isGpsEnabled = "true">
+<#assign wgb_vlan = "50">
+<#assign wgb_if = "Vlan${wgb_vlan}">
 
 <#-- TEMPLATE CONSTANTS -->
 <#assign umbrella_dns1_ip = "208.67.222.222">
@@ -148,6 +151,12 @@
 <#assign dns1 = far.lanDNSIPAddress1!umbrella_dns1_ip>
 <#assign dns2 = far.lanDNSIPAddress2!umbrella_dns2_ip>
 <#assign DNSIP		= "${dns1} ${dns2}">
+
+<#if far.ignition?has_content && far.ignition == "true">
+  <#assign ignition 	= "true">
+<#else>
+  <#assign ignition 	= "false">
+</#if>
 
 <#-- Setting up time zone settings -->
 <#if far.clockTZ?has_content>
@@ -293,7 +302,7 @@ service call-home
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
-<#-- ip name-server ${DNSIP} -->
+ip name-server ${DNSIP}
 ip domain name ${domainName}
 
 <#-- Exclude the first 5 IP addresses of the LAN -->
@@ -308,6 +317,13 @@ ip dhcp pool subtended
     default-router ${far.lanIPAddress}
     dns-server ${DNSIP}
     lease 0 0 10
+!
+vlan 50
+!
+interface ${wgb_if}
+  ip address dhcp
+  ip nat outside
+  ip virtual-reassembly in
 !
 <#-- PLACEHOLDER AS THIS IS NOT SUPPORTED YET IN UPT -->
 <#-- if far..lanIPAddressDHCPexcludeRangeStart?? && far..lanIPAddressDHCPexcludeRangeEnd?? -->
@@ -460,6 +476,14 @@ interface Tunnel2
       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
     </#if>
   </#list>
+</#if>
+
+<#if isWgbEnable == "true">
+  route-map RM_WGB_ACL permit 10
+    match ip address NAT_ACL
+    match interface ${wgb_if}
+  !
+  ip nat inside source route-map RM_WGB_ACL interface ${wgb_if} overload
 </#if>
 
 <#-- --------------------------------------- -->
@@ -665,12 +689,12 @@ int ${cell_if2}
           <#-- calculate based on 90% of total upstream in bps -->
           <#assign qbw = QOSbw * 0.90 * 1000>
           shape average ${qbw?int?c}
-          bandwidth remaining ratio 7
+          bandwidth remaining percent 70
           service-policy SUB-CLASS-SILVER-BRONZE
         class class-default
           fair-queue
           random-detect dscp-based
-          bandwidth remaining ratio 3
+          bandwidth remaining percent 30
 
       <#if isFirstCell?has_content && isFirstCell == "true">
         interface ${cell_if1}
@@ -689,28 +713,30 @@ int ${cell_if2}
 <#-- --- END OF QoS CONFIG ----------------------------- -->
 
 <#-- Enable GPS  -->
-<#if isFirstCell == "true" && isGpsEnabled?has_content && isGpsEnabled == "true">
-controller ${cell_if1}
- 	lte gps mode standalone
-  lte gps nmea
+<#if isGpsEnabled?has_content && isGpsEnabled == "true">
+gyroscope-reading enable
+controller ${cell_if1_contr}
+  lte gps mode standalone
 </#if>
 !
 <#if isFirstCell == "true">
 interface ${cell_if1}
     ip address negotiated
     dialer in-band
+    encapsulation slip
     dialer idle-timeout 0
     dialer-group 1
-    pulse-time 1
+    dialer string lte
 </#if>
 !
 <#if isSecondCell == "true">
-interface ${cell_if2}
+    interface ${cell_if2}
     ip address negotiated
     dialer in-band
+    encapsulation slip
     dialer idle-timeout 0
     dialer-group 1
-    pulse-time 1
+    dialer string lte
 </#if>
 !
 interface Vlan1
@@ -724,6 +750,8 @@ interface Vlan1
 !
 !
 <#-- enabling/disabling of ethernet ports -->
+interface GigabitEthernet0
+	shutdown
 
 interface GigabitEthernet1
 <#if isEthernetEnable != "true">
@@ -757,6 +785,10 @@ interface GigabitEthernet4
 	no shutdown
 </#if>
 
+interface Async0
+    no ip address
+    encapsulation scada
+!
 <#-- Enable NAT and routing -->
 ip access-list extended NAT_ACL
      permit ip ${lanNtwk} ${lanWild} any
@@ -937,7 +969,7 @@ interface ${ether_if}
 
 <#-- Set APN -->
 
-<#if isFirstCell == "true" && APN1?has_content>
+<#if isFirstCell?has_content && isFirstCell == "true" && APN1?has_content>
   event manager applet change_apn_cell1
   event timer countdown time 10
   action 5 syslog msg "Changing APN Profile"
@@ -946,7 +978,7 @@ interface ${ether_if}
   action 20 cli command "y"
 </#if>
 !
-<#if isSecondCell == "true" && APN2?has_content>
+<#if isSecondCell?has_content && isSecondCell == "true" && APN2?has_content>
   event manager applet change_apn_cell2
   event timer countdown time 10
   action 5 syslog msg "Changing APN Profile for Cellular0/3/0"
@@ -955,6 +987,31 @@ interface ${ether_if}
   action 20 cli command "y"
 </#if>
 !
+
+<#-- Ignition Power Management -->
+
+<#if ignition?has_content && ignition == "true">
+  ignition enable
+  ignition off-timer 400
+<#else>
+  no ignition enable
+</#if>
+
+event manager applet setAPvlan
+ event timer watchdog time 120
+ action 1.0 cli command "en"
+ action 2.0 cli command "show cgna profile name cg-nms-ap-bootstrap | i disabled"
+ action 3.0 string match "*Profile disabled*" "$_cli_result"
+ action 4.0 if $_string_result eq "0"
+ action 4.1  exit
+ action 4.2 end
+ action 5.0 cli command "conf t"
+ action 5.1 cli command "int wlan-gi0"
+ action 5.2 cli command "switchport trunk native vlan 50"
+ action 5.21 cli command "no spanning-tree vlan 50"
+ action 5.3 cli command "no event manager applet setAPvlan"
+ action 6.0 cli command "exit"
+ action 6.1 cli command "write mem"
 
 <#-- -- LOGGING ONLY ------------------------- -->
 
