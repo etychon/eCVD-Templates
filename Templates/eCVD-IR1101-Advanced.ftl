@@ -70,32 +70,26 @@
   <#assign isEthernetEnable = "false">
 </#if>
 
+<#assign isFirstCell = "false">
+<#assign isGpsEnabled = "false">
 <#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
   <#assign isFirstCell = "true">
   <#if far.apn1?has_content && far.apn1 != "null">
-    <#assign APN1			= "${far.apn1}">
+    <#assign APN1 = far.apn1>
   </#if>
-  <#-- TODO: this will need to change to support LTE modules
-  with no GPS support. Use far...isGpsEnabled toggle in updated
-  UPT version 1.14 -->
   <#if far.cellFirmwareVersion1?has_content && far.cellFirmwareVersion1?starts_with("SWI")>
     <#-- taking wild guess that if Sierra Wireless firmware it
        probably has GPS capability. -->
     <#assign isGpsEnabled = "true">
-  <#else>
-    <#assign isGpsEnabled = "false">
   </#if>
-<#else>
-    <#assign isFirstCell = "false">
 </#if>
 
+<#assign isSecondCell = "false">
 <#if section.wan_cellular2?has_content && section.wan_cellular2 == "true">
   <#assign isSecondCell = "true">
   <#if far.apn2?has_content && far.apn2 != "null">
     <#assign APN2			= "${far.apn2}">
   </#if>
-<#else>
-  <#assign isSecondCell = "false">
 </#if>
 
 <#-- LAN Menu -->
@@ -402,7 +396,7 @@ interface ${vpnTunnelIntf}
     <#assign isCellIntTable += ["true"]>
     <#assign Cell1PortPriority = 100+p>
   <#elseif isSecondCell == "true"
-        && cell_if2?? && far.secondCellularIntPriority?has_content
+        && cell_if2?has_content && far.secondCellularIntPriority?has_content
         && far.secondCellularIntPriority == p?string>
     <#assign priorityIfNameTable += [cell_if2]>
     <#assign isTunnelEnabledTable += [far.enableTunnelOverCell2!"false"]>
@@ -425,12 +419,9 @@ interface ${vpnTunnelIntf}
     <#if isCellIntTable[p] == "true">
       track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
-      ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
     <#else>
       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${100+p}
-      ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
     </#if>
-    ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
     ip sla ${p+40}
       icmp-echo ${ipslaDestIPaddress[p]} source-interface ${priorityIfNameTable[p]}
       frequency <#if isCellIntTable[p] == "true">50<#else>10</#if>
@@ -445,10 +436,6 @@ interface ${vpnTunnelIntf}
       action 1.0 cli command "clear ip nat translation *"
     int ${priorityIfNameTable[p]}
       zone-member security INTERNET
-    <#if isCellIntTable[p] != "true">
-      ip dhcp client route track ${p+40}
-      ip address dhcp
-    </#if>
     ip nat outside
     no shutdown
     <#if isUmbrella == "true">
@@ -531,7 +518,7 @@ interface Vlan1
   ip access-list extended eCVD-deny-from-outside
 
 <#assign count = 10>
-<#if far.firewallIP??>
+<#if far.firewallIP?has_content>
 <#list far.firewallIP as FW>
   <#if FW['fwType']?has_content>
    <#if FW['fwType'] == "deny">
@@ -752,8 +739,13 @@ interface FastEthernet0/0/4
 iox
 
 <#-- Enable NAT and routing -->
+<#assign gwips = far.lanIPAddress?split(".")>
+<#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
+<#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + (nwk_suffix + 5)>
 ip access-list extended NAT_ACL
      permit ip ${lanNtwk} ${lanWild} any
+     permit ip ${nwk_addr} 0.0.0.31 any
+
 !
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10

@@ -797,7 +797,6 @@ interface Async0
 <#-- Enable NAT and routing -->
 ip access-list extended NAT_ACL
      permit ip ${lanNtwk} ${lanWild} any
-     permit ip ${nwk_addr} 0.0.0.31 any
 !
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
