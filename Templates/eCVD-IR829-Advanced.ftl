@@ -551,7 +551,8 @@ udp-timeout 5
 no ip dns server
 !
 interface Vlan 1
-ip nbar protocol-discovery
+ no shutdown
+ ip nbar protocol-discovery
 !
 </#if>
 
