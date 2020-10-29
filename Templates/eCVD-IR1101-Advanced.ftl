@@ -319,7 +319,6 @@ ip dhcp pool subtended
     dns-server ${DNSIP}
     lease 0 0 10
 !
-<#-- PLACEHOLDER AS THIS IS NOT SUPPORTED YET IN UPT -->
 <#if far.lanIPAddressDHCPexcludeRangeStart?has_content && far.lanIPAddressDHCPexcludeRangeEnd?has_content>
 ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
 </#if>
