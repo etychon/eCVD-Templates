@@ -22,8 +22,8 @@
 <#assign ether_if = "GigabitEthernet 0/0/0">
 <#assign cell_if1 = "Cellular 0/1/0">
 <#assign cell_if2 = "Cellular 0/3/0">
-<#assign wgb_if = "Vlan 50">
 <#assign vpnTunnelIntf = "Tunnel2">
+<#assign isWgbEnable = "false">
 
 <#-- TEMPLATE CONSTANTS -->
 <#assign umbrella_dns1_ip = "208.67.222.222">
@@ -67,12 +67,6 @@
   <#assign isEthernetEnable = "true">
 <#else>
   <#assign isEthernetEnable = "false">
-</#if>
-
-<#if section.wan_wgb?has_content && section.wan_wgb == "true">
-  <#assign isWgbEnable = "true">
-<#else>
-  <#assign isWgbEnable = "false">
 </#if>
 
 <#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
@@ -395,13 +389,6 @@ interface ${vpnTunnelIntf}
     <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
     <#assign isCellIntTable += ["false"]>
     <#assign EthernetPortPriority = 100+p>
-  <#elseif isWgbEnable == "true"
-        && wgb_if?? && far.wgbPriority?has_content
-        && far.wgbPriority == p?string>
-    <#assign priorityIfNameTable += [wgb_if]>
-    <#assign isTunnelEnabledTable += [far.enableTunnelOverWGB!"false"]>
-    <#assign isCellIntTable += ["false"]>
-    <#assign WgbIntPriority = 100+p>
   <#elseif isFirstCell == "true"
         && cell_if1?? && far.firstCellularIntPriority?has_content
         && far.firstCellularIntPriority == p?string>
