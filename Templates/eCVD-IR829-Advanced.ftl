@@ -244,20 +244,22 @@
 	</#if>
 </#list>
 
-<#if !section.devicesettings_snmp?? || section.devicesettings_snmp == "true">
+<#--
+<#if !section..devicesettings_snmp?? || section..devicesettings_snmp == "true">
   <#assign isSnmp = "true">
-    <#if far.communityString?has_content>
-      <#assign communityString = far.communityString>
+    <#if far..communityString?has_content>
+      <#assign communityString = far..communityString>
     </#if>
-    <#if far.snmpVersion?has_content>
-      <#assign snmpVersion = far.snmpVersion>
+    <#if far..snmpVersion?has_content>
+      <#assign snmpVersion = far..snmpVersion>
       <#if snmpVersion == "3">
-        <#assign snmpV3User = far.snmpV3User>
+        <#assign snmpV3User = far..snmpV3User>
       </#if>
     </#if>
 <#else>
   <#assign isSnmp = "false">
 </#if>
+-->
 
 <#if section.network_qos?has_content && section.network_qos == "true">
   <#assign isQosEnabled = "true">
@@ -284,6 +286,7 @@ service call-home
 <#-- no logging console -->
 !
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
+<#--
 <#if isSnmp == "true">
   <#if communityString?has_content>
     <#list communityString as CS>
@@ -291,14 +294,15 @@ service call-home
         snmp-server community ${CS['snmpCommunity']} ${CS['snmpType']}
       </#if>
       <#if snmpVersion == "3">
-        snmp-server  user ${far.snmpV3User} group1 v3 auth md5 ${far.snmpV3Pass}
-        snmp-server  host ${far.snmpHost} version ${far.snmpVersion} auth ${CS['snmpCommunity']}
+        snmp-server  user ${far..snmpV3User} group1 v3 auth md5 ${far..snmpV3Pass}
+        snmp-server  host ${far..snmpHost} version ${far..snmpVersion} auth ${CS['snmpCommunity']}
       <#else>
-        snmp-server host ${far.snmpHost} version ${far.snmpVersion} ${CS['snmpCommunity']}
+        snmp-server host ${far..snmpHost} version ${far..snmpVersion} ${CS['snmpCommunity']}
       </#if>
     </#list>
   </#if>
 </#if>
+-->
 !
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
