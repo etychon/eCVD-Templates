@@ -118,7 +118,7 @@
 </#if>
 
 <#assign isNetFlow = "false">
-<#if section.security_netflow?? && section.security_netflow == "true">
+<#if section.security_netflow?has_content && section.security_netflow == "true">
   <#assign isNetFlow = "true">
   <#if far.netflowCollectorIP?has_content>
     <#assign netflowCollectorIP = far.netflowCollectorIP>
@@ -305,13 +305,6 @@ ntp server ${ntpIP}
 !
 <#-- ip name-server ${DNSIP} -->
 ip domain name ${domainName}
-
-<#-- Exclude the first 5 IP addresses of the LAN -->
-<#assign gwips = far.lanIPAddress?split(".")>
-<#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
-<#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + (nwk_suffix + 5)>
-ip dhcp excluded-address ${far.lanIPAddress} ${nwk_addr}
-!
 !
 ip dhcp pool subtended
     network ${lanNtwk} ${far.lanNetmask}
@@ -774,7 +767,6 @@ iox
 <#-- Enable NAT and routing -->
 ip access-list extended NAT_ACL
      permit ip ${lanNtwk} ${lanWild} any
-     permit ip ${nwk_addr} 0.0.0.31 any
 !
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
