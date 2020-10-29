@@ -65,6 +65,7 @@
 
 <#if section.wan_ethernet?has_content && section.wan_ethernet == "true">
   <#assign isEthernetEnable = "true">
+  <#assign ethernetPriority = far.ethernetPriority>
 <#else>
   <#assign isEthernetEnable = "false">
 </#if>
@@ -383,14 +384,14 @@ interface ${vpnTunnelIntf}
 
 <#list 1..4 as p>
   <#if isEthernetEnable == "true"
-        && ether_if?? && far.ethernetPriority?has_content
-        && far.ethernetPriority == p?string>
+        && ether_if?has_content && ethernetPriority?has_content
+        && ethernetPriority == p?string>
     <#assign priorityIfNameTable += [ether_if]>
     <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
     <#assign isCellIntTable += ["false"]>
     <#assign EthernetPortPriority = 100+p>
   <#elseif isFirstCell == "true"
-        && cell_if1?? && far.firstCellularIntPriority?has_content
+        && cell_if1?has_content && far.firstCellularIntPriority?has_content
         && far.firstCellularIntPriority == p?string>
     <#assign priorityIfNameTable += [cell_if1]>
     <#assign isTunnelEnabledTable += [far.enableTunnelOverCell1!"false"]>
@@ -743,12 +744,6 @@ interface FastEthernet0/0/4
 	no shutdown
 </#if>
 
-interface Async0/2/0
-    no ip address
-    encapsulation scada
-!
-
-
 <#-- Enable IOx -->
 iox
 
@@ -809,10 +804,7 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#list>
 </#if>
 
-<#-- remove this route from the bootstrap config to allow failover -->
-<#if isFirstCell == "true">
-  no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
-</#if>
+no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
 
 <#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
   ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp

@@ -1035,7 +1035,6 @@ event manager applet setAPvlan
 
 <#-- -- LOGGING ONLY ------------------------- -->
 
-<#if far.logAllVariables?has_content && far.logAllVariables == "true">
   event manager applet ListAllParams
   <#assign i = 100>
   <#list far as key, value>
@@ -1058,9 +1057,7 @@ event manager applet setAPvlan
         <#assign i = i + 1>
     </#if>
   </#list>
-</#if>
 
-<#if far.logAllVariables?has_content && far.logAllVariables == "true">
   event manager applet ListAllSections
   <#assign i = 100>
   <#list section as key, value>
@@ -1083,7 +1080,6 @@ event manager applet setAPvlan
         <#assign i = i + 1>
     </#if>
   </#list>
-</#if>
 
 </#compress>
 
