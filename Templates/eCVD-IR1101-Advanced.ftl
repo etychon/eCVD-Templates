@@ -23,6 +23,7 @@
 <#assign cell_if1 = "Cellular 0/1/0">
 <#assign cell_if2 = "Cellular 0/3/0">
 <#assign wgb_if = "Vlan 50">
+<#assign vpnTunnelIntf = "Tunnel2">
 
 <#-- TEMPLATE CONSTANTS -->
 <#assign umbrella_dns1_ip = "208.67.222.222">
@@ -117,9 +118,9 @@
   </#if>
 </#if>
 
-<#assign isNetFlow = "false">
+<#assign isNetflow = "false">
 <#if section.security_netflow?has_content && section.security_netflow == "true">
-  <#assign isNetFlow = "true">
+  <#assign isNetflow = "true">
   <#if far.netflowCollectorIP?has_content>
     <#assign netflowCollectorIP = far.netflowCollectorIP>
   </#if>

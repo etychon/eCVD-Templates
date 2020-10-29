@@ -30,6 +30,7 @@
 <#assign isGpsEnabled = "true">
 <#assign wgb_vlan = "50">
 <#assign wgb_if = "Vlan${wgb_vlan}">
+<#assign vpnTunnelIntf = "Tunnel2">
 
 <#-- TEMPLATE CONSTANTS -->
 <#assign umbrella_dns1_ip = "208.67.222.222">
@@ -382,7 +383,7 @@ crypto ipsec profile CVPN_IPS_PF
  set ikev2-profile CVPN_I2PF
 !
 !
-interface Tunnel2
+interface ${vpnTunnelIntf}
  ip address negotiated
  ip mtu 1358
  ip nat outside
@@ -471,7 +472,7 @@ interface Tunnel2
            umbrella out
       </#if>
     <#if isTunnelEnabledTable[p] == "true">
-      crypto ikev2 client flexvpn Tunnel2
+      crypto ikev2 client flexvpn ${vpnTunnelIntf}
       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
     </#if>
   </#list>
@@ -797,7 +798,7 @@ ip access-list extended NAT_ACL
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
      match ip address NAT_ACL
-     match interface Tunnel2
+     match interface ${vpnTunnelIntf}
 </#if>
 !
 dialer-list 1 protocol ip permit
@@ -870,7 +871,7 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#if>
 !
 <#if isPrimaryHeadEndEnable == "true">
-ip nat inside source route-map RM_Tu2 interface Tunnel2 overload
+ip nat inside source route-map RM_Tu2 interface ${vpnTunnelIntf} overload
 </#if>
 !
 ip ssh rsa keypair-name SSHKEY
@@ -895,10 +896,10 @@ ip access-list extended filter-internet
 <#-- ADDED 11 LINES BELOW FOR ADVANCED -->
 <#-- OPTIONALLY remove NAT overload config and config and setup routing over FlexVPN S2SVPN -->
 <#if isPrimaryHeadEndEnable == "true">
-no ip nat inside source route-map RM_Tu2 interface Tunnel2 overload
+no ip nat inside source route-map RM_Tu2 interface ${vpnTunnelIntf} overload
 no route-map RM_Tu2 permit 10
 
-interface Tunnel2
+interface ${vpnTunnelIntf}
  no ip nat outside
 !
 </#if>

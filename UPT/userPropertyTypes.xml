@@ -1373,6 +1373,35 @@
     </propertyType>
 
     <propertyType>
+      <name>umbrellaDnsBypassList</name>
+      <displayName>Enter Umbrella Bypass Domains here</displayName>
+      <description>Umbrella Bypass Domains</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Security>Umbrella</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>table</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <tableColumns>[{ "colKey": "umbrellaDnsBypassDomain", "colLabel": "Domain to bypass" }]</tableColumns>
+      <tableNumRows>6</tableNumRows>
+    </propertyType>
+
+    <propertyType>
+      <name>umbrellaDnsBypassDomain</name>
+      <displayName>Enter DNS domain for Umbrella to bypass</displayName>
+      <description>DNS domain for Umbrella to bypass</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Security>Umbrella</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'umbrellaDnsBypassDomain' per device", "value": "${far.umbrellaDnsBypassDomain}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
       <name>firewallIp</name>
       <displayName>Enter Firewall Rules</displayName>
   	  <description>Enter Firewall Rules</description>
@@ -1623,9 +1652,9 @@
   	  <deviceSpecific>1</deviceSpecific>
    	   <seedValues>[{ "key": "Provide 'nextInterface' per device", "value": "${far.nextInterface}" },
 	     	{ "key": "Ethernet", "value":"ether_if" },
-	        { "key": "Cell1", "value":"cell_if" },
+	        { "key": "Cell1", "value":"cell_if1" },
             { "key": "Cell2", "value":"cell_if2"},
-            { "key": "VPN", "value":"Tunnel2" },
+            { "key": "VPN", "value":"VPN" },
             { "key": "WiFi Uplink", "value":"WGB" }
    	]</seedValues>
    </propertyType>
