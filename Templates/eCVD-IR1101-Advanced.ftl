@@ -974,7 +974,6 @@ interface ${ether_if}
 
 <#-- -- LOGGING ONLY ------------------------- -->
 
-<#if far.logAllVariables?has_content && far.logAllVariables == "true">
   event manager applet ListAllParams
   <#assign i = 100>
   <#list far as key, value>
@@ -997,9 +996,7 @@ interface ${ether_if}
         <#assign i = i + 1>
     </#if>
   </#list>
-</#if>
 
-<#if far.logAllVariables?has_content && far.logAllVariables == "true">
   event manager applet ListAllSections
   <#assign i = 100>
   <#list section as key, value>
@@ -1022,7 +1019,6 @@ interface ${ether_if}
         <#assign i = i + 1>
     </#if>
   </#list>
-</#if>
 
 </#compress>
 
