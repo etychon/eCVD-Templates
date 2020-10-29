@@ -370,7 +370,7 @@ crypto ipsec profile CVPN_IPS_PF
  set ikev2-profile CVPN_I2PF
 !
 !
-interface Tunnel2
+interface ${vpnTunnelIntf}
  ip address negotiated
  ip mtu 1358
  ip nat outside
@@ -463,7 +463,7 @@ interface Tunnel2
            umbrella out
       </#if>
     <#if isTunnelEnabledTable[p] == "true">
-      crypto ikev2 client flexvpn Tunnel2
+      crypto ikev2 client flexvpn ${vpnTunnelIntf}
       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
     </#if>
   </#list>
@@ -772,7 +772,7 @@ ip access-list extended NAT_ACL
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
      match ip address NAT_ACL
-     match interface Tunnel2
+     match interface ${vpnTunnelIntf}
 </#if>
 !
 dialer-list 1 protocol ip permit
@@ -833,19 +833,38 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
     ip route ${backupHerIpAddress} 255.255.255.255 ${ether_if} dhcp
   </#if>
 </#if>
-
-<#-- ADDED 3 LINES BELOW FOR ADVANCED -->
+!
 <#-- User defined static routes with either next hop or egress interface -->
 <#if far.staticRoute?has_content>
-<#list far.staticRoute as SR>
-  <#if SR['destNetwork']?has_content>
-      ip route ${SR['destNetwork']} ${SR['destNetMask']} ${SR['nextInterface']}
-  </#if>
-</#list>
+  <#list far.staticRoute as SR>
+    <#if SR['destNetwork']?has_content>
+      <#assign dst_intf = "">
+      <#switch SR['nextInterface']>
+        <#case "ether_if">
+          <#assign dst_intf = ether_if!"">
+          <#break>
+        <#case "cell_if1">
+          <#assign dst_intf = cell_if1!"">
+          <#break>
+        <#case "cell_if2">
+          <#assign dst_intf = cell_if2!"">
+          <#break>
+        <#case "VPN">
+          <#assign dst_intf = vpnTunnelIntf!"">
+          <#break>
+        <#case "WGB">
+          <#assign dst_intf = wgb_if!"">
+          <#break>
+      </#switch>
+      <#if dst_intf?has_content>
+        ip route ${SR['destNetwork']} ${SR['destNetMask']} ${dst_intf}
+      </#if>
+    </#if>
+  </#list>
 </#if>
 !
 <#if isPrimaryHeadEndEnable == "true">
-ip nat inside source route-map RM_Tu2 interface Tunnel2 overload
+ip nat inside source route-map RM_Tu2 interface ${vpnTunnelIntf} overload
 </#if>
 !
 ip ssh rsa keypair-name SSHKEY
@@ -870,10 +889,10 @@ ip access-list extended filter-internet
 <#-- ADDED 11 LINES BELOW FOR ADVANCED -->
 <#-- OPTIONALLY remove NAT overload config and config and setup routing over FlexVPN S2SVPN -->
 <#if isPrimaryHeadEndEnable == "true">
-no ip nat inside source route-map RM_Tu2 interface Tunnel2 overload
+no ip nat inside source route-map RM_Tu2 interface ${vpnTunnelIntf} overload
 no route-map RM_Tu2 permit 10
 
-interface Tunnel2
+interface ${vpnTunnelIntf}
  no ip nat outside
 !
 </#if>

@@ -859,15 +859,34 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
     ip route ${backupHerIpAddress} 255.255.255.255 ${ether_if} dhcp
   </#if>
 </#if>
-
-<#-- ADDED 3 LINES BELOW FOR ADVANCED -->
+!
 <#-- User defined static routes with either next hop or egress interface -->
 <#if far.staticRoute?has_content>
-<#list far.staticRoute as SR>
-  <#if SR['destNetwork']?has_content>
-      ip route ${SR['destNetwork']} ${SR['destNetMask']} ${SR['nextInterface']}
-  </#if>
-</#list>
+  <#list far.staticRoute as SR>
+    <#if SR['destNetwork']?has_content>
+      <#assign dst_intf = "">
+      <#switch SR['nextInterface']>
+        <#case "ether_if">
+          <#assign dst_intf = ether_if!"">
+          <#break>
+        <#case "cell_if1">
+          <#assign dst_intf = cell_if1!"">
+          <#break>
+        <#case "cell_if2">
+          <#assign dst_intf = cell_if2!"">
+          <#break>
+        <#case "VPN">
+          <#assign dst_intf = vpnTunnelIntf!"">
+          <#break>
+        <#case "WGB">
+          <#assign dst_intf = wgb_if!"">
+          <#break>
+      </#switch>
+      <#if dst_intf?has_content>
+        ip route ${SR['destNetwork']} ${SR['destNetMask']} ${dst_intf}
+      </#if>
+    </#if>
+  </#list>
 </#if>
 !
 <#if isPrimaryHeadEndEnable == "true">
