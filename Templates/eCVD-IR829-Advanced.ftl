@@ -550,9 +550,8 @@ udp-timeout 5
 !
 no ip dns server
 !
-interface Vlan 1
- no shutdown
- ip nbar protocol-discovery
+interface Vlan1
+   ip nbar protocol-discovery
 !
 </#if>
 
@@ -744,9 +743,10 @@ interface Vlan1
     ip nbar protocol-discovery
     ip nat inside
     ip verify unicast source reachable-via rx
-  <#if isUmbrella == "true">
+    <#if isUmbrella == "true">
        umbrella in my_tag
-  </#if>
+    </#if>
+    no shutdown
 !
 !
 <#-- enabling/disabling of ethernet ports -->
