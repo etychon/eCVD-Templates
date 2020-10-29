@@ -325,10 +325,9 @@ interface ${wgb_if}
   ip nat outside
   ip virtual-reassembly in
 !
-<#-- PLACEHOLDER AS THIS IS NOT SUPPORTED YET IN UPT -->
-<#-- if far..lanIPAddressDHCPexcludeRangeStart?? && far..lanIPAddressDHCPexcludeRangeEnd?? -->
-<#-- ip dhcp excluded-address ${far..lanIPAddressDHCPexcludeRangeStart} ${far..lanIPAddressDHCPexcludeRangeEnd} -->
-<#-- /#if -->
+<#if far.lanIPAddressDHCPexcludeRangeStart?has_content && far.lanIPAddressDHCPexcludeRangeEnd?has_content>
+ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
+</#if>
 !
 <#if far.Users?has_content>
   <#list far.Users as user >
