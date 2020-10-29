@@ -440,15 +440,15 @@ interface ${vpnTunnelIntf}
       action 1.0 cli command "clear ip nat translation *"
     int ${priorityIfNameTable[p]}
       zone-member security INTERNET
-      <#if isCellIntTable[p] != "true">
-        ip dhcp client route track ${p+40}
-        ip address dhcp
-      </#if>
-      ip nat outside
-      no shutdown
-      <#if isUmbrella == "true">
-           umbrella out
-      </#if>
+    <#if isCellIntTable[p] != "true">
+      ip dhcp client route track ${p+40}
+      ip address dhcp
+    </#if>
+    ip nat outside
+    no shutdown
+    <#if isUmbrella == "true">
+      umbrella out
+    </#if>
     <#if isTunnelEnabledTable[p] == "true">
       crypto ikev2 client flexvpn ${vpnTunnelIntf}
       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
