@@ -419,23 +419,48 @@ interface ${vpnTunnelIntf}
     <#if isCellIntTable[p] == "true">
       track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
+      ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
     <#else>
       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${100+p}
+      ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
     </#if>
+    ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
     ip sla ${p+40}
       icmp-echo ${ipslaDestIPaddress[p]} source-interface ${priorityIfNameTable[p]}
       frequency <#if isCellIntTable[p] == "true">50<#else>10</#if>
     !
     !
     ip sla schedule ${p+40} life forever start-time now
-    track ${p+40} ip sla ${p+40} reachability
+      track ${p+40} ip sla ${p+40} reachability
     event manager applet failover_${p+40}
       event track ${p+40} state any
       action 0.1 syslog msg "${priorityIfNameTable[p]} connectivity change, clearing NAT translations"
       action 0.2 cli command "enable"
       action 1.0 cli command "clear ip nat translation *"
+    <#if isCellIntTable[p] != "true">
+      <#-- this is not cellular, use DHCP -->
+      int ${priorityIfNameTable[p]}
+        ip dhcp client route track ${p+40}
+      <#-- This will enable the client route track via EEM, since config causes Registration failure-->
+      <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
+      event manager applet client_route_track_${eventAppName}
+        event timer watchdog time 60
+        action 1 cli command "en"
+        action 2 cli command "show cgna profile name cg-nms-register | i disabled"
+        action 3 string match "*Profile disabled*" "$_cli_result"
+        action 4 if $_string_result eq "0"
+        action 5  exit
+        action 6 end
+        action 7.0 cli command "conf t"
+        action 7.1 cli command "interface ${priorityIfNameTable[p]}"
+        action 7.2 cli command "ip address dhcp"
+        action 7.3 cli command "exit"
+        action 8.0 cli command "no event manager applet client_route_track_${eventAppName}"
+        action 8.1 cli command "exit"
+        action 9.0 cli command "write mem"
+    </#if>
     int ${priorityIfNameTable[p]}
-      zone-member security INTERNET
+    zone-member security INTERNET
     ip nat outside
     no shutdown
     <#if isUmbrella == "true">
@@ -580,8 +605,7 @@ int ${cell_if2}
 </#if>
 !
 
-<#-- ADDED LINES BELOW FOR ADVANCED -->
-<#-- QOS config -->
+<#-- QoS config for IOS-XE -->
 
 <#if isQosEnabled == "true">
   <#if qosBandwidth?has_content>
@@ -617,41 +641,37 @@ int ${cell_if2}
         </#if>
       </#list>
 !
-      class-map match-any CLASS-SILVER-BRONZE
+      class-map match-any CLASS-GOLD-SILVER-BRONZE
       <#list qosPolicyTable as QOS>
         <#if QOS['qosType']?has_content>
-          <#if QOS['qosPriority'] == "med" || QOS['qosPriority'] == "low">
+          <#if QOS['qosPriority'] == "med" || QOS['qosPriority'] == "low" || QOS['qosPriority'] == "hi">
             match protocol attribute traffic-class ${QOS['qosType']}
           </#if>
         </#if>
       </#list>
 !
-      policy-map SUB-CLASS-SILVER-BRONZE
+      policy-map SUB-CLASS-GOLD-SILVER-BRONZE
+        class CLASS-GOLD
+         priority level 1 percent 10
+
         class CLASS-SILVER
-        <#-- calculate based on 40% of upstream bandwidth, in kbps -->
-        <#assign qosbwkb = QOSbw * 0.40>
-        bandwidth ${qosbwkb?int?c}
+         bandwidth percent 50
 !
         class CLASS-BRONZE
-        <#-- calculate based on 50% of upstream bandwidth, in kbps -->
-        <#assign qosbwkb = QOSbw * 0.50>
-        bandwidth ${qosbwkb?int?c}
+         bandwidth percent 40
 !
       policy-map CELL_WAN_QOS
-        class CLASS-GOLD
-          <#-- kbps.  10% of user entered upstream bandwidth -->
-          <#assign qosbwkb = QOSbw * 0.10>
-          priority ${qosbwkb?int?c}
-        class CLASS-SILVER-BRONZE
-          <#-- calculate based on 90% of total upstream in bps -->
-          <#assign qbw = QOSbw * 0.90 * 1000>
+
+        class CLASS-GOLD-SILVER-BRONZE
+          <#-- calculate based on total upstream throughput in bps -->
+          <#assign qbw = QOSbw * 1000>
           shape average ${qbw?int?c}
-          bandwidth remaining ratio 7
-          service-policy SUB-CLASS-SILVER-BRONZE
+          bandwidth remaining ratio 3
+          service-policy SUB-CLASS-GOLD-SILVER-BRONZE
         class class-default
           fair-queue
           random-detect dscp-based
-          bandwidth remaining ratio 3
+          bandwidth remaining ratio 1
 
       <#if isFirstCell?has_content && isFirstCell == "true">
         interface ${cell_if1}
