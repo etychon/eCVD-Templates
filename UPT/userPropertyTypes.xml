@@ -1558,7 +1558,7 @@
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <sectionLevelInTree>1</sectionLevelInTree>
 	    <section>Network>QoS</section>
-  	  <required>0</required>
+  	  <required>1</required>
   	  <validationType>non-empty</validationType>
   	  <dataType>integer</dataType>
   	  <deviceSpecific>1</deviceSpecific>
