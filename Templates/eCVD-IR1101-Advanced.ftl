@@ -1,10 +1,12 @@
-<#-- ---- Begin eCVD template for IR1101 -----
-     ---- Version 1.76 -----------------------
+<#--
+     ---- Begin eCVD template for IR1101 -----
+     ---- Version 1.77 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
+     -- QoS, Port Forwarding, Static Route  --
+     -- Umbrella with pattern bypass        --
 -->
-
 
 <#compress>
 
@@ -521,6 +523,11 @@ crypto pki certificate chain umbrella
 !
 parameter-map type regex dns_bypass
 pattern .*\.cisco\..*
+<#if far.umbrellaDnsBypassList?has_content>
+  <#list far.umbrellaDnsBypassList as patterns>
+    pattern ${patterns['umbrellaDnsBypassDomain']}
+  </#list>
+</#if>
 !
 parameter-map type umbrella global
 <#if UmbrellaToken?has_content>
