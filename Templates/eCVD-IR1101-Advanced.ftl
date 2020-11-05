@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD template for IR1101 -----
-     ---- Version 1.77 -----------------------
+     ---- Version 1.78 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -471,6 +471,17 @@ interface ${vpnTunnelIntf}
     <#if isTunnelEnabledTable[p] == "true">
       crypto ikev2 client flexvpn ${vpnTunnelIntf}
       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
+      <#if isCellIntTable[p] != "true">
+        <#assign suffix = "dhcp">
+      <#else>
+        <#assign suffix = " ">
+      </#if>
+      <#if herIpAddress?has_content>
+        ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
+        <#if backupHerIpAddress?has_content>
+          ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
+        </#if>
+      </#if>
     </#if>
   </#list>
 </#if>

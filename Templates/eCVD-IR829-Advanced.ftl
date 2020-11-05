@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR829 -----
-     ---- Version 1.74 -----------------------
+     ---- Version 1.75 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -8,7 +8,7 @@
 
 <#compress>
 
-<#-- extract PID and SN from EID - ie. IR1101-K9+FCW23510HKN -->
+<#-- extract PID and SN from EID - ie. IR829-K9+FCW23510HKN -->
 <#assign sublist 		= "${far.eid}"?split("+")[0..1]>
 <#assign pid = sublist[0]>
 <#assign model = pid[0..4]>
@@ -70,32 +70,33 @@
 
 <#if section.wan_ethernet?has_content && section.wan_ethernet == "true">
   <#assign isEthernetEnable = "true">
+  <#assign ethernetPriority = far.ethernetPriority>
 <#else>
   <#assign isEthernetEnable = "false">
 </#if>
 
 <#if section.wan_wgb?has_content && section.wan_wgb == "true">
   <#assign isWgbEnable = "true">
+  <#assign wgbPriority = far.wgbPriority>
 <#else>
   <#assign isWgbEnable = "false">
 </#if>
 
+<#assign isFirstCell = "false">
+<#assign isGpsEnabled = "true">
 <#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
   <#assign isFirstCell = "true">
-  <#if far.apn1?has_content>
-    <#assign APN1			= "${far.apn1}">
+  <#if far.apn1?has_content && far.apn1 != "null">
+    <#assign APN1			= far.apn1>
   </#if>
-<#else>
-    <#assign isFirstCell = "false">
 </#if>
 
+<#assign isSecondCell = "false">
 <#if section.wan_cellular2?has_content && section.wan_cellular2 == "true">
   <#assign isSecondCell = "true">
-  <#if far.apn2?has_content>
-    <#assign APN2			= "${far.apn2}">
+  <#if far.apn2?has_content && far.apn2 != "null">
+    <#assign APN2 = far.apn2>
   </#if>
-<#else>
-  <#assign isSecondCell = "false">
 </#if>
 
 <#-- LAN Menu -->
@@ -105,13 +106,9 @@
 <#-- Network Menu -->
 
 <#-- Security Menu -->
+
+<#-- Umbrella not supported on IR829 -->
 <#assign isUmbrella = "false">
-<#if section.security_umbrella?? && section.security_umbrella == "true">
-  <#assign isUmbrella = "true">
-  <#if far.umbrellaToken?has_content>
-    <#assign UmbrellaToken = "${far.umbrellaToken}">
-  </#if>
-</#if>
 
 <#assign isNetFlow = "false">
 <#if section.security_netflow?? && section.security_netflow == "true">
@@ -406,15 +403,15 @@ interface ${vpnTunnelIntf}
 
 <#list 1..4 as p>
   <#if isEthernetEnable == "true"
-        && ether_if?? && far.ethernetPriority?has_content
-        && far.ethernetPriority == p?string>
+        && ether_if?? && ethernetPriority?has_content
+        && ethernetPriority == p?string>
     <#assign priorityIfNameTable += [ether_if]>
     <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
     <#assign isCellIntTable += ["false"]>
     <#assign EthernetPortPriority = 100+p>
   <#elseif isWgbEnable == "true"
-        && wgb_if?? && far.wgbPriority?has_content
-        && far.wgbPriority == p?string>
+        && wgb_if?has_content && wgbPriority?has_content
+        && wgbPriority == p?string>
     <#assign priorityIfNameTable += [wgb_if]>
     <#assign isTunnelEnabledTable += [far.enableTunnelOverWGB!"false"]>
     <#assign isCellIntTable += ["false"]>
@@ -472,9 +469,6 @@ interface ${vpnTunnelIntf}
       zone-member security INTERNET
       ip nat outside
       no shutdown
-      <#if isUmbrella == "true">
-           umbrella out
-      </#if>
     <#if isTunnelEnabledTable[p] == "true">
       crypto ikev2 client flexvpn ${vpnTunnelIntf}
       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
@@ -493,72 +487,6 @@ interface ${vpnTunnelIntf}
 <#-- --------------------------------------- -->
 <#-- --------------------------------------- -->
 <#-- --------------------------------------- -->
-
-
-<#-- Umbrella DNS -->
-<#if !section.security_umbrella?? || section.security_umbrella == "true">
-crypto pki trustpoint umbrella
- revocation-check none
-crypto pki certificate chain umbrella
- certificate ca 01FDA3EB6ECA75C888438B724BCFBC91
-  30820494 3082037C A0030201 02021001 FDA3EB6E CA75C888 438B724B CFBC9130
-  0D06092A 864886F7 0D01010B 05003061 310B3009 06035504 06130255 53311530
-  13060355 040A130C 44696769 43657274 20496E63 31193017 06035504 0B131077
-  77772E64 69676963 6572742E 636F6D31 20301E06 03550403 13174469 67694365
-  72742047 6C6F6261 6C20526F 6F742043 41301E17 0D313330 33303831 32303030
-  305A170D 32333033 30383132 30303030 5A304D31 0B300906 03550406 13025553
-  31153013 06035504 0A130C44 69676943 65727420 496E6331 27302506 03550403
-  131E4469 67694365 72742053 48413220 53656375 72652053 65727665 72204341
-  30820122 300D0609 2A864886 F70D0101 01050003 82010F00 3082010A 02820101
-  00DCAE58 904DC1C4 30159035 5B6E3C82 15F52C5C BDE3DBFF 7143FA64 2580D4EE
-  18A24DF0 66D00A73 6E119836 1764AF37 9DFDFA41 84AFC7AF 8CFE1A73 4DCF3397
-  90A29687 53832BB9 A675482D 1D56377B DA31321A D7ACAB06 F4AA5D4B B74746DD
-  2A93C390 2E798080 EF13046A 143BB59B 92BEC207 654EFCDA FCFF7AAE DC5C7E55
-  310CE839 07A4D7BE 2FD30B6A D2B1DF5F FE577453 3B3580DD AE8E4498 B39F0ED3
-  DAE0D7F4 6B29AB44 A74B5884 6D924B81 C3DA738B 12974890 0445751A DD373197
-  92E8CD54 0D3BE4C1 3F395E2E B8F35C7E 108E8641 008D4566 47B0A165 CEA0AA29
-  094EF397 EBE82EAB 0F72A730 0EFAC7F4 FD1477C3 A45B2857 C2B3F982 FDB74558
-  9B020301 0001A382 015A3082 01563012 0603551D 130101FF 04083006 0101FF02
-  0100300E 0603551D 0F0101FF 04040302 01863034 06082B06 01050507 01010428
-  30263024 06082B06 01050507 30018618 68747470 3A2F2F6F 6373702E 64696769
-  63657274 2E636F6D 307B0603 551D1F04 74307230 37A035A0 33863168 7474703A
-  2F2F6372 6C332E64 69676963 6572742E 636F6D2F 44696769 43657274 476C6F62
-  616C526F 6F744341 2E63726C 3037A035 A0338631 68747470 3A2F2F63 726C342E
-  64696769 63657274 2E636F6D 2F446967 69436572 74476C6F 62616C52 6F6F7443
-  412E6372 6C303D06 03551D20 04363034 30320604 551D2000 302A3028 06082B06
-  01050507 0201161C 68747470 733A2F2F 7777772E 64696769 63657274 2E636F6D
-  2F435053 301D0603 551D0E04 1604140F 80611C82 3161D52F 28E78D46 38B42CE1
-  C6D9E230 1F060355 1D230418 30168014 03DE5035 56D14CBB 66F0A3E2 1B1BC397
-  B23DD155 300D0609 2A864886 F70D0101 0B050003 82010100 233EDF4B D23142A5
-  B67E425C 1A44CC69 D168B45D 4BE00421 6C4BE26D CCB1E097 8FA65309 CDAA2A65
-  E5394F1E 83A56E5C 98A22426 E6FBA1ED 93C72E02 C64D4ABF B042DF78 DAB3A8F9
-  6DFF2185 5336604C 76CEEC38 DCD65180 F0C5D6E5 D44D2764 AB9BC73E 71FB4897
-  B8336DC9 1307EE96 A21B1815 F65C4C40 EDB3C2EC FF71C1E3 47FFD4B9 00B43742
-  DA20C9EA 6E8AEE14 06AE7DA2 599888A8 1B6F2DF4 F2C9145F 26CF2C8D 7EED37C0
-  A9D539B9 82BF190C EA34AF00 2168F8AD 73E2C932 DA38250B 55D39A1D F06886ED
-  2E4134EF 7CA5501D BF3AF9D3 C1080CE6 ED1E8A58 25E4B877 AD2D6EF5 52DDB474
-  8FAB492E 9D3B9334 281F78CE 94EAC7BD D3C96D1C DE5C32F3
-        quit
-
-!
-parameter-map type regex dns_bypass
-pattern .*\.cisco\..*
-!
-parameter-map type umbrella global
-<#if UmbrellaToken?has_content>
-  token ${UmbrellaToken}
-</#if>
-
-local-domain dns_bypass
-dnscrypt
-udp-timeout 5
-!
-no ip dns server
-!
-interface Vlan1
-   ip nbar protocol-discovery
-!
-</#if>
 
 <#-- Zone based firewall.  Expands on Bootstrap config -->
 
@@ -748,9 +676,6 @@ interface Vlan1
     ip nbar protocol-discovery
     ip nat inside
     ip verify unicast source reachable-via rx
-    <#if isUmbrella == "true">
-       umbrella in my_tag
-    </#if>
     no shutdown
 !
 !
