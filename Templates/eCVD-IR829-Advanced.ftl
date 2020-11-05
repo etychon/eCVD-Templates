@@ -111,7 +111,7 @@
 <#assign isUmbrella = "false">
 
 <#assign isNetFlow = "false">
-<#if section.security_netflow?? && section.security_netflow == "true">
+<#if section.security_netflow?has_content && section.security_netflow == "true">
   <#assign isNetFlow = "true">
   <#if far.netflowCollectorIP?has_content>
     <#assign netflowCollectorIP = far.netflowCollectorIP>
@@ -306,13 +306,6 @@ ntp server ${ntpIP}
 !
 ip name-server ${DNSIP}
 ip domain name ${domainName}
-
-<#-- Exclude the first 5 IP addresses of the LAN -->
-<#assign gwips = far.lanIPAddress?split(".")>
-<#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
-<#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + (nwk_suffix + 5)>
-ip dhcp excluded-address ${far.lanIPAddress} ${nwk_addr}
-!
 !
 ip dhcp pool subtended
     network ${lanNtwk} ${far.lanNetmask}
@@ -320,7 +313,7 @@ ip dhcp pool subtended
     dns-server ${DNSIP}
     lease 0 0 10
 !
-vlan 50
+vlan ${wgb_vlan}
 !
 interface ${wgb_if}
   ip address dhcp
@@ -328,7 +321,7 @@ interface ${wgb_if}
   ip virtual-reassembly in
 !
 <#if far.lanIPAddressDHCPexcludeRangeStart?has_content && far.lanIPAddressDHCPexcludeRangeEnd?has_content>
-ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
+  ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
 </#if>
 !
 <#if far.Users?has_content>
@@ -459,19 +452,51 @@ interface ${vpnTunnelIntf}
     !
     !
     ip sla schedule ${p+40} life forever start-time now
-    track ${p+40} ip sla ${p+40} reachability
+      track ${p+40} ip sla ${p+40} reachability
     event manager applet failover_${p+40}
       event track ${p+40} state any
       action 0.1 syslog msg "${priorityIfNameTable[p]} connectivity change, clearing NAT translations"
       action 0.2 cli command "enable"
       action 1.0 cli command "clear ip nat translation *"
+    <#if isCellIntTable[p] != "true">
+      <#-- this is not cellular, use DHCP -->
+      int ${priorityIfNameTable[p]}
+        ip dhcp client route track ${p+40}
+        <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
+      event manager applet client_route_track_${eventAppName}
+        event timer watchdog time 60
+        action 1 cli command "en"
+        action 2 cli command "show cgna profile name cg-nms-register | i disabled"
+        action 3 string match "*Profile disabled*" "$_cli_result"
+        action 4 if $_string_result eq "0"
+        action 5  exit
+        action 6 end
+        action 7.0 cli command "conf t"
+        action 7.1 cli command "interface ${priorityIfNameTable[p]}"
+        action 7.2 cli command "ip address dhcp"
+        action 7.3 cli command "exit"
+        action 8.0 cli command "no event manager applet client_route_track_${eventAppName}"
+        action 8.1 cli command "exit"
+        action 9.0 cli command "write mem"
+    </#if>
     int ${priorityIfNameTable[p]}
       zone-member security INTERNET
       ip nat outside
       no shutdown
-    <#if isTunnelEnabledTable[p] == "true">
+    <#if isTunnelEnabledTable[p] == "true" && isPrimaryHeadEndEnable == "true">
       crypto ikev2 client flexvpn ${vpnTunnelIntf}
       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
+      <#if isCellIntTable[p] != "true">
+        <#assign suffix = "dhcp">
+      <#else>
+        <#assign suffix = " ">
+      </#if>
+      <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
+        ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
+        <#if backupHerIpAddress?has_content && isSecondaryHeadEndEnable == "true">
+          ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
+        </#if>
+      </#if>
     </#if>
   </#list>
 </#if>
@@ -484,13 +509,9 @@ interface ${vpnTunnelIntf}
   ip nat inside source route-map RM_WGB_ACL interface ${wgb_if} overload
 </#if>
 
-<#-- --------------------------------------- -->
-<#-- --------------------------------------- -->
-<#-- --------------------------------------- -->
-
 <#-- Zone based firewall.  Expands on Bootstrap config -->
 
-  ip access-list extended eCVD-deny-from-outside
+ip access-list extended eCVD-deny-from-outside
 
 <#assign count = 10>
 <#if far.firewallIP??>
@@ -551,12 +572,10 @@ int ${cell_if1}
 int ${cell_if2}
   zone-member security INTERNET
   !
-  !
 </#if>
 !
 
-<#-- ADDED LINES BELOW FOR ADVANCED -->
-<#-- QOS config -->
+<#-- QoS config for IOS Classic -->
 
 <#if isQosEnabled == "true">
   <#if qosBandwidth?has_content>
@@ -572,7 +591,6 @@ int ${cell_if2}
           </#if>
         </#if>
       </#list>
-!
 !
       class-map match-any CLASS-SILVER
       <#list qosPolicyTable as QOS>
@@ -602,31 +620,36 @@ int ${cell_if2}
       </#list>
 !
       policy-map SUB-CLASS-SILVER-BRONZE
-        class CLASS-SILVER
-        <#-- calculate based on 40% of upstream bandwidth, in kbps -->
-        <#assign qosbwkb = QOSbw * 0.40>
+       class CLASS-SILVER
+       <#-- calculate based on 20% of upstream bandwidth, in kbps -->
+       <#assign qosbwkb = QOSbw * 0.20>
+       bandwidth ${qosbwkb?int?c}
+       class CLASS-BRONZE
+        <#-- calculate based on 25% of upstream bandwidth, in kbps -->
+        <#assign qosbwkb = QOSbw * 0.25>
         bandwidth ${qosbwkb?int?c}
 !
-        class CLASS-BRONZE
-        <#-- calculate based on 50% of upstream bandwidth, in kbps -->
-        <#assign qosbwkb = QOSbw * 0.50>
-        bandwidth ${qosbwkb?int?c}
+      policy-map SUB-CLASS-GSB
+      class CLASS-GOLD
+        <#-- kbps.  10% of user entered upstream bandwidth -->
+        <#assign qosbwkb = QOSbw * 0.10>
+         priority ${qosbwkb?int?c}
+      class CLASS-SILVER-BRONZE
+       <#-- calculate based on 60% of total upstream in bps -->
+       <#assign qbw = QOSbw * 0.60 * 1000>
+       shape average ${qbw?int?c}
+       <#assign qosbwkb = QOSbw * 0.60>
+       bandwidth ${qosbwkb?int?c}
+       service-policy SUB-CLASS-SILVER-BRONZE
+      class class-default
+       fair-queue
+       random-detect dscp-based
 !
       policy-map CELL_WAN_QOS
-        class CLASS-GOLD
-          <#-- kbps.  10% of user entered upstream bandwidth -->
-          <#assign qosbwkb = QOSbw * 0.10>
-          priority ${qosbwkb?int?c}
-        class CLASS-SILVER-BRONZE
-          <#-- calculate based on 90% of total upstream in bps -->
-          <#assign qbw = QOSbw * 0.90 * 1000>
-          shape average ${qbw?int?c}
-          bandwidth remaining percent 70
-          service-policy SUB-CLASS-SILVER-BRONZE
-        class class-default
-          fair-queue
-          random-detect dscp-based
-          bandwidth remaining percent 30
+       class class-default
+        <#assign qbw = QOSbw * 1000>
+        shape average ${qbw?int?c}
+        service-policy SUB-CLASS-GSB
 
       <#if isFirstCell?has_content && isFirstCell == "true">
         interface ${cell_if1}
@@ -637,7 +660,6 @@ int ${cell_if2}
         interface ${cell_if2}
           service-policy output CELL_WAN_QOS
       </#if>
-
     </#if>
   </#if>
 </#if>
@@ -776,10 +798,7 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#list>
 </#if>
 
-<#-- remove this route from the bootstrap config to allow failover -->
-<#if isFirstCell == "true">
-  no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
-</#if>
+no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
 
 <#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
   ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp

@@ -90,7 +90,7 @@
 <#if section.wan_cellular2?has_content && section.wan_cellular2 == "true">
   <#assign isSecondCell = "true">
   <#if far.apn2?has_content && far.apn2 != "null">
-    <#assign APN2			= "${far.apn2}">
+    <#assign APN2	= far.apn2>
   </#if>
 </#if>
 
@@ -299,7 +299,7 @@ no platform punt-keepalive disable-kernel-core
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
-<#-- ip name-server ${DNSIP} -->
+ip name-server ${DNSIP}
 ip domain name ${domainName}
 !
 ip dhcp pool subtended
@@ -309,7 +309,7 @@ ip dhcp pool subtended
     lease 0 0 10
 !
 <#if far.lanIPAddressDHCPexcludeRangeStart?has_content && far.lanIPAddressDHCPexcludeRangeEnd?has_content>
-ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
+  ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
 </#if>
 !
 <#if far.Users?has_content>
@@ -468,7 +468,7 @@ interface ${vpnTunnelIntf}
     <#if isUmbrella == "true">
       umbrella out
     </#if>
-    <#if isTunnelEnabledTable[p] == "true">
+    <#if isTunnelEnabledTable[p] == "true" && isPrimaryHeadEndEnable == "true">
       crypto ikev2 client flexvpn ${vpnTunnelIntf}
       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
       <#if isCellIntTable[p] != "true">
@@ -476,9 +476,9 @@ interface ${vpnTunnelIntf}
       <#else>
         <#assign suffix = " ">
       </#if>
-      <#if herIpAddress?has_content>
+      <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
         ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
-        <#if backupHerIpAddress?has_content>
+        <#if backupHerIpAddress?has_content && isSecondaryHeadEndEnable == "true">
           ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
         </#if>
       </#if>
@@ -558,7 +558,7 @@ interface Vlan1
 
 <#-- Zone based firewall.  Expands on Bootstrap config -->
 
-  ip access-list extended eCVD-deny-from-outside
+ip access-list extended eCVD-deny-from-outside
 
 <#assign count = 10>
 <#if far.firewallIP?has_content>
@@ -619,7 +619,6 @@ int ${cell_if1}
 int ${cell_if2}
   zone-member security INTERNET
   !
-  !
 </#if>
 !
 
@@ -639,7 +638,6 @@ int ${cell_if2}
           </#if>
         </#if>
       </#list>
-!
 !
       class-map match-any CLASS-SILVER
       <#list qosPolicyTable as QOS>
@@ -749,6 +747,7 @@ interface FastEthernet0/0/1
 <#if FastEthernet1_enabled != "true">
     shutdown
 <#else>
+  description SUBTENDED NETWORK
 	no shutdown
 </#if>
 !
@@ -756,6 +755,7 @@ interface FastEthernet0/0/2
 <#if FastEthernet2_enabled != "true">
     shutdown
 <#else>
+  description SUBTENDED NETWORK
 	no shutdown
 </#if>
 !
@@ -763,6 +763,7 @@ interface FastEthernet0/0/3
 <#if FastEthernet3_enabled != "true">
     shutdown
 <#else>
+  description SUBTENDED NETWORK
 	no shutdown
 </#if>
 !
@@ -770,6 +771,7 @@ interface FastEthernet0/0/4
 <#if FastEthernet4_enabled != "true">
     shutdown
 <#else>
+  description SUBTENDED NETWORK
 	no shutdown
 </#if>
 
@@ -777,12 +779,8 @@ interface FastEthernet0/0/4
 iox
 
 <#-- Enable NAT and routing -->
-<#assign gwips = far.lanIPAddress?split(".")>
-<#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
-<#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + (nwk_suffix + 5)>
 ip access-list extended NAT_ACL
      permit ip ${lanNtwk} ${lanWild} any
-     permit ip ${nwk_addr} 0.0.0.31 any
 
 !
 <#if isPrimaryHeadEndEnable == "true">
