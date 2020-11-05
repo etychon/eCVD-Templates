@@ -411,35 +411,53 @@ no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
     !
     !
     ip sla schedule ${p+40} life forever start-time now
-    track ${p+40} ip sla ${p+40} reachability
+      track ${p+40} ip sla ${p+40} reachability
     event manager applet failover_${p+40}
       event track ${p+40} state any
       action 0.1 syslog msg "${priorityIfNameTable[p]} connectivity change, clearing NAT translations"
       action 0.2 cli command "enable"
       action 1.0 cli command "clear ip nat translation *"
+    <#if isCellIntTable[p] != "true">
+      <#-- this is not cellular, use DHCP -->
+      int ${priorityIfNameTable[p]}
+        ip dhcp client route track ${p+40}
+      <#-- This will enable the client route track via EEM, since config causes Registration failure-->
+      <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
+      event manager applet client_route_track_${eventAppName}
+        event timer watchdog time 60
+        action 1 cli command "en"
+        action 2 cli command "show cgna profile name cg-nms-register | i disabled"
+        action 3 string match "*Profile disabled*" "$_cli_result"
+        action 4 if $_string_result eq "0"
+        action 5  exit
+        action 6 end
+        action 7.0 cli command "conf t"
+        action 7.1 cli command "interface ${priorityIfNameTable[p]}"
+        action 7.2 cli command "ip address dhcp"
+        action 7.3 cli command "exit"
+        action 8.0 cli command "no event manager applet client_route_track_${eventAppName}"
+        action 8.1 cli command "exit"
+        action 9.0 cli command "write mem"
+    </#if>
     int ${priorityIfNameTable[p]}
-      zone-member security INTERNET
-      <#if isCellIntTable[p] == "false">
-         ip dhcp client route track ${p+40}
-         ip address dhcp
+    zone-member security INTERNET
+    ip nat outside
+    no shutdown
+    <#if isTunnelEnabledTable[p] == "true" && isPrimaryHeadEndEnable == "true">
+      crypto ikev2 client flexvpn ${vpnTunnelIntf}
+      source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
+      <#if isCellIntTable[p] != "true">
+        <#assign suffix = "dhcp">
+      <#else>
+        <#assign suffix = " ">
       </#if>
-      ip nat outside
-      no shutdown
-      <#if section.vpn_primaryheadend == "true" && isTunnelEnabledTable[p] == "true">
-        crypto ikev2 client flexvpn Tunnel2
-        source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
-        <#if isCellIntTable[p] == "false">
-          ip route ${herIpAddress}  255.255.255.255 ${priorityIfNameTable[p]} dhcp ${100+p}
-          <#if section.vpn_backupheadend?has_content && section.vpn_backupheadend == "true" && backupHerIpAddress?has_content>
-            ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} dhcp ${100+p}
-          </#if>
-        <#else>
-          ip route ${herIpAddress}  255.255.255.255 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
-          <#if section.vpn_backupheadend?has_content && section.vpn_backupheadend == "true" && backupHerIpAddress?has_content>
-            ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
-          </#if>
+      <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
+        ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
+        <#if backupHerIpAddress?has_content && isSecondaryHeadEndEnable == "true">
+          ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
         </#if>
       </#if>
+    </#if>
   </#list>
 </#if>
 
@@ -514,28 +532,6 @@ action 20 cli command "y"
 !
 </#if>
 
-  event manager applet ListAllParams
-  <#assign i = 100>
-  <#list far as key, value>
-    <#if value??>
-      <#if value?is_string>
-        action ${i} cli command "${key} = ${value}"
-        <#assign i = i + 1>
-      <#elseif value?is_sequence>
-          <#assign subi = 0>
-        <#list value as val>
-          <#list val as subkey, subvalue>
-          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
-          <#assign i = i + 1>
-          </#list>
-          <#assign subi = subi + 1>
-        </#list>
-      </#if>
-    <#elseif !value??>
-        action ${i} cli command "${key} = *null*"
-        <#assign i = i + 1>
-    </#if>
-  </#list>
 
 <#-- End eCVD template -->
 
