@@ -193,11 +193,9 @@ ntp server ${ntpIP}
 ip name-server ${DNSIP}
 ip domain name ${domainName}
 
-<#-- Exclude the first 5 IP addresses of the LAN -->
-<#assign gwips = far.lanIPAddress?split(".")>
-<#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
-<#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + (nwk_suffix + 5)>
-ip dhcp excluded-address ${far.lanIPAddress} ${nwk_addr}
+<#if far.lanIPAddressDHCPexcludeRangeStart?has_content && far.lanIPAddressDHCPexcludeRangeEnd?has_content>
+ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
+</#if>
 !
 
 ip dhcp pool subtended
@@ -353,16 +351,19 @@ ip nat inside source route-map RM_WAN_ACL2 interface ${ether_if} overload
    
 <#-- Use default i/f to set PAT -->
 
-
+<#if far.portForwarding?has_content>
 <#list far.portForwarding as PAT>
   <#if PAT['protocol']?has_content>
-	<#if EthernetPriority == 101>
-  			ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${ether_if} ${PAT['publicPort']}
-	<#else>
-			ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${cell_if1} ${PAT['publicPort']}
-	</#if>
-   </#if>
+  <#if EthernetPortPriority == 101>
+        ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${ether_if} ${PAT['publicPort']}
+  <#else>
+     <#if isFirstCell == "true">
+      ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${cell_if1} ${PAT['publicPort']}
+     </#if>
+  </#if>
+  </#if>
 </#list>
+</#if>
 
 <#-- remove this route from the bootstrap config to allow failover -->
 no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
@@ -531,7 +532,6 @@ action 20 cli command "y"
 !
 !
 </#if>
-
 
 <#-- End eCVD template -->
 
