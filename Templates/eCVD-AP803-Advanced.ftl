@@ -1,5 +1,5 @@
 <#-- Default Access point Configuration -->
-<#-- version 1.5 -->
+<#-- version 1.7 -->
 
 <#if far.bootStrap>
     aaa new-model
