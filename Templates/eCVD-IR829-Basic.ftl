@@ -11,7 +11,7 @@
    event manager directory user policy "flash:/managed/scripts"
 
 <#-- Begin eCVD template -->
-<#-- Version 1.7        -->
+<#-- Version 1.71       -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -22,6 +22,7 @@
 <#assign gwips = far.ip?split(".")>
 <#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
 <#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + nwk_suffix>
+<#assign vpnTunnelIntf = "Tunnel2">
 
 <#assign model = "IR829">
 <#assign ether_if = "vlan10">
@@ -73,14 +74,20 @@
 <#-- Network Menu -->
 
 <#-- VPN Settings Menu -->
-<#assign herIpAddress 	= "${far.herIpAddress}">
-<#assign herPsk			= "${far.herPsk}">
-<#if far.backupHerIpAddress?has_content>
-  <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
-  <#if far.backupHerPsk?has_content>
-    <#assign backupHerPsk	= "${far.backupHerPsk}">
-  <#else>
-    <#assign backupHerPsk = "nodefaultPSK">
+<#assign isPrimaryHeadEndEnable = "false">
+<#assign isSecondaryHeadEndEnable = "false">
+<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+  <#if far.herIpAddress?has_content && far.herPsk?has_content>
+    <#assign herIpAddress 	= "${far.herIpAddress}">
+    <#assign herPsk			    = "${far.herPsk}">
+    <#assign isPrimaryHeadEndEnable = "true">
+  </#if>
+  <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+    <#if far.backupHerIpAddress?has_content && far.backupHerPsk?has_content>
+      <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
+      <#assign backupHerPsk	= "${far.backupHerPsk}">
+      <#assign isSecondaryHeadEndEnable = "true">
+    </#if>
   </#if>
 </#if>
 
@@ -108,6 +115,29 @@
 <#else>
 <#assign ntpIP		= "time.nist.gov">
 </#if>
+
+  event manager applet ListAllParams
+  <#assign i = 100>
+  <#list far as key, value>
+    <#if value??>
+      <#if value?is_string>
+        action ${i} cli command "${key} = ${value}"
+        <#assign i = i + 1>
+      <#elseif value?is_sequence>
+          <#assign subi = 0>
+        <#list value as val>
+          <#list val as subkey, subvalue>
+          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+          <#assign i = i + 1>
+          </#list>
+          <#assign subi = subi + 1>
+        </#list>
+      </#if>
+    <#elseif !value??>
+        action ${i} cli command "${key} = *null*"
+        <#assign i = i + 1>
+    </#if>
+  </#list>
 
 <#-- Calculate Netmasks -->
 
@@ -342,12 +372,7 @@ interface Vlan50
     description Native VLAN for AP
 !
 
-<#-- Configure NAT and routing -->
 
-ip forward-protocol nd
-!
-ip nat inside source route-map RM_WAN_ACL interface ${cell_if1} overload
-ip nat inside source route-map RM_WAN_ACL2 interface ${ether_if} overload
    
 <#-- Use default i/f to set PAT -->
 
@@ -470,9 +495,9 @@ ip scp server enable
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
 route-map RM_Tu2 permit 10
      match ip address NAT_ACL
-     match interface Tunnel2
+     match interface ${vpnTunnelIntf}
 
-ip nat inside source route-map RM_Tu2 interface Tunnel2 overload
+ip nat inside source route-map RM_Tu2 interface ${vpnTunnelIntf} overload
 </#if>
 !
 ip access-list extended filter-internet
@@ -497,13 +522,24 @@ ip access-list extended NAT_ACL
 dialer-list 1 protocol ip permit
 !
 !
+<#if isFirstCell == "true">
 route-map RM_WAN_ACL permit 10 
     match ip address NAT_ACL
     match interface ${cell_if1}
 !
+</#if>
 route-map RM_WAN_ACL2 permit 10 
     match ip address NAT_ACL
     match interface ${ether_if}
+!
+<#-- Configure NAT and routing -->
+
+ip forward-protocol nd
+!
+<#if isFirstCell == "true">
+ip nat inside source route-map RM_WAN_ACL interface ${cell_if1} overload
+</#if>
+ip nat inside source route-map RM_WAN_ACL2 interface ${ether_if} overload
 !
 line vty 0 4
     exec-timeout 5 0
@@ -532,6 +568,29 @@ action 20 cli command "y"
 !
 !
 </#if>
+
+  event manager applet ListAllSections
+  <#assign i = 100>
+  <#list section as key, value>
+    <#if value??>
+      <#if value?is_string>
+        action ${i} cli command "${key} = ${value}"
+        <#assign i = i + 1>
+      <#elseif value?is_sequence>
+          <#assign subi = 0>
+        <#list value as val>
+          <#list val as subkey, subvalue>
+          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+          <#assign i = i + 1>
+          </#list>
+          <#assign subi = subi + 1>
+        </#list>
+      </#if>
+    <#elseif !value??>
+        action ${i} cli command "${key} = *null*"
+        <#assign i = i + 1>
+    </#if>
+  </#list>
 
 <#-- End eCVD template -->
 
