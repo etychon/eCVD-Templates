@@ -561,8 +561,8 @@ interface Vlan1
 ip access-list extended eCVD-deny-from-outside
 
 <#assign count = 10>
-<#if far.firewallIP?has_content>
-<#list far.firewallIP as FW>
+<#if far.firewallIp?has_content>
+<#list far.firewallIp as FW>
   <#if FW['fwType']?has_content>
    <#if FW['fwType'] == "deny">
     <#if FW['fwProtocol'] == "ip" || FW['fwProtocol'] == "icmp">
@@ -579,8 +579,8 @@ ip access-list extended eCVD-deny-from-outside
   ip access-list extended eCVD-permit-from-outside
 
 <#assign count = 10>
-<#if far.firewallIP??>
-<#list far.firewallIP as FW>
+<#if far.firewallIp??>
+<#list far.firewallIp as FW>
   <#if FW['fwType']?has_content>
    <#if FW['fwType'] == "allow">
     <#if FW['fwProtocol'] == "ip" || FW['fwProtocol'] == "icmp">
