@@ -458,18 +458,18 @@ iox
     zone-member security INTERNET
     ip nat outside
     no shutdown
-    <#if isTunnelEnabledTable[p] == "true">
+    <#if isTunnelEnabledTable[p] == "true" && isPrimaryHeadEndEnable == "true">
       crypto ikev2 client flexvpn ${vpnTunnelIntf}
       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
       <#if isCellIntTable[p] != "true">
-        ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} dhcp
-        <#if backupHerIpAddress?has_content>
-          ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} dhcp
-        </#if>
+        <#assign suffix = "dhcp">
       <#else>
-        ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]}
-        <#if backupHerIpAddress?has_content>
-          ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]}
+        <#assign suffix = " ">
+      </#if>
+      <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
+        ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
+        <#if backupHerIpAddress?has_content && isSecondaryHeadEndEnable == "true">
+          ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
         </#if>
       </#if>
     </#if>

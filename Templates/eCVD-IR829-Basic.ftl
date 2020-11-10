@@ -11,7 +11,7 @@
    event manager directory user policy "flash:/managed/scripts"
 
 <#-- Begin eCVD template -->
-<#-- Version 1.7        -->
+<#-- Version 1.71       -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -22,6 +22,7 @@
 <#assign gwips = far.ip?split(".")>
 <#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
 <#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + nwk_suffix>
+<#assign vpnTunnelIntf = "Tunnel2">
 
 <#assign model = "IR829">
 <#assign ether_if = "vlan10">
@@ -73,14 +74,20 @@
 <#-- Network Menu -->
 
 <#-- VPN Settings Menu -->
-<#assign herIpAddress 	= "${far.herIpAddress}">
-<#assign herPsk			= "${far.herPsk}">
-<#if far.backupHerIpAddress?has_content>
-  <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
-  <#if far.backupHerPsk?has_content>
-    <#assign backupHerPsk	= "${far.backupHerPsk}">
-  <#else>
-    <#assign backupHerPsk = "nodefaultPSK">
+<#assign isPrimaryHeadEndEnable = "false">
+<#assign isSecondaryHeadEndEnable = "false">
+<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+  <#if far.herIpAddress?has_content && far.herPsk?has_content>
+    <#assign herIpAddress 	= "${far.herIpAddress}">
+    <#assign herPsk			    = "${far.herPsk}">
+    <#assign isPrimaryHeadEndEnable = "true">
+  </#if>
+  <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+    <#if far.backupHerIpAddress?has_content && far.backupHerPsk?has_content>
+      <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
+      <#assign backupHerPsk	= "${far.backupHerPsk}">
+      <#assign isSecondaryHeadEndEnable = "true">
+    </#if>
   </#if>
 </#if>
 
@@ -108,6 +115,29 @@
 <#else>
 <#assign ntpIP		= "time.nist.gov">
 </#if>
+
+  event manager applet ListAllParams
+  <#assign i = 100>
+  <#list far as key, value>
+    <#if value??>
+      <#if value?is_string>
+        action ${i} cli command "${key} = ${value}"
+        <#assign i = i + 1>
+      <#elseif value?is_sequence>
+          <#assign subi = 0>
+        <#list value as val>
+          <#list val as subkey, subvalue>
+          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+          <#assign i = i + 1>
+          </#list>
+          <#assign subi = subi + 1>
+        </#list>
+      </#if>
+    <#elseif !value??>
+        action ${i} cli command "${key} = *null*"
+        <#assign i = i + 1>
+    </#if>
+  </#list>
 
 <#-- Calculate Netmasks -->
 
@@ -193,11 +223,9 @@ ntp server ${ntpIP}
 ip name-server ${DNSIP}
 ip domain name ${domainName}
 
-<#-- Exclude the first 5 IP addresses of the LAN -->
-<#assign gwips = far.lanIPAddress?split(".")>
-<#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
-<#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + (nwk_suffix + 5)>
-ip dhcp excluded-address ${far.lanIPAddress} ${nwk_addr}
+<#if far.lanIPAddressDHCPexcludeRangeStart?has_content && far.lanIPAddressDHCPexcludeRangeEnd?has_content>
+ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
+</#if>
 !
 
 ip dhcp pool subtended
@@ -344,25 +372,23 @@ interface Vlan50
     description Native VLAN for AP
 !
 
-<#-- Configure NAT and routing -->
 
-ip forward-protocol nd
-!
-ip nat inside source route-map RM_WAN_ACL interface ${cell_if1} overload
-ip nat inside source route-map RM_WAN_ACL2 interface ${ether_if} overload
    
 <#-- Use default i/f to set PAT -->
 
-
+<#if far.portForwarding?has_content>
 <#list far.portForwarding as PAT>
   <#if PAT['protocol']?has_content>
-	<#if EthernetPriority == 101>
-  			ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${ether_if} ${PAT['publicPort']}
-	<#else>
-			ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${cell_if1} ${PAT['publicPort']}
-	</#if>
-   </#if>
+  <#if EthernetPortPriority == 101>
+        ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${ether_if} ${PAT['publicPort']}
+  <#else>
+     <#if isFirstCell == "true">
+      ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${cell_if1} ${PAT['publicPort']}
+     </#if>
+  </#if>
+  </#if>
 </#list>
+</#if>
 
 <#-- remove this route from the bootstrap config to allow failover -->
 no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
@@ -411,35 +437,53 @@ no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
     !
     !
     ip sla schedule ${p+40} life forever start-time now
-    track ${p+40} ip sla ${p+40} reachability
+      track ${p+40} ip sla ${p+40} reachability
     event manager applet failover_${p+40}
       event track ${p+40} state any
       action 0.1 syslog msg "${priorityIfNameTable[p]} connectivity change, clearing NAT translations"
       action 0.2 cli command "enable"
       action 1.0 cli command "clear ip nat translation *"
+    <#if isCellIntTable[p] != "true">
+      <#-- this is not cellular, use DHCP -->
+      int ${priorityIfNameTable[p]}
+        ip dhcp client route track ${p+40}
+      <#-- This will enable the client route track via EEM, since config causes Registration failure-->
+      <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
+      event manager applet client_route_track_${eventAppName}
+        event timer watchdog time 60
+        action 1 cli command "en"
+        action 2 cli command "show cgna profile name cg-nms-register | i disabled"
+        action 3 string match "*Profile disabled*" "$_cli_result"
+        action 4 if $_string_result eq "0"
+        action 5  exit
+        action 6 end
+        action 7.0 cli command "conf t"
+        action 7.1 cli command "interface ${priorityIfNameTable[p]}"
+        action 7.2 cli command "ip address dhcp"
+        action 7.3 cli command "exit"
+        action 8.0 cli command "no event manager applet client_route_track_${eventAppName}"
+        action 8.1 cli command "exit"
+        action 9.0 cli command "write mem"
+    </#if>
     int ${priorityIfNameTable[p]}
-      zone-member security INTERNET
-      <#if isCellIntTable[p] == "false">
-         ip dhcp client route track ${p+40}
-         ip address dhcp
+    zone-member security INTERNET
+    ip nat outside
+    no shutdown
+    <#if isTunnelEnabledTable[p] == "true" && isPrimaryHeadEndEnable == "true">
+      crypto ikev2 client flexvpn ${vpnTunnelIntf}
+      source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
+      <#if isCellIntTable[p] != "true">
+        <#assign suffix = "dhcp">
+      <#else>
+        <#assign suffix = " ">
       </#if>
-      ip nat outside
-      no shutdown
-      <#if section.vpn_primaryheadend == "true" && isTunnelEnabledTable[p] == "true">
-        crypto ikev2 client flexvpn Tunnel2
-        source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
-        <#if isCellIntTable[p] == "false">
-          ip route ${herIpAddress}  255.255.255.255 ${priorityIfNameTable[p]} dhcp ${100+p}
-          <#if section.vpn_backupheadend?has_content && section.vpn_backupheadend == "true" && backupHerIpAddress?has_content>
-            ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} dhcp ${100+p}
-          </#if>
-        <#else>
-          ip route ${herIpAddress}  255.255.255.255 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
-          <#if section.vpn_backupheadend?has_content && section.vpn_backupheadend == "true" && backupHerIpAddress?has_content>
-            ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
-          </#if>
+      <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
+        ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
+        <#if backupHerIpAddress?has_content && isSecondaryHeadEndEnable == "true">
+          ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
         </#if>
       </#if>
+    </#if>
   </#list>
 </#if>
 
@@ -451,9 +495,9 @@ ip scp server enable
 <#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
 route-map RM_Tu2 permit 10
      match ip address NAT_ACL
-     match interface Tunnel2
+     match interface ${vpnTunnelIntf}
 
-ip nat inside source route-map RM_Tu2 interface Tunnel2 overload
+ip nat inside source route-map RM_Tu2 interface ${vpnTunnelIntf} overload
 </#if>
 !
 ip access-list extended filter-internet
@@ -478,13 +522,24 @@ ip access-list extended NAT_ACL
 dialer-list 1 protocol ip permit
 !
 !
+<#if isFirstCell == "true">
 route-map RM_WAN_ACL permit 10 
     match ip address NAT_ACL
     match interface ${cell_if1}
 !
+</#if>
 route-map RM_WAN_ACL2 permit 10 
     match ip address NAT_ACL
     match interface ${ether_if}
+!
+<#-- Configure NAT and routing -->
+
+ip forward-protocol nd
+!
+<#if isFirstCell == "true">
+ip nat inside source route-map RM_WAN_ACL interface ${cell_if1} overload
+</#if>
+ip nat inside source route-map RM_WAN_ACL2 interface ${ether_if} overload
 !
 line vty 0 4
     exec-timeout 5 0
@@ -514,9 +569,9 @@ action 20 cli command "y"
 !
 </#if>
 
-  event manager applet ListAllParams
+  event manager applet ListAllSections
   <#assign i = 100>
-  <#list far as key, value>
+  <#list section as key, value>
     <#if value??>
       <#if value?is_string>
         action ${i} cli command "${key} = ${value}"
