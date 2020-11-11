@@ -324,8 +324,7 @@ ip dhcp pool subtended
 !
 <#-- S2S VPN Configuration -->
 !
-<#if isPrimaryHeadEndEnable == "true">
-  <#if herIpAddress?has_content && herPsk?has_content>
+<#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content && herPsk?has_content>
     crypto ikev2 authorization policy CVPN
  	    route set interface
  	    route accept any distance 70
@@ -376,8 +375,13 @@ interface ${vpnTunnelIntf}
  tunnel path-mtu-discovery
  tunnel protection ipsec profile CVPN_IPS_PF
 !
+crypto ikev2 client flexvpn ${vpnTunnelIntf}
+  peer 1 ${herIpAddress}
+  <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+    peer 2 ${backupHerIpAddress}
+  </#if>
+  client connect ${vpnTunnelIntf}
 !
-</#if>
 </#if>
 
 <#-- interface priorities -->
