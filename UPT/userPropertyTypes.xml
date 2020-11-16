@@ -1360,7 +1360,7 @@
 
     <propertyType>
       <name>umbrellaToken</name>
-      <displayName>Enter Umbrella Token Here</displayName>
+      <displayName>Enter Umbrella Token</displayName>
       <description>Umbrella Token</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Security>Umbrella</section>
@@ -1368,13 +1368,14 @@
       <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
+      <defaultValue>.*\.cisco\..*</defaultValue>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'umbrellaToken' per device", "value": "${far.umbrellaToken}" }]</seedValues>
     </propertyType>
 
     <propertyType>
       <name>umbrellaDnsBypassList</name>
-      <displayName>Enter Umbrella Bypass Domains here</displayName>
+      <displayName>Enter Umbrella Bypass Regex Patterns</displayName>
       <description>Umbrella Bypass Domains</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Security>Umbrella</section>
