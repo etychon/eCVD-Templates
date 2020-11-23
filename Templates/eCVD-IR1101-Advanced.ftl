@@ -607,7 +607,7 @@ ip access-list extended eCVD-deny-from-outside
 !
   policy-map type inspect INTERNET2Any
     class type inspect eCVD-permit-list
-      pass
+      inspect
     class type inspect eCVD-deny-list
       drop
 !
