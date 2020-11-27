@@ -548,8 +548,24 @@ action 20 cli command "y"
 !
 !
 </#if>
-<#-- End eCVD template -->
 
+<#-- generare RSA keys for SSH -->
+
+event manager applet ssh_crypto_key authorization bypass
+  event timer cron cron-entry "@reboot" maxrun 60
+  action 1.0 cli command "enable"
+  action 1.1 cli command "config t"
+  action 1.2 cli command "crypto key generate rsa usage-keys label SSHKEY modulus 2048"
+  action 1.3 cli command "end"
+  action 1.4 cli command "write mem" pattern "confirm|#"
+  action 1.5 regexp "confirm" "$_cli_result"
+  action 1.6 if $_regexp_result eq "1"
+  action 1.7 cli command "y"
+  action 1.8 end
+  action 1.9 cli command "config t"
+  action 2.0 cli command "no event manager applet ssh_crypto_key"
+
+<#-- End eCVD template -->
 
 <#elseif far.isRunningCgOs()>
 
