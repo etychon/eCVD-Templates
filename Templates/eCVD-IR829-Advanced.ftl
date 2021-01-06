@@ -887,7 +887,7 @@ crypto ikev2 authorization policy CVPN
 <#-- Reverse telnet to serial port at TCP port 2050 -->
 !
 line console 0
-  transport output none
+  transport output telnet ssh
   databits 8
   parity none
   stopbits 1
