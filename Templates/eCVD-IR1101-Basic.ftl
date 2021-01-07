@@ -435,7 +435,7 @@ iox
     <#if isCellIntTable[p] != "true">
       <#-- this is not cellular, use DHCP -->
       int ${priorityIfNameTable[p]}
-        ip dhcp client route track ${p+40}
+        <#-- ip dhcp client route track ${p+40} -->
       <#-- This will enable the client route track via EEM, since config causes Registration failure-->
       <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
       event manager applet client_route_track_${eventAppName}

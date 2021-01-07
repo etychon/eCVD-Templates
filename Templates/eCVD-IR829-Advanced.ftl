@@ -465,7 +465,7 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
     <#if isCellIntTable[p] != "true">
       <#-- this is not cellular, use DHCP -->
       int ${priorityIfNameTable[p]}
-        ip dhcp client route track ${p+40}
+        <#-- ip dhcp client route track ${p+40} -->
         <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
       event manager applet client_route_track_${eventAppName}
         event timer watchdog time 60

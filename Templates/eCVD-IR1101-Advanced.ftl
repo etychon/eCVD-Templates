@@ -1085,6 +1085,29 @@ event manager applet ssh_crypto_key authorization bypass
     </#if>
   </#list>
 
+  event manager applet ListAllConfig
+  <#assign i = 100>
+  <#list config as key, value>
+    <#if value??>
+      <#if value?is_string>
+        action ${i} cli command "${key} = ${value}"
+        <#assign i = i + 1>
+      <#elseif value?is_sequence>
+          <#assign subi = 0>
+        <#list value as val>
+          <#list val as subkey, subvalue>
+          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+          <#assign i = i + 1>
+          </#list>
+          <#assign subi = subi + 1>
+        </#list>
+      </#if>
+    <#elseif !value??>
+        action ${i} cli command "${key} = *null*"
+        <#assign i = i + 1>
+    </#if>
+  </#list>
+
 </#compress>
 
 <#-- End eCVD template -->

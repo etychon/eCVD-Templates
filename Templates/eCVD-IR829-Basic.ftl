@@ -109,7 +109,7 @@
 <#else>
 <#assign clockTZ	= "edt">
 </#if>
-<#-- assign clockDST	= "${far.clockDST}"--> 
+<#-- assign clockDST	= "${far.clockDST}"-->
 <#if far.ntpIP?has_content>
 <#assign ntpIP 		= "${far.ntpIP}">
 <#else>
@@ -145,10 +145,10 @@
 
 <#-- Binary Conversion of LAN IP-->
 
-<#list lanIP as lann> 
+<#list lanIP as lann>
 <#assign lan=lann?number>
 <#list 1..100 as y>
-<#if lan < 1> 
+<#if lan < 1>
 <#if lan == 0>
 <#list 1..8 as s> <#assign lan_ip=lan_ip+["0"]> </#list> </#if>
 <#if lan_ip?size % 8 != 0> <#list 1..8 as s> <#assign lan_ip=lan_ip+["0"]> <#if lan_ip?size % 8 == 0> <#break> </#if> </#list> </#if>
@@ -158,7 +158,7 @@
 
 <#-- Binary Conversion of NetMask-->
 
-<#list lanNet as lann> 
+<#list lanNet as lann>
 <#assign lan=lann?number>
 <#list 1..100 as y>
 <#if lan < 1 >
@@ -230,14 +230,14 @@ ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAdd
 
 ip dhcp pool subtended
     network ${lanNtwk} ${far.lanNetmask}
-    default-router ${far.lanIPAddress} 
+    default-router ${far.lanIPAddress}
     dns-server ${DNSIP}
     lease 0 0 10
 !
 !
 <#list far.Users as user >
 		username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
-</#list> 
+</#list>
 !
 <#-- S2S VPN Configuration -->
 !
@@ -349,14 +349,14 @@ interface GigabitEthernet2
     shutdown
 <#else>
 	no shutdown
-</#if>   
+</#if>
 !
 interface GigabitEthernet3
 <#if GigEthernet3 != "true">
     shutdown
 <#else>
 	no shutdown
-</#if>    
+</#if>
 !
 interface GigabitEthernet4
 <#if GigEthernet4 != "true">
@@ -373,7 +373,7 @@ interface Vlan50
 !
 
 
-   
+
 <#-- Use default i/f to set PAT -->
 
 <#if far.portForwarding?has_content>
@@ -446,7 +446,7 @@ no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
     <#if isCellIntTable[p] != "true">
       <#-- this is not cellular, use DHCP -->
       int ${priorityIfNameTable[p]}
-        ip dhcp client route track ${p+40}
+        <#-- ip dhcp client route track ${p+40} -->
       <#-- This will enable the client route track via EEM, since config causes Registration failure-->
       <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
       event manager applet client_route_track_${eventAppName}
@@ -523,12 +523,12 @@ dialer-list 1 protocol ip permit
 !
 !
 <#if isFirstCell == "true">
-route-map RM_WAN_ACL permit 10 
+route-map RM_WAN_ACL permit 10
     match ip address NAT_ACL
     match interface ${cell_if1}
 !
 </#if>
-route-map RM_WAN_ACL2 permit 10 
+route-map RM_WAN_ACL2 permit 10
     match ip address NAT_ACL
     match interface ${ether_if}
 !
