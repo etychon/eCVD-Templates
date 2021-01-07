@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD template for IR1101 -----
-     ---- Version 1.79 -----------------------
+     ---- Version 1.80 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -445,8 +445,11 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
       action 1.0 cli command "clear ip nat translation *"
     <#if isCellIntTable[p] != "true">
       <#-- this is not cellular, use DHCP -->
-      int ${priorityIfNameTable[p]}
-        ip dhcp client route track ${p+40}
+      <#-- config below is disabled until CSCvw77702 is fixed on both IOS and IOS-XE
+           "'no ip dhcp client route track' should removed tracked object immediately"
+           int ${priorityIfNameTable[p]}
+             ip dhcp client route track ${p+40}
+      -->
       <#-- This will enable the client route track via EEM, since config causes Registration failure-->
       <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
       event manager applet client_route_track_${eventAppName}
@@ -716,6 +719,13 @@ controller ${cell_if1}
   lte gps nmea
 </#if>
 !
+<#-- IoT OD location tracking magic -->
+<#if config.enableLocationTracking>
+  event manager environment _gps_poll_interval ${config.locStreamRate}
+  event manager environment _gps_threshold ${config.distThreshold}
+  event manager policy fnd-push-gps.tcl type user
+</#if>
+!
 <#if isFirstCell == "true">
 interface ${cell_if1}
     ip address negotiated
@@ -930,7 +940,6 @@ interface Async0/2/0
 !
 line 0/2/0
   transport input telnet
-  transport output none
   databits 8
   parity none
   stopbits 1
