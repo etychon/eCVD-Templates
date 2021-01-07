@@ -11,7 +11,7 @@
    event manager directory user policy "flash:/managed/scripts"
 
 <#-- Begin eCVD template -->
-<#-- Version 1.71        -->
+<#-- Version 1.72        -->
 
 <#-- Default BootStrap Configuration -->
 

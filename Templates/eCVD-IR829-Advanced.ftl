@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR829 -----
-     ---- Version 1.76 -----------------------
+     ---- Version 1.77 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
