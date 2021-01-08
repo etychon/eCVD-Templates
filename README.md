@@ -3,9 +3,11 @@
 
 This repository contains eCVD templates for Cisco IoT Operations Dashboard (IoT OD). These templates are based on user feedback and testing performed by the Cisco Validated Design (CVD) team, and are meant to used with Cisco IoT OD.
 
+[Cisco IoT Operations Dashboard](https://developer.cisco.com/docs/iotod/) is a device management platform to manage Cisco industrial network devices such as IR1101, IR829, IR809, and IR807. Devices are onboarded using [Cisco Plug and Play Connect](https://www.cisco.com/c/en/us/buy/smart-accounts/plug-play-connect.html).
+
 # How it works
 
-IoT OC will present the user with a graphical configuration template that is build based on `userPropertyTypes.xml`. Based on user input and preference, a data model is fed to the appropriate template that will generate an IOS configuration file.
+IoT OD will present the user with a graphical configuration template that is build based on `userPropertyTypes.xml`. Based on user input and preference, a data model is fed to the appropriate template that will generate an IOS configuration file.
 
 ![flow.png](images/flow.png)
 
@@ -22,7 +24,9 @@ The templates provided here can be used as they are, or as a basis for your own 
 
 The ultimate output of a template is a Cisco IOS configuration that will be pushed to the gateway.
 
-# Templates provided her
+How to use templates provided here in Cisco IoT Operations Dashbord is explained in [Cisco DevNet IoT OD documentation](https://developer.cisco.com/docs/iotod/#!manage-templates-and-groups/add-and-manage-configurations).
+
+# Templates provided
 
 This repo contains templates for IR829, IR1101, and IR829's access point (AP803). They are two versions of the templates: Basic (B) and Advanced (A).
 
@@ -56,3 +60,5 @@ The table below lists what's supported by each template type, either `A` for Adv
 Note:
 * IR829s have two templates: one for the gateway, one for the Access Point.
 * The default upstream ethernet port is Gig0/0/0 for IR1101 and Gig1 for IR829.
+
+# References
