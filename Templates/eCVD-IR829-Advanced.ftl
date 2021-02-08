@@ -968,6 +968,7 @@ interface ${ether_if}
   no ignition enable
 </#if>
 
+<#if section.wan_wgb?has_content && section.wan_wgb == "true">
 event manager applet setAPvlan
  event timer watchdog time 120
  action 1.0 cli command "en"
@@ -983,7 +984,7 @@ event manager applet setAPvlan
  action 5.3 cli command "no event manager applet setAPvlan"
  action 6.0 cli command "exit"
  action 6.1 cli command "write mem"
-
+</#if>
 <#-- -- LOGGING ONLY ------------------------- -->
 
   event manager applet ListAllParams
