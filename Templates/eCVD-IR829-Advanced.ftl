@@ -496,9 +496,9 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
         <#assign suffix = " ">
       </#if>
       <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
-        ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
+        ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix} ${p+40}
         <#if backupHerIpAddress?has_content && isSecondaryHeadEndEnable == "true">
-          ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix}
+          ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix} ${p+40}
         </#if>
       </#if>
     </#if>
