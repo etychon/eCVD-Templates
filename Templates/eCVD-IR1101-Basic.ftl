@@ -300,7 +300,7 @@ controller ${cell_if1}
 !
 
 interface ${ether_if}
-    media-type rj45
+    media-type auto-select
     no shutdown
     ip nat outside
 !
