@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD template for IR1101 -----
-     ---- Version 1.80 -----------------------
+     ---- Version 1.81 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -616,6 +616,7 @@ ip access-list extended eCVD-deny-from-outside
 !
 int ${ether_if}
   zone-member security INTERNET
+  media-type auto-select
   !
 <#if isFirstCell == "true">
 int ${cell_if1}
