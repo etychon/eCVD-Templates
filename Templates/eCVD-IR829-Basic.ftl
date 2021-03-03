@@ -1,17 +1,5 @@
-<#if far.isRunningIos()>
-<#-- Enable periodic inventory notification every 30 mins to report metrics. -->
-    cgna profile cg-nms-periodic
-      no active
-      interval 30
-      active
-    exit
-<#-- Enable periodic configuration (heartbeat) notification every 10 mins. -->
-   cgna heart-beat interval 10
-
-   event manager directory user policy "flash:/managed/scripts"
-
-<#-- Begin eCVD template -->
-<#-- Version 1.72       -->
+<#-- Begin eCVD BASIC template for IR829 -->
+<#-- Version 1.73       -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -593,9 +581,3 @@ action 20 cli command "y"
   </#list>
 
 <#-- End eCVD template -->
-
-<#elseif far.isRunningCgOs()>
-
-<#else>
-  ${provisioningFailed("FAR is not running CG-OS or IOS")}
-</#if>
