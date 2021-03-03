@@ -360,6 +360,20 @@ interface Async0/2/0
 <#-- Enable IOx -->
 iox
 
+ip dhcp pool ioxpool
+ network 10.9.51.0 255.255.255.0
+ default-router 10.9.51.1
+ dns-server 10.9.51.1
+ remember
+!
+interface VirtualPortGroup0
+ ip address 10.9.51.1 255.255.255.0
+ ip nat inside
+ ipv6 enable
+!
+ip access-list standard IOxRange
+ 10 permit 10.9.51.0 0.0.0.255
+
 
 <#-- Use default i/f to set PAT -->
 
@@ -548,6 +562,8 @@ action 20 cli command "y"
 !
 !
 </#if>
+
+<#-- enable IOx -->
 
 <#-- generare RSA keys for SSH -->
 
