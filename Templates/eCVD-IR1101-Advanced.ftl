@@ -616,8 +616,7 @@ ip access-list extended eCVD-deny-from-outside
 !
 int ${ether_if}
   zone-member security INTERNET
-  media-type auto-select
-  !
+!
 <#if isFirstCell == "true">
 int ${cell_if1}
   zone-member security INTERNET
