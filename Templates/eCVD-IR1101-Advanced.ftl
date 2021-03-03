@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD ADVANCED template for IR1101 -----
-     ---- Version 1.82 -----------------------
+     ---- Version 1.83 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -795,8 +795,8 @@ iox
 
 <#-- Enable NAT and routing -->
 ip access-list extended NAT_ACL
-     permit ip ${lanNtwk} ${lanWild} any
-
+  permit ip ${lanNtwk} ${lanWild} any
+  permit ip 10.9.51.0 0.0.0.255 any
 !
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
