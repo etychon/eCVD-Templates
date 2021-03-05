@@ -1,4 +1,5 @@
-<#-- Default Access point Configuration -->
+<#-- eCVD AP803 BASIC template -->
+<#-- version 1.7 -->
 
 <#if far.bootStrap>
     aaa new-model
@@ -89,7 +90,7 @@ dot11 ssid ${far.wifiSsid}
     !
     !
     interface GigabitEthernet0.1
-      encapsulation dot1Q 1 
+      encapsulation dot1Q 1
       no ip route-cache
       bridge-group 10
       bridge-group 10 spanning-disabled

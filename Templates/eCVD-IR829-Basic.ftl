@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.73       -->
+<#-- Version 1.74       -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -12,7 +12,11 @@
 <#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + nwk_suffix>
 <#assign vpnTunnelIntf = "Tunnel2">
 
-<#assign model = "IR829">
+<#if model?contains("IR829")>
+      <#assign iox_if = "GigabitEthernet5">
+<#else>
+      <#assign iox_if = "GigabitEthernet2">
+</#if>
 <#assign ether_if = "vlan10">
 <#assign cell_contr = "Cellular 0">
 <#if pid?contains("2LTE")>
@@ -23,12 +27,13 @@
 
 <#-- Interface Menu -->
 <#assign GigEthernet1 = "${far.gigEthernet1}">
-<#assign GigEthernet2 = "${far.gigEthernet2}">
-<#assign GigEthernet3 = "${far.gigEthernet3}">
-<#assign GigEthernet4 = "${far.gigEthernet4}">
+<#if model?contains("IR829")>
+  <#assign GigEthernet2 = "${far.gigEthernet2}">
+  <#assign GigEthernet3 = "${far.gigEthernet3}">
+  <#assign GigEthernet4 = "${far.gigEthernet4}">
+</#if>
 
 <#assign ipslaDestIPaddress = ["4.2.2.1","4.2.2.2"]>
-
 
 <#-- VARIABLES INITIALIZATION -->
 <#assign highestPriorityIfName = 1>
@@ -201,9 +206,6 @@ service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
 service call-home
-
-!
-no logging console
 !
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
@@ -312,6 +314,7 @@ interface ${cell_if1}
 !
 !
 interface Vlan1
+    description Subtended network
     ip address ${far.lanIPAddress} ${far.lanNetmask}
     ip nbar protocol-discovery
     ip nat inside
@@ -502,10 +505,14 @@ ip access-list extended filter-internet
 </#if>
 </#if>
 !
-ip access-list extended NAT_ACL
-     permit ip ${lanNtwk} ${lanWild} any
-     permit ip ${nwk_addr} 0.0.0.31 any
 !
+ip access-list extended NAT_ACL
+   ! VLAN 1
+   permit ip ${lanNtwk} ${lanWild} any
+   ! Loopback1
+   permit ip ${nwk_addr} 0.0.0.31 any
+   ! IOx pool
+   permit ip 10.9.51.0 0.0.0.255 any
 !
 dialer-list 1 protocol ip permit
 !
@@ -543,7 +550,26 @@ ignition off-timer 400
 no ignition enable
 </#if>
 
-
+<#-- configure IOx -->
+!
+ip dhcp pool ioxpool
+ network 10.9.51.0 255.255.255.0
+ default-router 10.9.51.1
+ dns-server 10.9.51.1
+   remember
+!
+ip host gos.iotspdev.local 10.9.51.2
+!
+interface GigabitEthernet5
+ ip address 10.9.51.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 enable
+ no shutdown
+!
+ip nat inside source static tcp 10.9.51.2 8443 interface Vlan10 9443
 <#-- Set APN -->
 
 <#if APN1?has_content>

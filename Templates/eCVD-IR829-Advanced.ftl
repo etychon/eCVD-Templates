@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR829 -----
-     ---- Version 1.77 -----------------------
+     ---- Version 1.78 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -278,9 +278,6 @@ service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
 service call-home
-!
-<#-- #TODO We may need to disable logging console later in production -->
-<#-- no logging console -->
 !
 <#-- ADDED 3 LINES BELOW FOR ADVANCED -->
 <#--
@@ -698,6 +695,7 @@ interface ${cell_if1}
 </#if>
 !
 interface Vlan1
+    description Subtended network
     ip address ${far.lanIPAddress} ${far.lanNetmask}
     ip nbar protocol-discovery
     ip nat inside
@@ -747,7 +745,10 @@ interface Async0
 !
 <#-- Enable NAT and routing -->
 ip access-list extended NAT_ACL
-     permit ip ${lanNtwk} ${lanWild} any
+  ! VLAN 1
+  permit ip ${lanNtwk} ${lanWild} any
+  ! IOx pool
+  permit ip 10.9.51.0 0.0.0.255 any
 !
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
@@ -967,6 +968,27 @@ interface ${ether_if}
 <#else>
   no ignition enable
 </#if>
+
+<#-- configure IOx -->
+!
+ip dhcp pool ioxpool
+ network 10.9.51.0 255.255.255.0
+ default-router 10.9.51.1
+ dns-server 10.9.51.1
+   remember
+!
+ip host gos.iotspdev.local 10.9.51.2
+!
+interface GigabitEthernet5
+ ip address 10.9.51.1 255.255.255.0
+ ip nat inside
+ ip virtual-reassembly in
+ duplex auto
+ speed auto
+ ipv6 enable
+ no shutdown
+!
+ip nat inside source static tcp 10.9.51.2 8443 interface Vlan10 9443
 
 <#if section.wan_wgb?has_content && section.wan_wgb == "true">
 event manager applet setAPvlan

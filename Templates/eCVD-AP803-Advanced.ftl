@@ -1,17 +1,18 @@
 <#-- Default Access point Configuration -->
+<#-- eCVD AP803 ADVANCED template -->
 <#-- version 1.7 -->
 
 <#if far.bootStrap>
     aaa new-model
     aaa authentication login default local
     aaa authorization exec default local
-    ! 
+    !
     ip domain name cisco.com
     !
     archive
     path flash:
     maximum 3
-    ! 
+    !
     !
     username ${deviceDefault.apAdminUsername} privilege 15 secret ${deviceDefault.apAdminPassword}
     <#list far.Users as user >
@@ -174,7 +175,7 @@ interface BVI1
     !
     !
     interface GigabitEthernet0.1
-      encapsulation dot1Q 1 
+      encapsulation dot1Q 1
       no ip route-cache
       bridge-group 10
       bridge-group 10 spanning-disabled
@@ -184,7 +185,7 @@ interface BVI1
       no ip address
       no ip route-cache
     </#if>
-    
+
     bridge 1 aging-time 86400
     bridge 10 aging-time 86400
     !
