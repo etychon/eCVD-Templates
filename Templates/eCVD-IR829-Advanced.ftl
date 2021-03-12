@@ -448,8 +448,14 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
     </#if>
     ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
     ip sla ${p+40}
-      icmp-echo ${ipslaDestIPaddress[p]} source-interface ${priorityIfNameTable[p]}
-      frequency <#if isCellIntTable[p] == "true">50<#else>10</#if>
+      <#-- Cell interface do not require the source for the SLA -->
+      <#if isCellIntTable[p] == "true">
+      	icmp-echo ${ipslaDestIPaddress[p]}
+        frequency 50
+      <#else>
+        icmp-echo ${ipslaDestIPaddress[p]} source-interface ${priorityIfNameTable[p]}
+        frequency 10
+      </#if>
     !
     !
     ip sla schedule ${p+40} life forever start-time now
