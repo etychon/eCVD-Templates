@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD ADVANCED template for IR1101 -----
-     ---- Version 1.83 -----------------------
+     ---- Version 1.84 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -72,17 +72,20 @@
   <#assign isEthernetEnable = "false">
 </#if>
 
-<#assign isFirstCell = "false">
+<#-- by default GPS is off -->
 <#assign isGpsEnabled = "false">
+<#if far.cellFirmwareVersion1?has_content && far.cellFirmwareVersion1?starts_with("SWI")>
+  <#-- taking wild guess that if Sierra Wireless firmware it
+     probably has GPS capability. -->
+  <#assign isGpsEnabled = "true">
+</#if>
+
+
+<#assign isFirstCell = "false">
 <#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
   <#assign isFirstCell = "true">
   <#if far.apn1?has_content && far.apn1 != "null">
     <#assign APN1 = far.apn1>
-  </#if>
-  <#if far.cellFirmwareVersion1?has_content && far.cellFirmwareVersion1?starts_with("SWI")>
-    <#-- taking wild guess that if Sierra Wireless firmware it
-       probably has GPS capability. -->
-    <#assign isGpsEnabled = "true">
   </#if>
 </#if>
 
@@ -711,19 +714,60 @@ int ${cell_if2}
 </#if>
 
 <#-- --- END OF QoS CONFIG ----------------------------- -->
-
-<#-- Enable GPS  -->
-<#if isFirstCell == "true" && isGpsEnabled?has_content && isGpsEnabled == "true">
-controller ${cell_if1}
- 	lte gps mode standalone
-  lte gps nmea
-</#if>
 !
 <#-- IoT OD location tracking magic -->
 <#if config.enableLocationTracking>
   event manager environment _gps_poll_interval ${config.locStreamRate}
   event manager environment _gps_threshold ${config.distThreshold}
   event manager policy fnd-push-gps.tcl type user
+  event manager applet GNSS_ENABLE
+  event timer cron cron-entry "*/1 * * * *"
+  action 010 cli command "enable"
+  action 020 cli command "show ${cell_if1} firmware"
+  action 030 regexp "Modem is still down, please wait for modem to come up" $_cli_result match
+   action 031 if $_regexp_result eq 1
+   action 032 syslog msg  "Modem is DOWN, not touching anything and exiting"
+   action 033 exit
+  action 034 end
+  action 035 cli command "show ${cell_if1} gps"
+  ! action 036 syslog msg  "FULL OUTPUT: $_cli_result"
+  action 040 foreach line $_cli_result "\r\n"
+  !  action 045 syslog msg  "PROCESSING LINE '$line'"
+   action 050 regexp "^GPS Mode Configured =[ ]+(.+)$" $line match _gps_mode
+   action 060 if $_regexp_result eq 1
+     ! action 070 syslog msg  "GPS MODE $_gps_mode"
+     action 080 if $_gps_mode eq "not configured"
+       action 090 syslog msg  "Enabling GPS standalone mode"
+       action 100 cli command "conf t"
+       action 110 cli command "controller ${cell_if1}"
+       action 120 cli command "lte gps mode standalone"
+       action 130 cli command "lte gps nmea"
+       action 140 cli command "service internal"
+       action 150 cli command "do test ${cell_if1} modem-power-cycle"
+       action 160 cli command "end"
+       action 170 break
+     action 180 end
+     action 190 if $_gps_mode eq "Modem reset/power-cycle is needed to change GPS Mode to not configured"
+       action 200 syslog msg  "LTE module being power-cycled"
+       action 210 cli command "conf t"
+       action 220 cli command "service internal"
+       action 230 cli command "do test ${cell_if1} modem-power-cycle"
+       action 240 cli command "end"
+       action 250 break
+     action 260 end
+   action 270 end
+   action 300 regexp "^GPS Status =[ ]+(.+)$" $line match _gps_status
+   action 310 if $_regexp_result eq 1
+     ! action 320 syslog msg "GPS STATUS '$_gps_status'"
+     action 330 if $_gps_status eq "NMEA Disabled"
+       action 340 syslog msg "Configuring NMEA mode on GPS"
+       action 350 cli command "conf t"
+       action 360 cli command "controller ${cell_if1}"
+       action 370 cli command "lte gps nmea"
+       action 380 break
+     action 390 end
+   action 400 end
+  action 410 end
 </#if>
 !
 <#if isFirstCell == "true">
@@ -1025,13 +1069,30 @@ event manager applet ssh_crypto_key authorization bypass
 
 <#-- Set APN -->
 
+
 <#if isFirstCell == "true" && APN1?has_content>
+  <#-- if fist cell is enabled and there is an APN set -->
+  <#-- get the current APN set for first cell interface -->
   event manager applet change_apn_cell1
-  event timer countdown time 10
-  action 5 syslog msg "Changing APN Profile"
-  action 10 cli command "enable"
-  action 15 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confirm"
-  action 20 cli command "y"
+  event timer countdown time 120
+  action 005 set _match1 ""
+  action 010 syslog msg "Verifying APN Profile"
+  action 020 cli command "enable"
+  action 030 cli command "show ${cell_if1} profile | i Access Point Name"
+  action 040 regexp "^.* = ([A-Za-z0-9\.]+)" $_cli_result _match _match1
+  action 050 if $_regexp_result eq 1
+  action 060 syslog msg  "Current APN in ${cell_if1} is $_match1"
+  action 070 end
+  <#-- compare APN of first cell int with APN configured in IoT OD -->
+  action 080 if $_match1 eq "${APN1}"
+  <#-- already set, no change -->
+  action 090 syslog msg  "APN is already set to $_match1"
+  action 100 else
+  action 110 syslog msg  "changing APN to ${APN1}"
+  <#-- configure new APN, interface will be down 10-20 seconds -->
+  action 120 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confirm"
+  action 130 cli command "y"
+  action 140 end
 </#if>
 !
 <#if isSecondCell == "true" && APN2?has_content>
