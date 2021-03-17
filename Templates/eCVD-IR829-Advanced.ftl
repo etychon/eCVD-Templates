@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR829 -----
-     ---- Version 1.78 -----------------------
+     ---- Version 1.79 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -994,7 +994,7 @@ interface GigabitEthernet5
  ipv6 enable
  no shutdown
 !
-ip nat inside source static tcp 10.9.51.2 8443 interface Vlan10 9443
+ip nat inside source static tcp 10.9.51.2 8443 interface ${ether_if} 9443
 
 <#if section.wan_wgb?has_content && section.wan_wgb == "true">
 event manager applet setAPvlan

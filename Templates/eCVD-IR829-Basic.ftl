@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.74       -->
+<#-- Version 1.75       -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -575,7 +575,7 @@ interface GigabitEthernet5
  ipv6 enable
  no shutdown
 !
-ip nat inside source static tcp 10.9.51.2 8443 interface Vlan10 9443
+ip nat inside source static tcp 10.9.51.2 8443 interface ${ether_if} 9443
 <#-- Set APN -->
 
 <#if APN1?has_content>
