@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR829 -----
-     ---- Version 1.79 -----------------------
+     ---- Version 1.80 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -710,7 +710,12 @@ interface Vlan1
 !
 !
 <#-- enabling/disabling of ethernet ports -->
+
+<#-- if GigabitEthernet0 is to be used as uplink, this
+template will need to be adjusted -->
+
 interface GigabitEthernet0
+  description Disabled by eCVD template
 	shutdown
 
 interface GigabitEthernet1
@@ -1012,6 +1017,20 @@ event manager applet setAPvlan
  action 5.3 cli command "no event manager applet setAPvlan"
  action 6.0 cli command "exit"
  action 6.1 cli command "write mem"
+</#if>
+
+<#-- When Gig1 goes down, Vlan10 will stay up because it is
+also used by Wlan0 interface in trunking mode. This script
+will clear the DHCP lease when Gig1 goes down, also clearing
+the route -->
+<#if model == "IR829" && ether_if == "vlan10">
+track 110 interface GigabitEthernet1 line-protocol
+  delay down 10
+event manager applet CLEAR_DHCP
+  event track 110 state down
+  action 1.0 cli command "enable"
+  action 1.1 cli command "release dhcp vlan 10"
+  action 1.2 cli command "renew dhcp vlan 10"
 </#if>
 
 <#-- -- LOGGING ONLY ------------------------- -->

@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.75       -->
+<#-- Version 1.76       -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -587,6 +587,20 @@ action 15 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confir
 action 20 cli command "y"
 !
 !
+</#if>
+
+<#-- When Gig1 goes down, Vlan10 will stay up because it is
+also used by Wlan0 interface in trunking mode. This script
+will clear the DHCP lease when Gig1 goes down, also clearing
+the route -->
+<#if model == "IR829" && ether_if == "vlan10">
+track 110 interface GigabitEthernet1 line-protocol
+  delay down 10
+event manager applet CLEAR_DHCP
+  event track 110 state down
+  action 1.0 cli command "enable"
+  action 1.1 cli command "release dhcp vlan 10"
+  action 1.2 cli command "renew dhcp vlan 10"
 </#if>
 
   event manager applet ListAllSections
