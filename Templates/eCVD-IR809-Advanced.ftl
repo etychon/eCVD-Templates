@@ -1,8 +1,9 @@
 <#-- ---- Begin eCVD template for IR809 -----
-     ---- Version 1.80 -----------------------
-     -----------------------------------------
-     -- Support single Radio       --
-     -- Site to Site VPN                    --
+  ---- Version 1.80 -----------------------
+  -----------------------------------------
+  -- This template for IR809 was NOT     --
+  -- validated by the CVD team and is    --
+  -- only provided as a courtesy    --
 -->
 
 
