@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.14        -->
+<!-- Version 1.15        -->
 
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
-  <propertyTypes kind="ir800,ir1100">
+  <propertyTypes kind="ir800,ir1100,ir1800">
 
     <propertyType>
       <name>organization</name>
@@ -35,8 +35,8 @@
       <displayName>DHCP Helper IP Address</displayName>
       <description>IPv4 Address of the DHCP Helper</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Custom Subnet</section>
-      <required>1</required>
+      <section>LAN</section>
+      <required>0</required>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
