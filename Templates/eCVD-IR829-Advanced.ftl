@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR829 -----
-     ---- Version 1.80 -----------------------
+     ---- Version 1.81 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -41,6 +41,7 @@
 <#assign priorityIfNameTable = []>
 <#assign isTunnelEnabledTable = []>
 <#assign isCellIntTable = []>
+<#assign isWGBIntTable = []>
 <#assign EthernetPortPriority = 200>
 <#assign WgbIntPriority = 200>
 <#assign Cell2PortPriority = 200>
@@ -393,121 +394,121 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
 !
 </#if>
 
-<#-- interface priorities -->
+ <#-- interface priorities -->
 
-<#list 1..4 as p>
-  <#if isEthernetEnable == "true"
-        && ether_if?? && ethernetPriority?has_content
-        && ethernetPriority == p?string>
-    <#assign priorityIfNameTable += [ether_if]>
-    <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
-    <#assign isCellIntTable += ["false"]>
-    <#assign EthernetPortPriority = 100+p>
-  <#elseif isWgbEnable == "true"
-        && wgb_if?has_content && wgbPriority?has_content
-        && wgbPriority == p?string>
-    <#assign priorityIfNameTable += [wgb_if]>
-    <#assign isTunnelEnabledTable += [far.enableTunnelOverWGB!"false"]>
-    <#assign isCellIntTable += ["false"]>
-    <#assign WgbIntPriority = 100+p>
-  <#elseif isFirstCell == "true"
-        && cell_if1?? && far.firstCellularIntPriority?has_content
-        && far.firstCellularIntPriority == p?string>
-    <#assign priorityIfNameTable += [cell_if1]>
-    <#assign isTunnelEnabledTable += [far.enableTunnelOverCell1!"false"]>
-    <#assign isCellIntTable += ["true"]>
-    <#assign Cell1PortPriority = 100+p>
-  <#elseif isSecondCell == "true"
-        && cell_if2?? && far.secondCellularIntPriority?has_content
-        && far.secondCellularIntPriority == p?string>
-    <#assign priorityIfNameTable += [cell_if2]>
-    <#assign isTunnelEnabledTable += [far.enableTunnelOverCell2!"false"]>
-    <#assign isCellIntTable += ["true"]>
-    <#assign Cell2PortPriority = 100+p>
-  </#if>
-</#list>
+ <#list 1..4 as p>
+   <#if isEthernetEnable == "true"
+         && ether_if?? && ethernetPriority?has_content
+         && ethernetPriority == p?string>
+     <#assign priorityIfNameTable += [ether_if]>
+     <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
+     <#assign isCellIntTable += ["false"]>
+     <#assign isWGBIntTable += ["false"]>
+     <#assign EthernetPortPriority = 100+p>
+   <#elseif isWgbEnable == "true"
+         && wgb_if?has_content && wgbPriority?has_content
+         && wgbPriority == p?string>
+     <#assign priorityIfNameTable += [wgb_if]>
+     <#assign isTunnelEnabledTable += [far.enableTunnelOverWGB!"false"]>
+     <#assign isCellIntTable += ["false"]>
+     <#assign isWGBIntTable += ["true"]>
+     <#assign WgbIntPriority = 100+p>
+   <#elseif isFirstCell == "true"
+         && cell_if1?? && far.firstCellularIntPriority?has_content
+         && far.firstCellularIntPriority == p?string>
+     <#assign priorityIfNameTable += [cell_if1]>
+     <#assign isTunnelEnabledTable += [far.enableTunnelOverCell1!"false"]>
+     <#assign isCellIntTable += ["true"]>
+     <#assign isWGBIntTable += ["false"]>
+     <#assign Cell1PortPriority = 100+p>
+   <#elseif isSecondCell == "true"
+         && cell_if2?? && far.secondCellularIntPriority?has_content
+         && far.secondCellularIntPriority == p?string>
+     <#assign priorityIfNameTable += [cell_if2]>
+     <#assign isTunnelEnabledTable += [far.enableTunnelOverCell2!"false"]>
+     <#assign isCellIntTable += ["true"]>
+     <#assign isWGBIntTable += ["false"]>
+     <#assign Cell2PortPriority = 100+p>
+   </#if>
+ </#list>
 
-<#if priorityIfNameTable?size <=0>
-  <#-- No interface in the priority table
-       This scenario should never happen -->
-   ${provisioningFailed("Need at least one WAN interface enabled on ${far.eid}")}
-<#else>
-  <#-- Iterate over interface table list, by configured priority from 1 to 4 -->
-  <#list 0 .. (priorityIfNameTable?size-1) as p>
-    !
-    ! ***** ${priorityIfNameTable[p]} configuration *****
-    !
-    <#-- Config for Cell interface are slightly different -->
-    <#if isCellIntTable[p] == "true">
-      track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
-      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
-      ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
-    <#else>
-      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${100+p}
-      ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
-    </#if>
-    ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
-    ip sla ${p+40}
-      <#-- Cell interface do not require the source for the SLA -->
-      <#if isCellIntTable[p] == "true">
-      	icmp-echo ${ipslaDestIPaddress[p]}
-        frequency 50
-      <#else>
-        icmp-echo ${ipslaDestIPaddress[p]} source-interface ${priorityIfNameTable[p]}
-        frequency 10
-      </#if>
-    !
-    !
-    ip sla schedule ${p+40} life forever start-time now
-      track ${p+40} ip sla ${p+40} reachability
-    event manager applet failover_${p+40}
-      event track ${p+40} state any
-      action 0.1 syslog msg "${priorityIfNameTable[p]} connectivity change, clearing NAT translations"
-      action 0.2 cli command "enable"
-      action 1.0 cli command "clear ip nat translation *"
-    <#if isCellIntTable[p] != "true">
-      <#-- this is not cellular, use DHCP -->
-      int ${priorityIfNameTable[p]}
-        <#-- ip dhcp client route track ${p+40} -->
-        <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
-      event manager applet client_route_track_${eventAppName}
-        event timer watchdog time 60
-        action 1 cli command "en"
-        action 2 cli command "show cgna profile name cg-nms-register | i disabled"
-        action 3 string match "*Profile disabled*" "$_cli_result"
-        action 4 if $_string_result eq "0"
-        action 5  exit
-        action 6 end
-        action 7.0 cli command "conf t"
-        action 7.1 cli command "interface ${priorityIfNameTable[p]}"
-        action 7.2 cli command "ip address dhcp"
-        action 7.3 cli command "exit"
-        action 8.0 cli command "no event manager applet client_route_track_${eventAppName}"
-        action 8.1 cli command "exit"
-        action 9.0 cli command "write mem"
-    </#if>
-    int ${priorityIfNameTable[p]}
-      zone-member security INTERNET
-      ip nat outside
-      no shutdown
-    <#if isTunnelEnabledTable[p] == "true" && isPrimaryHeadEndEnable == "true">
-      crypto ikev2 client flexvpn ${vpnTunnelIntf}
-      source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
-      <#if isCellIntTable[p] != "true">
-        <#assign suffix = "dhcp">
-      <#else>
-        <#assign suffix = " ">
-      </#if>
-      <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
-        ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix} ${p+40}
-        <#if backupHerIpAddress?has_content && isSecondaryHeadEndEnable == "true">
-          ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix} ${p+40}
-        </#if>
-      </#if>
-    </#if>
-  </#list>
-</#if>
-
+ <#if priorityIfNameTable?size <=0>
+   <#-- No interface in the priority table
+        This scenario should never happen -->
+    ${provisioningFailed("Need at least one WAN interface enabled on ${far.eid}")}
+ <#else>
+   <#-- Iterate over interface table list, by configured priority from 1 to 4 -->
+   <#list 0 .. (priorityIfNameTable?size-1) as p>
+     !
+     ! ***** ${priorityIfNameTable[p]} configuration *****
+     !
+     <#-- Config for Cell interface are slightly different -->
+     <#if isCellIntTable[p] == "true">
+       track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
+       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
+       ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
+     <#else>
+       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${100+p}
+       ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
+     </#if>
+     ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
+     ip sla ${p+40}
+       <#-- Cell interface do not require the source for the SLA -->
+       <#if isCellIntTable[p] == "true">
+       	icmp-echo ${ipslaDestIPaddress[p]}
+         frequency 50
+       <#else>
+         icmp-echo ${ipslaDestIPaddress[p]} source-interface ${priorityIfNameTable[p]}
+         frequency 10
+       </#if>
+     !
+     !
+     ip sla schedule ${p+40} life forever start-time now
+       track ${p+40} ip sla ${p+40} reachability
+     event manager applet failover_${p+40}
+       event track ${p+40} state any
+       action 0.1 syslog msg "${priorityIfNameTable[p]} connectivity change, clearing NAT translations"
+       action 0.2 cli command "enable"
+       action 1.0 cli command "clear ip nat translation *"
+     <#if isWGBIntTable[p] == "true">
+       event manager applet WGB_HEALTH_CHECK
+        event track ${p+40} stat down
+        action 0.1  track read ${p+40}
+        action 0.2  if $_track_state ne "down"
+        action 0.3   exit
+        action 0.4  end
+        action 1    cli command "enable"
+        action 2    cli command "ping ${ipslaDestIPaddress[p]} time 1 repeat 3"
+        action 3    regexp "(!!)" "$_cli_result" _match
+        action 4    if $_regexp_result ne "1"
+        action 4.1   syslog priority warnings msg "WGB Test Failed"
+        action 4.42   cli command "release dhcp ${wgb_if}"
+        action 4.43   cli command "renew dhcp ${wgb_if}"
+        action 5    end
+     </#if>
+     int ${priorityIfNameTable[p]}
+       zone-member security INTERNET
+       ip nat outside
+       no shutdown
+     <#if isTunnelEnabledTable[p] == "true" && isPrimaryHeadEndEnable == "true">
+       crypto ikev2 client flexvpn ${vpnTunnelIntf}
+       source ${p+1} ${priorityIfNameTable[p]} track ${p+40}
+       <#if isCellIntTable[p] != "true">
+         <#assign suffix = "dhcp">
+       <#else>
+         <#assign suffix = " ">
+       </#if>
+       <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
+         ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix} ${p+40}
+         <#if backupHerIpAddress?has_content && isSecondaryHeadEndEnable == "true">
+           ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix} ${p+40}
+         </#if>
+       </#if>
+     </#if>
+   </#list>
+ </#if>
+ 
+ 
 <#if isWgbEnable == "true">
   route-map RM_WGB_ACL permit 10
     match ip address NAT_ACL
