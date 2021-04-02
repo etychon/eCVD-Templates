@@ -324,11 +324,13 @@ interface ${wgb_if}
 !
 <#if far.Users?has_content>
   <#list far.Users as user >
-		<#if user['userName'] == "admin">
-		  <#-- "admin" user is already used by IoT OC, ignore -->
-		  <#continue>
-		</#if>
-		username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
+    <#if user['userName']?has_content && user['userPassword']?has_content>
+  		<#if user['userName'] == "admin">
+	  	  <#-- "admin" user is already used by IoT OC, ignore -->
+		    <#continue>
+		  </#if>
+		  username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
+    </#if>
   </#list>
 </#if>
 !
@@ -507,8 +509,8 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
      </#if>
    </#list>
  </#if>
- 
- 
+
+
 <#if isWgbEnable == "true">
   route-map RM_WGB_ACL permit 10
     match ip address NAT_ACL
