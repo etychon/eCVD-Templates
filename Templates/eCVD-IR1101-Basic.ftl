@@ -211,9 +211,15 @@ ip dhcp pool subtended
     lease 0 0 10
 !
 !
-<#list far.Users as user >
+<#if far.Users?has_content>
+  <#list far.Users as user >
+		<#if user['userName'] == "admin">
+		  <#-- "admin" user is already used by IoT OC, ignore -->
+		  <#continue>
+		</#if>
 		username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
-</#list>
+  </#list>
+</#if>
 !
 <#-- S2S VPN Configuration -->
 !
