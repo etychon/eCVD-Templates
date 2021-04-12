@@ -191,8 +191,6 @@ service call-home
 platform qfp utilization monitor load 80
 no platform punt-keepalive disable-kernel-core
 !
-no logging console
-!
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
