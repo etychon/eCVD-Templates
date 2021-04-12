@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.76       -->
+<#-- Version 1.77       -->
 
 <#-- Default BootStrap Configuration -->
 
