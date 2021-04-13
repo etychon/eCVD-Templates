@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR809 -----
-  ---- Version 1.80 -----------------------
+  ---- Version 1.81 -----------------------
   -----------------------------------------
   -- This template for IR809 was NOT     --
   -- validated by the CVD team and is    --
@@ -282,13 +282,19 @@ ip dhcp pool subtended
   ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
 </#if>
 !
+<#-- create users as defined in the template -->
 <#if far.Users?has_content>
   <#list far.Users as user >
-		<#if user['userName'] == "admin">
-		  <#-- "admin" user is already used by IoT OC, ignore -->
-		  <#continue>
-		</#if>
-		username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
+    <#if user['userName']?has_content &&
+          user['userPassword']?has_content &&
+          user['userPriv']?has_content>
+		  <#if user['userName'] == "admin">
+		    <#-- "admin" user is already used by IoT OC, ignore -->
+		    <#continue>
+		  </#if>
+      <#-- here we made sure to have username, password and pivillege defined -->
+		  username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
+    </#if>
   </#list>
 </#if>
 !

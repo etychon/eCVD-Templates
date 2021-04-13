@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD ADVANCED template for IR1101 -----
-     ---- Version 1.85 -----------------------
+     ---- Version 1.86 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -315,13 +315,19 @@ ip dhcp pool subtended
   ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
 </#if>
 !
+<#-- create users as defined in the template -->
 <#if far.Users?has_content>
   <#list far.Users as user >
-		<#if user['userName'] == "admin">
-		  <#-- "admin" user is already used by IoT OC, ignore -->
-		  <#continue>
-		</#if>
-		username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
+    <#if user['userName']?has_content &&
+          user['userPassword']?has_content &&
+          user['userPriv']?has_content>
+		  <#if user['userName'] == "admin">
+		    <#-- "admin" user is already used by IoT OC, ignore -->
+		    <#continue>
+		  </#if>
+      <#-- here we made sure to have username, password and pivillege defined -->
+		  username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
+    </#if>
   </#list>
 </#if>
 !
