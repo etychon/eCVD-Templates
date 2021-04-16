@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD ADVANCED template for IR1101 -----
-     ---- Version 1.86 -----------------------
+     ---- Version 1.87 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -1130,7 +1130,9 @@ event manager applet ssh_crypto_key authorization bypass
           <#assign subi = 0>
         <#list value as val>
           <#list val as subkey, subvalue>
-          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+            <#if subvalue??>
+              action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+            </#if>
           <#assign i = i + 1>
           </#list>
           <#assign subi = subi + 1>
@@ -1153,7 +1155,9 @@ event manager applet ssh_crypto_key authorization bypass
           <#assign subi = 0>
         <#list value as val>
           <#list val as subkey, subvalue>
-          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+            <#if subvalue??>
+            action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+            </#if>
           <#assign i = i + 1>
           </#list>
           <#assign subi = subi + 1>
@@ -1176,7 +1180,9 @@ event manager applet ssh_crypto_key authorization bypass
           <#assign subi = 0>
         <#list value as val>
           <#list val as subkey, subvalue>
-          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+            <#if subvalue??>
+              action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+            </#if>
           <#assign i = i + 1>
           </#list>
           <#assign subi = subi + 1>
