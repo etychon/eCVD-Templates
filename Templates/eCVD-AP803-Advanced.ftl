@@ -1,6 +1,6 @@
 <#-- Default Access point Configuration -->
 <#-- eCVD AP803 ADVANCED template -->
-<#-- version 1.7 -->
+<#-- version 1.8 -->
 
 <#if far.bootStrap>
     aaa new-model
@@ -15,9 +15,22 @@
     !
     !
     username ${deviceDefault.apAdminUsername} privilege 15 secret ${deviceDefault.apAdminPassword}
-    <#list far.Users as user >
-	   username ${user.userName} privilege ${user.userPriv}  secret ${user.userPassword}
-    </#list>
+    <#-- create users as defined in the template -->
+    <#if far.Users?has_content>
+      <#list far.Users as user >
+        <#if user['userName']?has_content &&
+              user['userPassword']?has_content &&
+              user['userPriv']?has_content>
+    		  <#if user['userName'] == "admin">
+    		    <#-- "admin" user is already used by IoT OC, ignore -->
+    		    <#continue>
+    		  </#if>
+          <#-- here we made sure to have username, password and pivillege defined -->
+    		  username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
+        </#if>
+      </#list>
+    </#if>
+    !
     no username Cisco
     do mkdir flash:/managed/data
     bridge irb
