@@ -316,6 +316,136 @@
       <seedValues>[{ "key": "Provide 'secProperty5' per device", "value": "${far.secProperty5}" }]</seedValues>
     </propertyType>
 
+  <propertyType>
+    <name>ipaddrProperty1</name>
+    <displayName>IP address property 1</displayName>
+    <description>IP address property 1</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>ipv4</validationType>
+    <dataType>string</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'ipaddrProperty1' per device", "value": "${far.ipaddrProperty1}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>ipaddrProperty2</name>
+    <displayName>IP address property 2</displayName>
+    <description>IP address property 2</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>ipv4</validationType>
+    <dataType>string</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'ipaddrProperty2' per device", "value": "${far.ipaddrProperty2}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>ipaddrProperty3</name>
+    <displayName>IP address property 3</displayName>
+    <description>IP address property 3</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>ipv4</validationType>
+    <dataType>string</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'ipaddrProperty3' per device", "value": "${far.ipaddrProperty3}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>ipaddrProperty4</name>
+    <displayName>IP address property 4</displayName>
+    <description>IP address property 4</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>ipv4</validationType>
+    <dataType>string</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'ipaddrProperty4' per device", "value": "${far.ipaddrProperty4}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>ipaddrProperty5</name>
+    <displayName>IP address property 5</displayName>
+    <description>IP address property 5</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>ipv4</validationType>
+    <dataType>string</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'ipaddrProperty5' per device", "value": "${far.ipaddrProperty5}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>vlanProperty1</name>
+    <displayName>VLAN Property 1</displayName>
+    <description>VLAN Property 1</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>integer</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'vlanProperty1' per device", "value": "${far.vlanProperty1}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>vlanProperty2</name>
+    <displayName>VLAN Property 2</displayName>
+    <description>VLAN Property 2</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>integer</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'vlanProperty2' per device", "value": "${far.vlanProperty2}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>vlanProperty3</name>
+    <displayName>VLAN Property 3</displayName>
+    <description>VLAN Property 3</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>integer</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'vlanProperty3' per device", "value": "${far.vlanProperty3}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>vlanProperty4</name>
+    <displayName>VLAN Property 4</displayName>
+    <description>VLAN Property 4</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>integer</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'vlanProperty4' per device", "value": "${far.vlanProperty4}" }]</seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>vlanProperty5</name>
+    <displayName>VLAN Property 5</displayName>
+    <description>VLAN Property 5</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>integer</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'vlanProperty5' per device", "value": "${far.vlanProperty5}" }]</seedValues>
+  </propertyType>
+
 	<propertyType>
 	  <name>gigEthernet1</name>
 	  <displayName>Gigabit Ethernet1</displayName>
@@ -464,7 +594,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN>Cellular1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>false</defaultValue>
+      <defaultValue>true</defaultValue>
       <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
