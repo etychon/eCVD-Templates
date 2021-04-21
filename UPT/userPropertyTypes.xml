@@ -372,6 +372,20 @@
       <seedValues>[{ "key": "Provide 'gigEthernet4' per device", "value": "${far.gigEthernet4}" }]</seedValues>
 	</propertyType>
 
+  <propertyType>
+	  <name>fastEthernet0</name>
+	  <displayName>Fast Ethernet0</displayName>
+	  <description>Enable/Disable Fast Ethernet Port 0</description>
+ 	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  	  <section>Interface</section>
+  	  <required>0</required>
+  	  <defaultValue>true</defaultValue>
+  	  <validationType>non-empty</validationType>
+  	  <dataType>boolean</dataType>
+  	  <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'fastEthernet0' per device", "value": "${far.fastEthernet0}" }]</seedValues>
+	</propertyType>
+
 	<propertyType>
 	  <name>fastEthernet1</name>
 	  <displayName>Fast Ethernet1</displayName>
@@ -683,7 +697,7 @@
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
        <section>VPN>Interfaces</section>
        <sectionLevelInTree>1</sectionLevelInTree>
-       <defaultValue>false</defaultValue>
+       <defaultValue>true</defaultValue>
        <required>0</required>
        <validationType>non-empty</validationType>
        <dataType>boolean</dataType>
@@ -698,7 +712,7 @@
        <exportAsTemplateKeys>1</exportAsTemplateKeys>
        <section>VPN>Interfaces</section>
        <sectionLevelInTree>1</sectionLevelInTree>
-       <defaultValue>false</defaultValue>
+       <defaultValue>true</defaultValue>
        <required>0</required>
        <validationType>non-empty</validationType>
        <dataType>boolean</dataType>
