@@ -1,5 +1,5 @@
 <#-- eCVD AP803 BASIC template -->
-<#-- version 1.81 -->
+<#-- version 1.82 -->
 
 <#if far.bootStrap>
     aaa new-model
@@ -38,13 +38,6 @@
       description Cisco Rainier AP v2.21, ${deviceDefault.apIpAddress} should match DHCP
       ip address dhcp
     !
-dot11 ssid ${far.wifiSsid}
-        vlan 1
-        authentication open
-        authentication key-management wpa version 2
-        mbssid guest-mode
-        wpa-psk ascii 0 ${far.wifiPsk}
-      !
       !
       interface Dot11Radio0
         no ip address
@@ -144,5 +137,11 @@ dot11 ssid ${far.wifiSsid}
     end
 
 <#else>
+dot11 ssid ${far.wifiSsid}
+    vlan 1
+    authentication open
+    authentication key-management wpa version 2
+    mbssid guest-mode
+    wpa-psk ascii 0 ${far.wifiPsk}
    !
 </#if>
