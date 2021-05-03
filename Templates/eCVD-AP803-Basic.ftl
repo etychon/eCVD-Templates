@@ -1,5 +1,5 @@
 <#-- eCVD AP803 BASIC template -->
-<#-- version 1.8 -->
+<#-- version 1.81 -->
 
 <#if far.bootStrap>
     aaa new-model
@@ -118,9 +118,6 @@ dot11 ssid ${far.wifiSsid}
     ip http authentication local
     ip http secure-server
     ip http secure-port 8443
-    !ip http secure-trustpoint LDevID
-    ip http secure-trustpoint CISCO_IDEVID_SUDI
-    ip http client secure-trustpoint CISCO_IDEVID_SUDI
     !
     wsma agent exec
     profile exec
