@@ -305,6 +305,8 @@ ntp server ${ntpIP}
 ip name-server ${DNSIP}
 ip domain name ${domainName}
 !
+event manager directory user policy "flash:/managed/scripts"
+!
 ip dhcp pool subtended
     network ${lanNtwk} ${far.lanNetmask}
     default-router ${far.lanIPAddress}
@@ -685,6 +687,54 @@ int ${cell_if2}
 gyroscope-reading enable
 controller ${cell_if1_contr}
   lte gps mode standalone
+  lte gps nmea ip
+</#if>
+!
+<#if config.enableLocationTracking>
+  event manager environment _gps_poll_interval ${config.locStreamRate}
+  event manager environment _gps_threshold ${config.distThreshold}
+  event manager policy fnd-push-gps.tcl type user
+  event manager applet GNSS_ENABLE
+  event timer cron cron-entry "*/1 * * * *"
+  action 010 cli command "enable"
+  action 020 cli command "show ${cell_if1} firmware"
+  action 030 regexp "Modem is still down, please wait for modem to come up" $_cli_result match
+   action 031 if $_regexp_result eq 1
+   action 032 syslog msg  "Modem is DOWN, not touching anything and exiting"
+   action 033 exit
+  action 034 end
+  action 035 cli command "show ${cell_if1} gps"
+  ! action 036 syslog msg  "FULL OUTPUT: $_cli_result"
+  action 040 foreach line $_cli_result "\r\n"
+    action 045 syslog msg  "PROCESSING LINE '$line'"
+    action 050 regexp "^GPS Mode Configured:[ ]+(.+)$" $line match _gps_mode
+    action 060 if $_regexp_result eq 1
+      ! action 070 syslog msg  "GPS MODE $_gps_mode"
+      action 080 if $_gps_mode eq "not configured/unknown"
+        action 090 syslog msg  "Enabling GPS standalone mode"
+        action 100 cli command "conf t"
+        action 110 cli command "controller ${cell_if1_contr}"
+        action 120 cli command "lte gps mode standalone"
+        action 130 cli command "lte gps nmea ip"
+        action 160 cli command "end"
+        action 170 break
+      action 180 end
+    action 182 end
+    action 185 regexp "^GPS Feature:[ ]+(.+)$" $line match _gps_mode
+    action 186 if $_regexp_result eq 1
+      action 190 if $_gps_mode eq "Modem reset/power-cycle is needed to enable GPS"
+        action 200 syslog msg  "LTE module being power-cycled"
+        action 210 cli command "conf t"
+        action 211 cli command "controller ${cell_if1_contr}"
+        action 212 cli command "lte gps mode standalone"
+        action 213 cli command "lte gps nmea ip"
+        action 220 cli command "service internal"
+        action 230 cli command "do test ${cell_if1} modem-power-cycle"
+        action 240 cli command "end"
+        action 250 break
+      action 260 end
+    action 265 end
+  action 410 end
 </#if>
 !
 <#if isFirstCell == "true">
