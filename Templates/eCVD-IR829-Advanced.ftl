@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR829 -----
-     ---- Version 1.82 -----------------------
+     ---- Version 1.83 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -704,9 +704,7 @@ controller ${cell_if1_contr}
    action 033 exit
   action 034 end
   action 035 cli command "show ${cell_if1} gps"
-  ! action 036 syslog msg  "FULL OUTPUT: $_cli_result"
   action 040 foreach line $_cli_result "\r\n"
-    ! action 045 syslog msg  "PROCESSING LINE '$line'"
     action 050 regexp "^GPS Mode Configured:[ ]+(.+)$" $line match _gps_mode
     action 060 if $_regexp_result eq 1
       ! action 070 syslog msg  "GPS MODE $_gps_mode"
