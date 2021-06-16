@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR1101 -->
-<#-- Version 1.90        -->
+<#-- Version 1.91        -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -503,7 +503,6 @@ ip access-list extended filter-internet
 ip access-list extended NAT_ACL
   permit ip ${lanNtwk} ${lanWild} any
   permit ip ${nwk_addr} 0.0.0.31 any
-  permit ip 10.9.51.0 0.0.0.255 any
 !
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10

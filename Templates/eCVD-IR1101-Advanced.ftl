@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD ADVANCED template for IR1101 -----
-     ---- Version 1.90 -----------------------
+     ---- Version 1.91 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -846,9 +846,12 @@ interface FastEthernet0/0/4
 </#if>
 
 <#-- Enable NAT and routing -->
+<#assign gwips = far.lanIPAddress?split(".")>
+<#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
+<#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + (nwk_suffix + 5)>
 ip access-list extended NAT_ACL
   permit ip ${lanNtwk} ${lanWild} any
-  permit ip 10.9.51.0 0.0.0.255 any
+  permit ip ${nwk_addr} 0.0.0.31 any
 !
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
