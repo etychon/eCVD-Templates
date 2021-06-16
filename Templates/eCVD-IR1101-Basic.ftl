@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR1101 -->
-<#-- Version 1.76        -->
+<#-- Version 1.90        -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -353,25 +353,6 @@ interface Async0/2/0
     no ip address
     encapsulation scada
 !
-
-<#-- Enable IOx -->
-iox
-
-ip dhcp pool ioxpool
- network 10.9.51.0 255.255.255.0
- default-router 10.9.51.1
- dns-server 10.9.51.1
- remember
-!
-interface VirtualPortGroup0
- ip address 10.9.51.1 255.255.255.0
- ip nat inside
- ipv6 enable
-!
-ip access-list standard IOxRange
- 10 permit 10.9.51.0 0.0.0.255
-
-
 <#-- Use default i/f to set PAT -->
 
 <#if far.portForwarding?has_content>

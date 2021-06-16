@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD ADVANCED template for IR1101 -----
-     ---- Version 1.88 -----------------------
+     ---- Version 1.90 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -845,9 +845,6 @@ interface FastEthernet0/0/4
 	no shutdown
 </#if>
 
-<#-- Enable IOx -->
-iox
-
 <#-- Enable NAT and routing -->
 ip access-list extended NAT_ACL
   permit ip ${lanNtwk} ${lanWild} any
@@ -999,24 +996,6 @@ line vty 0 4
     length 0
     transport input ssh
 !
-! Enable IOx IP address pool
-ip dhcp pool ioxpool
-  network 10.9.51.0 255.255.255.0
-  default-router 10.9.51.1
-  dns-server 10.9.51.1
-  remember
-!
-interface VirtualPortGroup0
-  ip address 10.9.51.1 255.255.255.0
-  ip nat inside
-  ipv6 enable
-!
-ip access-list standard IOxRange
-  10 permit 10.9.51.0 0.0.0.255
-
-<#-- ---------------------------------------------- -->
-<#-- etychon - ok until here on  IR1101-FCW23510HKN -->
-<#-- ---------------------------------------------- -->
 !
 <#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- Netflow -->
