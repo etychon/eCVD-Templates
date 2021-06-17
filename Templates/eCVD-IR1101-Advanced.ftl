@@ -105,11 +105,9 @@
 
 <#-- Security Menu -->
 <#assign isUmbrella = "false">
-<#if section.security_umbrella?? && section.security_umbrella == "true">
+<#if section.security_umbrella?has_content && section.security_umbrella == "true" && far.umbrellaToken?has_content>
   <#assign isUmbrella = "true">
-  <#if far.umbrellaToken?has_content>
-    <#assign UmbrellaToken = "${far.umbrellaToken}">
-  </#if>
+  <#assign UmbrellaToken = "${far.umbrellaToken}">
 </#if>
 
 <#assign isNetflow = "false">
@@ -123,13 +121,13 @@
 <#-- VPN Settings Menu -->
 <#assign isPrimaryHeadEndEnable = "false">
 <#assign isSecondaryHeadEndEnable = "false">
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if section.vpn_primaryheadend?has_content && section.vpn_primaryheadend == "true">
   <#if far.herIpAddress?has_content && far.herPsk?has_content>
     <#assign herIpAddress 	= "${far.herIpAddress}">
     <#assign herPsk			    = "${far.herPsk}">
     <#assign isPrimaryHeadEndEnable = "true">
   </#if>
-  <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+  <#if section.vpn_backupheadend?has_content && section.vpn_backupheadend == "true">
     <#if far.backupHerIpAddress?has_content && far.backupHerPsk?has_content>
       <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
       <#assign backupHerPsk	= "${far.backupHerPsk}">
@@ -333,7 +331,7 @@ ip dhcp pool subtended
 !
 <#-- S2S VPN Configuration -->
 !
-<#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content && herPsk?has_content>
+<#if isPrimaryHeadEndEnable == "true">
     crypto ikev2 authorization policy CVPN
  	    route set interface
  	    route accept any distance 70
@@ -386,7 +384,7 @@ interface ${vpnTunnelIntf}
 !
 crypto ikev2 client flexvpn ${vpnTunnelIntf}
   peer 1 ${herIpAddress}
-  <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+  <#if isSecondaryHeadEndEnable == "true">
     peer 2 ${backupHerIpAddress}
   </#if>
   client connect ${vpnTunnelIntf}
@@ -509,7 +507,7 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
 </#if>
 
 <#-- Umbrella DNS -->
-<#if !section.security_umbrella?? || section.security_umbrella == "true">
+<#if isUmbrella == "true">
 crypto pki trustpoint umbrella
  revocation-check none
 crypto pki certificate chain umbrella
