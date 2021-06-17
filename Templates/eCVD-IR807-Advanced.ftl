@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR807 -----
-  ---- Version 1.81 -----------------------
+  ---- Version 1.82 -----------------------
   -----------------------------------------
   -- This template for IR807 was NOT     --
   -- validated by the CVD team and is    --
@@ -93,13 +93,13 @@
 <#-- VPN Settings Menu -->
 <#assign isPrimaryHeadEndEnable = "false">
 <#assign isSecondaryHeadEndEnable = "false">
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if section.vpn_primaryheadend?has_content && section.vpn_primaryheadend == "true">
   <#if far.herIpAddress?has_content && far.herPsk?has_content>
     <#assign herIpAddress 	= "${far.herIpAddress}">
     <#assign herPsk			    = "${far.herPsk}">
     <#assign isPrimaryHeadEndEnable = "true">
   </#if>
-  <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+  <#if section.vpn_backupheadend?has_content && section.vpn_backupheadend == "true">
     <#if far.backupHerIpAddress?has_content && far.backupHerPsk?has_content>
       <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
       <#assign backupHerPsk	= "${far.backupHerPsk}">
@@ -315,7 +315,7 @@ interface ${vpnTunnelIntf}
 !
 crypto ikev2 client flexvpn ${vpnTunnelIntf}
   peer 1 ${herIpAddress}
-  <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+  <#if isSecondaryHeadEndEnable == "true">
     peer 2 ${backupHerIpAddress}
   </#if>
   client connect ${vpnTunnelIntf}
