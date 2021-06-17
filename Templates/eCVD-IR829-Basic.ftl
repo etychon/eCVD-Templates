@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.90       -->
+<#-- Version 1.91       -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -69,13 +69,13 @@
 <#-- VPN Settings Menu -->
 <#assign isPrimaryHeadEndEnable = "false">
 <#assign isSecondaryHeadEndEnable = "false">
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if section.vpn_primaryheadend?has_content && section.vpn_primaryheadend == "true">
   <#if far.herIpAddress?has_content && far.herPsk?has_content>
     <#assign herIpAddress 	= "${far.herIpAddress}">
     <#assign herPsk			    = "${far.herPsk}">
     <#assign isPrimaryHeadEndEnable = "true">
   </#if>
-  <#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+  <#if section.vpn_backupheadend?has_content && section.vpn_backupheadend == "true">
     <#if far.backupHerIpAddress?has_content && far.backupHerPsk?has_content>
       <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
       <#assign backupHerPsk	= "${far.backupHerPsk}">
@@ -243,7 +243,7 @@ ip dhcp pool subtended
 !
 <#-- S2S VPN Configuration -->
 !
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if isPrimaryHeadEndEnable == "true">
 
 crypto ikev2 authorization policy CVPN
  	route set interface
@@ -256,7 +256,7 @@ crypto ikev2 keyring Flex_key
   identity key-id ${herIpAddress}
   pre-shared-key ${herPsk}
 !
-<#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+<#if isSecondaryHeadEndEnable == "true">
   peer ${backupHerIpAddress}
   address ${backupHerIpAddress}
   identity key-id ${backupHerIpAddress}
@@ -267,7 +267,7 @@ crypto ikev2 keyring Flex_key
 !
 crypto ikev2 profile CVPN_I2PF
  match identity remote key-id ${herIpAddress}
-<#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+<#if isSecondaryHeadEndEnable == "true">
   match identity remote key-id ${backupHerIpAddress}
 </#if>
  identity local email ${sn}@iotspdev.io
@@ -296,7 +296,7 @@ interface Tunnel2
 !
 crypto ikev2 client flexvpn Tunnel2
   peer 1 ${herIpAddress}
-<#if !section.vpn_backupheadend?? || section.vpn_backupheadend == "true">
+<#if isSecondaryHeadEndEnable == "true">
   peer 2 ${backupHerIpAddress}
 </#if>
   client connect Tunnel2
@@ -544,7 +544,7 @@ ip ssh rsa keypair-name SSHKEY
 ip ssh version 2
 ip scp server enable
 !
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
      match ip address NAT_ACL
      match interface ${vpnTunnelIntf}
@@ -559,9 +559,9 @@ ip access-list extended filter-internet
  permit icmp any any packet-too-big
  permit icmp any any ttl-exceeded
  permit udp any eq bootps host 255.255.255.255 eq bootpc
-<#if !section.vpn_primaryheadend?? || section.vpn_primaryheadend == "true">
+<#if isPrimaryHeadEndEnable == "true">
  permit esp host ${herIpAddress} any
-<#if backupHerIpAddress?has_content>
+<#if isSecondaryHeadEndEnable == "true">
  permit esp host ${backupHerIpAddress} any
 </#if>
 </#if>
