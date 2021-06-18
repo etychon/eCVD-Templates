@@ -288,13 +288,6 @@ crypto ikev2 client flexvpn Tunnel2
 !
 </#if>
 !
-
-<#-- Enable GPS  -->
-<#if isFirstCell == "true" && isGpsEnabled?has_content && isGpsEnabled == "true">
-controller ${cell_if1}
-</#if>
-!
-
 interface ${ether_if}
     no shutdown
     ip nat outside
