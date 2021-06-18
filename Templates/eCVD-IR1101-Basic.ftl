@@ -292,8 +292,6 @@ crypto ikev2 client flexvpn Tunnel2
 <#-- Enable GPS  -->
 <#if isFirstCell == "true" && isGpsEnabled?has_content && isGpsEnabled == "true">
 controller ${cell_if1}
- 	lte gps mode standalone
-  lte gps nmea
 </#if>
 !
 
