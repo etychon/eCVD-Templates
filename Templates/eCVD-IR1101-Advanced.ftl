@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD ADVANCED template for IR1101 -----
-     ---- Version 1.92 -----------------------
+     ---- Version 1.93 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -1040,7 +1040,7 @@ interface ${ether_if}
 <#-- generare RSA keys for SSH -->
 
 event manager applet ssh_crypto_key authorization bypass
-  event timer cron cron-entry "@reboot" maxrun 60
+  event timer watchdog time 5 maxrun 60
   action 1.0 cli command "enable"
   action 2.0 cli command "show ip ssh | include ^SSH"
   action 2.1 regexp "([ED][^ ]+)" "$_cli_result" _result
