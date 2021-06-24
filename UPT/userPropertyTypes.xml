@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.16        -->
+<!-- Version 1.17        -->
 
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -389,7 +389,7 @@
     <section>Additional Settings</section>
     <required>0</required>
     <validationType>non-empty</validationType>
-    <dataType>integer</dataType>
+    <dataType>string</dataType>
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'vlanProperty1' per device", "value": "${far.vlanProperty1}" }]</seedValues>
   </propertyType>
@@ -402,7 +402,7 @@
     <section>Additional Settings</section>
     <required>0</required>
     <validationType>non-empty</validationType>
-    <dataType>integer</dataType>
+    <dataType>string</dataType>
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'vlanProperty2' per device", "value": "${far.vlanProperty2}" }]</seedValues>
   </propertyType>
@@ -415,7 +415,7 @@
     <section>Additional Settings</section>
     <required>0</required>
     <validationType>non-empty</validationType>
-    <dataType>integer</dataType>
+    <dataType>string</dataType>
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'vlanProperty3' per device", "value": "${far.vlanProperty3}" }]</seedValues>
   </propertyType>
@@ -428,7 +428,7 @@
     <section>Additional Settings</section>
     <required>0</required>
     <validationType>non-empty</validationType>
-    <dataType>integer</dataType>
+    <dataType>string</dataType>
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'vlanProperty4' per device", "value": "${far.vlanProperty4}" }]</seedValues>
   </propertyType>
@@ -441,7 +441,7 @@
     <section>Additional Settings</section>
     <required>0</required>
     <validationType>non-empty</validationType>
-    <dataType>integer</dataType>
+    <dataType>string</dataType>
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'vlanProperty5' per device", "value": "${far.vlanProperty5}" }]</seedValues>
   </propertyType>
