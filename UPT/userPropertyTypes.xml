@@ -1096,7 +1096,7 @@
   	  <exportAsTemplateKeys>1</exportAsTemplateKeys>
   	  <sectionLevelInTree>1</sectionLevelInTree>
 	    <section>User Management</section>
-  	  <required>1</required>
+  	  <required>0</required>
   	  <validationType>non-empty</validationType>
   	  <dataType>array</dataType>
   	  <deviceSpecific>1</deviceSpecific>
