@@ -226,7 +226,7 @@
 <#assign netid=netid+[num]>
 </#list>
 
-<#--Network Address-->
+<#--Network Address-->lanNtwk
 
 <#assign lanNtwk = netid?join(".")?string>
 <#assign lanWild = "${(255 - (lanNet[0])?number)?abs}.${(255 - (lanNet[1])?number)?abs}.${(255 - (lanNet[2])?number)?abs}.${(255 - (lanNet[3])?number)?abs}">
@@ -1035,20 +1035,33 @@ interface ${ether_if}
 
 <#if section.wan_wgb?has_content && section.wan_wgb == "true">
 event manager applet setAPvlan
- event timer watchdog time 120
- action 1.0 cli command "en"
- action 2.0 cli command "show cgna profile name cg-nms-ap-bootstrap | i disabled"
- action 3.0 string match "*Profile disabled*" "$_cli_result"
- action 4.0 if $_string_result eq "0"
- action 4.1  exit
- action 4.2 end
- action 5.0 cli command "conf t"
- action 5.1 cli command "int wlan-gi0"
- action 5.2 cli command "switchport trunk native vlan 50"
- action 5.21 cli command "no spanning-tree vlan 50"
- action 5.3 cli command "no event manager applet setAPvlan"
- action 6.0 cli command "exit"
- action 6.1 cli command "write mem"
+  event timer watchdog time 120
+  action 1.0 cli command "en"
+  action 2.0 cli command "sh cgna profile-state all | i cg-nms-ap-bootstrap"
+  action 2.1 string match "*cg-nms-ap-bootstrap*" "$_cli_result"
+  action 2.2 set ap_bootstrap_present $_string_result
+  action 3.0 cli command "show cgna profile name cg-nms-ap-bootstrap | i disabled"
+  action 3.1 string match "*Profile disabled*" "$_cli_result"
+  action 3.2 set ap_bootstrap_disabled $_string_result
+  action 4.0 cli command "sh cgna profile-state all | i cg-nms-ap-register"
+  action 4.1 string match "*cg-nms-ap-register*" "$_cli_result"
+  action 4.2 set ap_register_present $_string_result
+  action 5.0 if $ap_bootstrap_present eq "1"
+  action 5.01 if $ap_bootstrap_disabled eq "0"
+  action 5.02 exit
+  action 5.03 end
+  action 5.1 end
+  action 6.0 if $ap_bootstrap_present eq "0"
+  action 6.01 if $ap_register_present eq "0"
+  action 6.02 exit
+  action 6.03 end
+  action 6.1 end
+  action 7.0 cli command "conf t"
+  action 7.1 cli command "int wlan-gi0"
+  action 7.2 cli command "switchport trunk native vlan 20"
+  action 7.3 cli command "no event manager applet setAPvlan"
+  action 8.0 cli command "exit"
+  action 8.1 cli command "write mem"
 </#if>
 
 <#-- When Gig1 goes down, Vlan10 will stay up because it is
