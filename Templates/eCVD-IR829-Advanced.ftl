@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR829 -----
-     ---- Version 1.92 -----------------------
+     ---- Version 1.93 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -226,7 +226,7 @@
 <#assign netid=netid+[num]>
 </#list>
 
-<#--Network Address-->lanNtwk
+<#--Network Address-->
 
 <#assign lanNtwk = netid?join(".")?string>
 <#assign lanWild = "${(255 - (lanNet[0])?number)?abs}.${(255 - (lanNet[1])?number)?abs}.${(255 - (lanNet[2])?number)?abs}.${(255 - (lanNet[3])?number)?abs}">
