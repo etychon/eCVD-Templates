@@ -123,7 +123,7 @@
 <#-- This will be triggered if only Hotspot is enabled-->
    <#else>
 interface BVI1
-      description Cisco Rainier AP v2.21, ${deviceDefault.apIpAddress} should match DHCP
+      description Cisco IoT OD eCVD Advanced AP, no WGB, ${deviceDefault.apIpAddress} should match DHCP
       ip address dhcp
     !
 
