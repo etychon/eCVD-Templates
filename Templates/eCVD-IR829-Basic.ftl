@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.91       -->
+<#-- Version 1.92       -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -608,6 +608,29 @@ ignition off-timer 400
 <#else>
 no ignition enable
 </#if>
+
+<#-- generare RSA keys for SSH -->
+
+event manager applet ssh_crypto_key authorization bypass
+  event timer watchdog time 5 maxrun 60
+  action 1.0 cli command "enable"
+  action 2.0 cli command "show ip ssh | include ^SSH"
+  action 2.1 regexp "([ED][^ ]+)" "$_cli_result" _result
+  action 3.0 if $_result eq Disabled
+  action 3.1   syslog msg "EEM:ssh_crypto_key generating new SSHKEY "
+  action 3.2   cli command "config t"
+  action 3.3   cli command "crypto key generate rsa usage-keys label SSHKEY modulus 2048"
+  action 3.4   cli command "end"
+  action 3.5   cli command "write mem" pattern "confirm|#"
+  action 3.6   regexp "confirm" "$_cli_result"
+  action 3.7   if $_regexp_result eq "1"
+  action 3.8     cli command "y"
+  action 3.9   end
+  action 4.0 end
+  action 5.1 syslog msg "EEM:ssh_crypto_key hara-kiri "
+  action 5.2 cli command "config t"
+  action 5.3 cli command "no event manager applet ssh_crypto_key"
+
 
 <#-- Set APN -->
 
