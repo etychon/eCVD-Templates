@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR1800 -->
-<#-- Version 1.90       -->
+<#-- Version 1.91       -->
 
 <#compress>
 <#-- Default BootStrap Configuration -->
@@ -306,6 +306,7 @@ interface ${ether_if}
     ip nat outside
 !
 !
+<#if isFirstCell == "true">
 interface ${cell_if1}
     ip address negotiated
     ip nat outside
@@ -313,6 +314,7 @@ interface ${cell_if1}
     dialer idle-timeout 0
     dialer-group 1
     pulse-time 1
+</#if>
 !
 !
 interface Vlan1
