@@ -1,6 +1,6 @@
 <#-- Default Access point Configuration -->
 <#-- eCVD AP803 ADVANCED template -->
-<#-- version 1.8 -->
+<#-- version 1.81 -->
 
 <#if far.bootStrap>
     aaa new-model
@@ -46,11 +46,11 @@
       mbssid guest-mode
       wpa-psk ascii 0 ${far.wifiPsk}
       !
-    dot11 ssid ${far.wgbSsid}
+    dot11 ssid ${far.wgbSSID}
       vlan 50
       authentication open
       authentication key-management wpa version 2
-      wpa-psk ascii 0 ${far.wgbPsk}
+      wpa-psk ascii 0 ${far.wgbPSK}
     !
     interface Dot11Radio0
       no ip address
@@ -89,7 +89,7 @@
      no shut
      encryption vlan 50 mode ciphers aes-ccm
      encryption mode ciphers aes-ccm
-     ssid ${far.wgbSsid}
+     ssid ${far.wgbSSID}
      antenna gain 0
      no peakdetect
      station-role workgroup-bridge universal ${far.interfaces("Vlan1")[0].macAddress}
