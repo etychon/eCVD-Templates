@@ -867,7 +867,9 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#list>
 </#if>
 
+<#if isFirstCell == "true">
 no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
+</#if>
 
 <#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
   ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
@@ -1080,7 +1082,8 @@ event manager applet setAPvlan
   action 6.1 end
   action 7.0 cli command "conf t"
   action 7.1 cli command "int wlan-gi0"
-  action 7.2 cli command "switchport trunk native vlan 20"
+  action 7.2 cli command "switchport trunk native vlan 50"
+  action 7.25 cli command "no spanning-tree vlan 50"
   action 7.3 cli command "no event manager applet setAPvlan"
   action 8.0 cli command "exit"
   action 8.1 cli command "write mem"
