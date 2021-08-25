@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR809 -----
-  ---- Version 1.91 -----------------------
+  ---- Version 1.92 -----------------------
   -----------------------------------------
   -- This template for IR809 was NOT     --
   -- validated by the CVD team and is    --
@@ -706,7 +706,9 @@ ip nat inside source route-map RM_WAN_ACL2 interface ${ether_if} overload
 </#list>
 </#if>
 
+<#if isFirstCell == "true">
 no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
+</#if>
 
 <#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
   ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
