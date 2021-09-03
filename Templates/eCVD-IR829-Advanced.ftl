@@ -1,4 +1,4 @@
-<#-- ---- Begin eCVD template for IR829 -----
+<#-- ---- Begin eCVD ADVANCED template for IR829 -----
      ---- Version 1.96 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
