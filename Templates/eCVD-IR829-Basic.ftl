@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.92       -->
+<#-- Version 1.93       -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -210,7 +210,6 @@ service call-home
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
-ip name-server ${DNSIP}
 ip domain name ${domainName}
 
 <#if far.lanIPAddressDHCPexcludeRangeStart?has_content && far.lanIPAddressDHCPexcludeRangeEnd?has_content>

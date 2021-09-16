@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD ADVANCED template for IR829 -----
-     ---- Version 1.96 -----------------------
+     ---- Version 1.97 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -302,7 +302,6 @@ service call-home
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
-ip name-server ${DNSIP}
 ip domain name ${domainName}
 !
 event manager directory user policy "flash:/managed/scripts"

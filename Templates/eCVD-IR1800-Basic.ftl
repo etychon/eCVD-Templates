@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR1800 -->
-<#-- Version 1.91       -->
+<#-- Version 1.92       -->
 
 <#compress>
 <#-- Default BootStrap Configuration -->
@@ -197,7 +197,6 @@ no platform punt-keepalive disable-kernel-core
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
-ip name-server ${DNSIP}
 ip domain name ${domainName}
 
 <#if far.lanIPAddressDHCPexcludeRangeStart?has_content && far.lanIPAddressDHCPexcludeRangeEnd?has_content>

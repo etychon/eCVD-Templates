@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD ADVANCED template for IR1101 -----
-     ---- Version 1.93 -----------------------
+     ---- Version 1.94 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -300,7 +300,6 @@ no platform punt-keepalive disable-kernel-core
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
-ip name-server ${DNSIP}
 ip domain name ${domainName}
 !
 ip dhcp pool subtended

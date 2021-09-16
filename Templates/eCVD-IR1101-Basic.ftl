@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR1101 -->
-<#-- Version 1.94        -->
+<#-- Version 1.95        -->
 
 <#-- Default BootStrap Configuration -->
 
@@ -194,7 +194,6 @@ no platform punt-keepalive disable-kernel-core
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
-ip name-server ${DNSIP}
 ip domain name ${domainName}
 
 <#if far.lanIPAddressDHCPexcludeRangeStart?has_content && far.lanIPAddressDHCPexcludeRangeEnd?has_content>

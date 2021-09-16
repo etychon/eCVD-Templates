@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR807 -----
-  ---- Version 1.83 -----------------------
+  ---- Version 1.84 -----------------------
   -----------------------------------------
   -- This template for IR807 was NOT     --
   -- validated by the CVD team and is    --
@@ -231,7 +231,6 @@ service call-home
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
-ip name-server ${DNSIP}
 ip domain name ${domainName}
 !
 ip dhcp pool subtended

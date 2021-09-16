@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD template for IR1800 -----
-     ---- Version 1.90 -----------------------
+     ---- Version 1.91 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -309,7 +309,6 @@ no platform punt-keepalive disable-kernel-core
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
-ip name-server ${DNSIP}
 ip domain name ${domainName}
 !
 ip dhcp pool subtended
