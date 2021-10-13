@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.17        -->
+<!-- Version 1.18        -->
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -456,7 +456,11 @@
   	  <validationType>non-empty</validationType>
   	  <dataType>boolean</dataType>
   	  <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'gigEthernet1' per device", "value": "${far.gigEthernet1}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'gigEthernet1' per device", "value": "${far.gigEthernet1}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
 	</propertyType>
 
 	<propertyType>
@@ -470,7 +474,11 @@
   	  <validationType>non-empty</validationType>
   	  <dataType>boolean</dataType>
   	  <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'gigEthernet2' per device", "value": "${far.gigEthernet2}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'gigEthernet2' per device", "value": "${far.gigEthernet2}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
 	</propertyType>
 
 	<propertyType>
@@ -484,7 +492,11 @@
   	  <validationType>non-empty</validationType>
   	  <dataType>boolean</dataType>
   	  <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'gigEthernet3' per device", "value": "${far.gigEthernet3}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'gigEthernet3' per device", "value": "${far.gigEthernet3}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
 	</propertyType>
 
 	<propertyType>
@@ -498,7 +510,11 @@
   	  <validationType>non-empty</validationType>
   	  <dataType>boolean</dataType>
   	  <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'gigEthernet4' per device", "value": "${far.gigEthernet4}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'gigEthernet4' per device", "value": "${far.gigEthernet4}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
 	</propertyType>
 
   <propertyType>
@@ -512,7 +528,11 @@
   	  <validationType>non-empty</validationType>
   	  <dataType>boolean</dataType>
   	  <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'fastEthernet0' per device", "value": "${far.fastEthernet0}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'fastEthernet0' per device", "value": "${far.fastEthernet0}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
 	</propertyType>
 
 	<propertyType>
@@ -526,7 +546,11 @@
   	  <validationType>non-empty</validationType>
   	  <dataType>boolean</dataType>
   	  <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'fastEthernet1' per device", "value": "${far.fastEthernet1}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'fastEthernet1' per device", "value": "${far.fastEthernet1}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
 	</propertyType>
 
 	<propertyType>
@@ -540,7 +564,11 @@
   	  <validationType>non-empty</validationType>
   	  <dataType>boolean</dataType>
   	  <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'fastEthernet2' per device", "value": "${far.fastEthernet2}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'fastEthernet2' per device", "value": "${far.fastEthernet2}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
 	</propertyType>
 
 	<propertyType>
@@ -554,7 +582,11 @@
   	  <validationType>non-empty</validationType>
   	  <dataType>boolean</dataType>
   	  <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'fastEthernet3' per device", "value": "${far.fastEthernet3}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'fastEthernet3' per device", "value": "${far.fastEthernet3}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
 	</propertyType>
 
 	<propertyType>
@@ -568,7 +600,11 @@
   	  <validationType>non-empty</validationType>
   	  <dataType>boolean</dataType>
   	  <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'fastEthernet4' per device", "value": "${far.fastEthernet4}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'fastEthernet4' per device", "value": "${far.fastEthernet4}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
 	</propertyType>
 
   <propertyType>
@@ -583,7 +619,11 @@
     <validationType>non-empty</validationType>
     <dataType>boolean</dataType>
     <deviceSpecific>1</deviceSpecific>
-    <seedValues>[{ "key": "Provide 'isEthernetEnable' per device", "value": "${far.isEthernetEnable}" }]</seedValues>
+    <seedValues>
+      [{ "key": "Provide 'isEthernetEnable' per device", "value": "${far.isEthernetEnable}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
   </propertyType>
 
   <propertyType>
@@ -598,7 +638,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isFirstCell' per device", "value": "${far.isFirstCell}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isFirstCell' per device", "value": "${far.isFirstCell}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
   </propertyType>
 
   <propertyType>
@@ -613,7 +657,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isGpsEnabled' per device", "value": "${far.isGpsEnabled}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isGpsEnabled' per device", "value": "${far.isGpsEnabled}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
   </propertyType>
 
   <propertyType>
@@ -628,7 +676,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isSecondCell' per device", "value": "${far.isSecondCell}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isSecondCell' per device", "value": "${far.isSecondCell}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
   </propertyType>
 
   <propertyType>
@@ -643,7 +695,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isWgbEnable' per device", "value": "${far.isWgbEnable}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isWgbEnable' per device", "value": "${far.isWgbEnable}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
   </propertyType>
 
    <propertyType>
@@ -816,7 +872,11 @@
        <validationType>non-empty</validationType>
        <dataType>boolean</dataType>
        <deviceSpecific>1</deviceSpecific>
-       <seedValues>[{ "key": "Provide 'enableTunnelOverEthernet' per device", "value": "${far.enableTunnelOverEthernet}" }]</seedValues>
+       <seedValues>
+         [{ "key": "Provide 'enableTunnelOverEthernet' per device", "value": "${far.enableTunnelOverEthernet}" },
+         { "key": "True", "value": true },
+         { "key": "False", "value": false }]
+       </seedValues>
      </propertyType>
 
      <propertyType>
@@ -831,7 +891,11 @@
        <validationType>non-empty</validationType>
        <dataType>boolean</dataType>
        <deviceSpecific>1</deviceSpecific>
-       <seedValues>[{ "key": "Provide 'enableTunnelOverCell1' per device", "value": "${far.enableTunnelOverCell1}" }]</seedValues>
+       <seedValues>
+         [{ "key": "Provide 'enableTunnelOverCell1' per device", "value": "${far.enableTunnelOverCell1}" },
+         { "key": "True", "value": true },
+         { "key": "False", "value": false }]
+       </seedValues>
      </propertyType>
 
      <propertyType>
@@ -846,7 +910,11 @@
        <validationType>non-empty</validationType>
        <dataType>boolean</dataType>
        <deviceSpecific>1</deviceSpecific>
-       <seedValues>[{ "key": "Provide 'enableTunnelOverCell2' per device", "value": "${far.enableTunnelOverCell2}" }]</seedValues>
+       <seedValues>
+         [{ "key": "Provide 'enableTunnelOverCell2' per device", "value": "${far.enableTunnelOverCell2}" },
+         { "key": "True", "value": true },
+         { "key": "False", "value": false }]
+       </seedValues>
      </propertyType>
 
      <propertyType>
@@ -861,7 +929,11 @@
        <validationType>non-empty</validationType>
        <dataType>boolean</dataType>
        <deviceSpecific>1</deviceSpecific>
-       <seedValues>[{ "key": "Provide 'enableTunnelOverWGB' per device", "value": "${far.enableTunnelOverWGB}" }]</seedValues>
+       <seedValues>
+         [{ "key": "Provide 'enableTunnelOverWGB' per device", "value": "${far.enableTunnelOverWGB}" },
+         { "key": "True", "value": true },
+         { "key": "False", "value": false }]
+       </seedValues>
      </propertyType>
 
     <propertyType>
@@ -1294,7 +1366,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isPortForwarding' per device", "value": "${far.isPortForwarding}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isPortForwarding' per device", "value": "${far.isPortForwarding}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
    <propertyType>
@@ -1404,7 +1480,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'Ignition' per device", "value": "${far.ignition}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'Ignition' per device", "value": "${far.ignition}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
 <propertyType>
@@ -1474,7 +1554,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isBackupHer' per device", "value": "${far.isBackupHer}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isBackupHer' per device", "value": "${far.isBackupHer}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
    </propertyType>
 
     <propertyType>
@@ -1489,7 +1573,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isSecondCell' per device", "value": "${far.isSecondCell}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isSecondCell' per device", "value": "${far.isSecondCell}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
      <propertyType>
@@ -1504,7 +1592,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isSnmp' per device", "value": "${far.isSnmp}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isSnmp' per device", "value": "${far.isSnmp}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -1630,7 +1722,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isUmbrella' per device", "value": "${far.isUmbrella}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isUmbrella' per device", "value": "${far.isUmbrella}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -1788,7 +1884,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isWifi' per device", "value": "${far.isWifi}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isWifi' per device", "value": "${far.isWifi}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -1824,7 +1924,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isQos' per device", "value": "${far.isQos}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isQos' per device", "value": "${far.isQos}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -1973,7 +2077,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isNetflow' per device", "value": "${far.isNetflow}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isNetflow' per device", "value": "${far.isNetflow}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -2003,7 +2111,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'isVirtualNetworks' per device", "value": "${far.isVirtualNetworks}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'isVirtualNetworks' per device", "value": "${far.isVirtualNetworks}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -2209,7 +2321,11 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'logAllVariables' per device", "value": "${far.logAllVariables}" }]</seedValues>
+      <seedValues>
+        [{ "key": "Provide 'logAllVariables' per device", "value": "${far.logAllVariables}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
   </propertyType>
 
   </propertyTypes>
