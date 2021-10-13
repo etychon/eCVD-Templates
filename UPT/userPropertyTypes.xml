@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- Version 1.17        -->
-
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -389,7 +388,7 @@
     <section>Additional Settings</section>
     <required>0</required>
     <validationType>non-empty</validationType>
-    <dataType>string</dataType>
+    <dataType>integer</dataType>
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'vlanProperty1' per device", "value": "${far.vlanProperty1}" }]</seedValues>
   </propertyType>
@@ -402,7 +401,7 @@
     <section>Additional Settings</section>
     <required>0</required>
     <validationType>non-empty</validationType>
-    <dataType>string</dataType>
+    <dataType>integer</dataType>
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'vlanProperty2' per device", "value": "${far.vlanProperty2}" }]</seedValues>
   </propertyType>
@@ -415,7 +414,7 @@
     <section>Additional Settings</section>
     <required>0</required>
     <validationType>non-empty</validationType>
-    <dataType>string</dataType>
+    <dataType>integer</dataType>
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'vlanProperty3' per device", "value": "${far.vlanProperty3}" }]</seedValues>
   </propertyType>
@@ -428,7 +427,7 @@
     <section>Additional Settings</section>
     <required>0</required>
     <validationType>non-empty</validationType>
-    <dataType>string</dataType>
+    <dataType>integer</dataType>
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'vlanProperty4' per device", "value": "${far.vlanProperty4}" }]</seedValues>
   </propertyType>
@@ -441,7 +440,7 @@
     <section>Additional Settings</section>
     <required>0</required>
     <validationType>non-empty</validationType>
-    <dataType>string</dataType>
+    <dataType>integer</dataType>
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'vlanProperty5' per device", "value": "${far.vlanProperty5}" }]</seedValues>
   </propertyType>
@@ -1040,7 +1039,139 @@
   	  <dataType>boolean</dataType>
   	  <deviceSpecific>1</deviceSpecific>
 	</propertyType>
+    <propertyType>
+      <name>ignitionSenseThresholdVolts</name>
+      <displayName>Ignition Sense Threshold Volts</displayName>
+      <description>Ignition Sense Threshold Volts</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Settings>Vehicle</section>
+      <required>0</required>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>13</defaultValue>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'ignitionSenseThresholdVolts' per device", "value": "${far.ignitionSenseThresholdVolts}"}]</seedValues>
+    </propertyType>
 
+    <propertyType>
+      <name>ignitionSenseThresholdMillivolts</name>
+      <displayName>Ignition Sense Threshold Millivolts</displayName>
+      <description>Ignition Sense Threshold Milliolts</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Settings>Vehicle</section>
+      <required>0</required>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>0</defaultValue>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'ignitionSenseThresholdMillivolts' per device", "value": "${far.ignitionSenseThresholdMillivolts}"}]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>ignitionOffTimerSeconds</name>
+      <displayName>Ignition Off Timer (seconds)</displayName>
+      <description>Ignition Off Timer (seconds)</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Settings>Vehicle</section>
+      <required>0</required>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>300</defaultValue>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'ignitionOffTimerSeconds' per device", "value": "${far.ignitionOffTimerSeconds}"}]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>isIgnitionSense</name>
+      <displayName>Enable Ignition Sense</displayName>
+      <description>Enable Ignition Sense</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Settings>Vehicle</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>false</defaultValue>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'isIgnitionSense' per device", "value": "${far.isIgnitionSense}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>isDeadReckoning</name>
+      <displayName>Enable Dead Reckoning</displayName>
+      <description>Enable Dead Reckoning</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Settings>Vehicle</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>false</defaultValue>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'isDeadReckoning' per device", "value": "${far.isDeadReckoning}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>canbusBaudrateBPS</name>
+      <displayName>CANBUS Baudrate (bits per sec)</displayName>
+      <description>CANBUS Baudrate (bits per sec)</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Settings>Vehicle</section>
+      <required>0</required>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>250000</defaultValue>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'canbusBaudrateBPS' per device", "value": "${far.canbusBaudrateBPS}"}]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>recoveryTimer</name>
+      <displayName>Recovery Timer</displayName>
+      <description>Recovery Timer</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Settings>Recovery</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>array</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[ { "key": "Provide 'recoveryTimer' per device", "value": "${far.recoveryTimer}" },
+              { "key": "15 min", "value": "15" },
+              { "key": "30 min", "value": "30" },
+              { "key": "1 hour", "value": "60" },
+              { "key": "2 hours", "value": "120" },
+              { "key": "6 hours", "value": "360" },
+              { "key": "12 hours", "value": "720" },
+              { "key": "1 day", "value": "1440" },
+              { "key": "2 days", "value": "2880" },
+              { "key": "3 days", "value": "4320" },
+              { "key": "4 days", "value": "5760" },
+              { "key": "5 days", "value": "7200" },
+              { "key": "6 days", "value": "8640" },
+              { "key": "7 days", "value": "10080" }
+      ]</seedValues>
+    </propertyType>
+
+
+    <propertyType>
+      <name>isRecoveryEnable</name>
+      <displayName>Enable Recovery Timer</displayName>
+      <description>Enable Recovery Timer</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Settings>Recovery</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>false</defaultValue>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'isRecoveryEnable' per device", "value": "${far.isRecoveryEnable}" }]</seedValues>
+    </propertyType>
     <propertyType>
       <name>Users</name>
       <displayName>Users</displayName>
