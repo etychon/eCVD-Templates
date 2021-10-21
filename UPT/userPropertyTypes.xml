@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.18        -->
+<!-- Version 1.19        -->
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -61,10 +61,15 @@
       <description>Boolean Property 1</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'boolProperty1' per device", "value": "${far.boolProperty1}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -73,10 +78,15 @@
       <description>Boolean Property 2</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'boolProperty2' per device", "value": "${far.boolProperty2}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -85,10 +95,15 @@
       <description>Boolean Property 3</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'boolProperty3' per device", "value": "${far.boolProperty3}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -97,10 +112,15 @@
       <description>Boolean Property 4</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'boolProperty4' per device", "value": "${far.boolProperty4}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -109,10 +129,100 @@
       <description>Boolean Property 5</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'boolProperty5' per device", "value": "${far.boolProperty5}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>boolProperty6</name>
+      <displayName>Boolean Property 6</displayName>
+      <description>Boolean Property 6</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Additional Settings</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'boolProperty6' per device", "value": "${far.boolProperty6}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>boolProperty7</name>
+      <displayName>Boolean Property 7</displayName>
+      <description>Boolean Property 7</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Additional Settings</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'boolProperty7' per device", "value": "${far.boolProperty7}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>boolProperty8</name>
+      <displayName>Boolean Property 8</displayName>
+      <description>Boolean Property 8</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Additional Settings</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'boolProperty8' per device", "value": "${far.boolProperty8}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>boolProperty9</name>
+      <displayName>Boolean Property 9</displayName>
+      <description>Boolean Property 9</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Additional Settings</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'boolProperty9' per device", "value": "${far.boolProperty9}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>boolProperty10</name>
+      <displayName>Boolean Property 10</displayName>
+      <description>Boolean Property 10</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Additional Settings</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'boolProperty10' per device", "value": "${far.boolProperty10}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -121,7 +231,7 @@
       <description>Numeric Property 1</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -134,7 +244,7 @@
       <description>Numeric Property 2</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -147,7 +257,7 @@
       <description>Numeric Property 3</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -160,7 +270,7 @@
       <description>Numeric Property 4</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -173,7 +283,7 @@
       <description>Numeric Property 5</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -186,7 +296,7 @@
       <description>String Property 1</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -199,7 +309,7 @@
       <description>String Property 2</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -212,7 +322,7 @@
       <description>String Property 3</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -225,7 +335,7 @@
       <description>String Property 4</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -238,7 +348,7 @@
       <description>String Property 5</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -252,7 +362,7 @@
       <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -266,7 +376,7 @@
       <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -280,7 +390,7 @@
       <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -294,7 +404,7 @@
       <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -308,7 +418,7 @@
       <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Additional Settings</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -858,6 +968,23 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'IcmpReachableIPaddress4' per device", "value": "${far.IcmpReachableIPaddress4}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>enable_ipsla_test</name>
+      <displayName>Enable ICMP reachability tests</displayName>
+      <description>Enable ICMP reachability tests</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN>ICMP</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'enable_ipsla_test' per device", "value": "${far.enable_ipsla_test}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -2326,6 +2453,193 @@
         { "key": "True", "value": true },
         { "key": "False", "value": false }]
       </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_SiemensS7</name>
+    <displayName>Enable Siemens S7 protocol</displayName>
+    <description>Enable Siemens S7 protocol</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_SiemensS7' per device", "value": "${far.enable_SiemensS7}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_SiemensCNC</name>
+    <displayName>Enable Siemens CNC</displayName>
+    <description>Enable Siemens CNC</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_SiemensCNC' per device", "value": "${far.enable_SiemensCNC}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_Netbios</name>
+    <displayName>Enable Netbios protocol</displayName>
+    <description>Enable Netbios protocol</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_Netbios' per device", "value": "${far.enable_Netbios}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_Samba</name>
+    <displayName>Enable Samba protocol</displayName>
+    <description>Enable Samba protocol</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_Samba' per device", "value": "${far.enable_Samba}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_Modbus</name>
+    <displayName>Enable MODBUS protocol</displayName>
+    <description>Enable MODBUS protocol</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_Modbus' per device", "value": "${far.enable_Modbus}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_OPCUA</name>
+    <displayName>Enable OPC-UA protocol</displayName>
+    <description>Enable OPC-UA protocol</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_OPCUA' per device", "value": "${far.enable_OPCUA}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_EthernetIP</name>
+    <displayName>Enable EtherNet/IP protocol</displayName>
+    <description>Enable EtherNet/IP protocol</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_EthernetIP' per device", "value": "${far.enable_EthernetIP}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_Fanuc</name>
+    <displayName>Enable Fanuc protocol</displayName>
+    <description>Enable Fanuc protocol</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_Fanuc' per device", "value": "${far.enable_Fanuc}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_FTP</name>
+    <displayName>Enable FTP protocol</displayName>
+    <description>Enable FTP protocol</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_FTP' per device", "value": "${far.enable_FTP}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_dot1x</name>
+    <displayName>Enable dot1x</displayName>
+    <description>Enable dot1x</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_dot1x' per device", "value": "${far.enable_dot1x}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
+  </propertyType>
+
+  <propertyType>
+    <name>enable_spantree</name>
+    <displayName>Enable Spanning Tree</displayName>
+    <description>Enable Spanning Tree</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'enable_spantree' per device", "value": "${far.enable_spantree}" },
+      { "key": "True", "value": true },
+      { "key": "False", "value": false }]
+    </seedValues>
   </propertyType>
 
   </propertyTypes>
