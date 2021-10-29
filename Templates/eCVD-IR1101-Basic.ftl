@@ -1,5 +1,10 @@
 <#-- Begin eCVD BASIC template for IR1101 -->
-<#-- Version 1.95        -->
+<#-- Version 1.96        -->
+
+<#-- Set dumpAllVariables to true to dump all template variables
+     in the config for debugging. This will also dump all passwords in
+     clear text. -->
+<#assign dumpAllVariables = false>
 
 <#-- Default BootStrap Configuration -->
 

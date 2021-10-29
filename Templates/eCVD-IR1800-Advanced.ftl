@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD template for IR1800 -----
-     ---- Version 1.91 -----------------------
+     ---- Version 1.92 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -10,16 +10,16 @@
 
 <#compress>
 
+<#-- Set dumpAllVariables to true to dump all template variables
+     in the config for debugging. This will also dump all passwords in
+     clear text. -->
+<#assign dumpAllVariables = false>
+
 <#-- extract PID and SN from EID - ie. IR1800-K9+FCW23510HKN -->
 <#assign sublist 		= "${far.eid}"?split("+")[0..1]>
 <#assign pid = sublist[0]>
 <#assign model = pid[0..5]>
 <#assign sn = sublist[1]>
-
-
-
-
-
 
 <#-- PLATFORM SPECIFIC VARIABLES -->
 <#assign ether_if = "GigabitEthernet 0/0/0">
@@ -1172,6 +1172,7 @@ event manager applet ssh_crypto_key authorization bypass
 
 <#-- -- LOGGING ONLY ------------------------- -->
 
+<#if dumpAllVariables>
   event manager applet ListAllParams
   <#assign i = 100>
   <#list far as key, value>
@@ -1249,6 +1250,7 @@ event manager applet ssh_crypto_key authorization bypass
         <#assign i = i + 1>
     </#if>
   </#list>
+</#if>
 
 
 </#compress>

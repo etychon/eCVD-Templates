@@ -1,5 +1,10 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.93       -->
+<#-- Version 1.94       -->
+
+<#-- Set dumpAllVariables to true to dump all template variables
+     in the config for debugging. This will also dump all passwords in
+     clear text. -->
+<#assign dumpAllVariables = false>
 
 <#-- Default BootStrap Configuration -->
 
@@ -658,6 +663,31 @@ event manager applet CLEAR_DHCP
   action 1.2 cli command "renew dhcp vlan 10"
 </#if>
 
+<#-- -- LOGGING ONLY ------------------------- -->
+<#if dumpAllVariables>
+  event manager applet ListAllParams
+  <#assign i = 100>
+  <#list far as key, value>
+    <#if value??>
+      <#if value?is_string>
+        action ${i} cli command "${key} = ${value}"
+        <#assign i = i + 1>
+      <#elseif value?is_sequence>
+          <#assign subi = 0>
+        <#list value as val>
+          <#list val as subkey, subvalue>
+          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+          <#assign i = i + 1>
+          </#list>
+          <#assign subi = subi + 1>
+        </#list>
+      </#if>
+    <#elseif !value??>
+        action ${i} cli command "${key} = *null*"
+        <#assign i = i + 1>
+    </#if>
+  </#list>
+
   event manager applet ListAllSections
   <#assign i = 100>
   <#list section as key, value>
@@ -680,5 +710,7 @@ event manager applet CLEAR_DHCP
         <#assign i = i + 1>
     </#if>
   </#list>
+</#if>
+
 
 <#-- End eCVD template -->

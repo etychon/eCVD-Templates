@@ -1,7 +1,13 @@
 <#-- Begin eCVD BASIC template for IR1800 -->
-<#-- Version 1.92       -->
+<#-- Version 1.93       -->
 
 <#compress>
+
+<#-- Set dumpAllVariables to true to dump all template variables
+     in the config for debugging. This will also dump all passwords in
+     clear text. -->
+<#assign dumpAllVariables = false>
+
 <#-- Default BootStrap Configuration -->
 
 <#assign sublist 		= "${far.eid}"?split("+")[0..1]>
@@ -640,6 +646,7 @@ event manager applet ssh_crypto_key authorization bypass
 
 <#-- -- LOGGING ONLY ------------------------- -->
 
+<#if dumpAllVariables>
   event manager applet ListAllParams
   <#assign i = 100>
   <#list far as key, value>
@@ -711,10 +718,7 @@ event manager applet ssh_crypto_key authorization bypass
         <#assign i = i + 1>
     </#if>
   </#list>
-
-
-
-
+</#if>
 
 </#compress>
 

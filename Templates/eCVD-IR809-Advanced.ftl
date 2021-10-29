@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR809 -----
-  ---- Version 1.93 -----------------------
+  ---- Version 1.94 -----------------------
   -----------------------------------------
   -- This template for IR809 was NOT     --
   -- validated by the CVD team and is    --
@@ -8,6 +8,12 @@
 
 
 <#compress>
+
+<#-- Set dumpAllVariables to true to dump all template variables
+     in the config for debugging. This will also dump all passwords in
+     clear text. -->
+<#assign dumpAllVariables = false>
+
 
 <#-- extract PID and SN from EID - ie. IR829-K9+FCW23510HKN -->
 <#assign sublist 		= "${far.eid}"?split("+")[0..1]>
@@ -873,6 +879,7 @@ event manager applet ssh_crypto_key authorization bypass
 
 <#-- -- LOGGING ONLY ------------------------- -->
 
+<#if dumpAllVariables>
   event manager applet ListAllParams
   <#assign i = 100>
   <#list far as key, value>
@@ -918,6 +925,7 @@ event manager applet ssh_crypto_key authorization bypass
         <#assign i = i + 1>
     </#if>
   </#list>
+</#if>
 
 </#compress>
 

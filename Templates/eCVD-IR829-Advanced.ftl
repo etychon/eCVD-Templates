@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD ADVANCED template for IR829 -----
-     ---- Version 1.97 -----------------------
+     ---- Version 1.98 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -7,6 +7,11 @@
 
 
 <#compress>
+
+<#-- Set dumpAllVariables to true to dump all template variables
+     in the config for debugging. This will also dump all passwords in
+     clear text. -->
+<#assign dumpAllVariables = false>
 
 <#-- extract PID and SN from EID - ie. IR829-K9+FCW23510HKN -->
 <#assign sublist 		= "${far.eid}"?split("+")[0..1]>
@@ -1103,7 +1108,7 @@ event manager applet CLEAR_DHCP
 </#if>
 
 <#-- -- LOGGING ONLY ------------------------- -->
-
+<#if dumpAllVariables>
   event manager applet ListAllParams
   <#assign i = 100>
   <#list far as key, value>
@@ -1149,6 +1154,7 @@ event manager applet CLEAR_DHCP
         <#assign i = i + 1>
     </#if>
   </#list>
+</#if>
 
 </#compress>
 
