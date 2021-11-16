@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD ADVANCED template for IR1101 -----
-     ---- Version 1.95 -----------------------
+     ---- Version 1.96 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -908,7 +908,12 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#list>
 </#if>
 
-no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
+! Remove routes from Bootstrap that we don't want
+event manager applet remove-cell0-route-failproof-cli
+  event timer countdown time 15
+  action 600 cli command "enable"
+  action 610 cli command "conf t"
+  action 620 cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100"
 
 <#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
   ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
