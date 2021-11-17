@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.19        -->
+<!-- Version 1.20        -->
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -2642,5 +2642,56 @@
     </seedValues>
   </propertyType>
 
+<propertyType>
+      <name>assetID</name>
+      <displayName>Asset ID</displayName>
+      <description>Asset ID for device</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Additional Settings</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'assetID' per device", "value": "${far.assetID}" }]</seedValues>
+    </propertyType>
+
+<propertyType>
+      <name>stagingID</name>
+      <displayName>Staging ID</displayName>
+      <description>Staging ID number, label or description</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Additional Settings</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'stagingID' per device", "value": "${far.stagingID}" }]</seedValues>
+    </propertyType>
+
+<propertyType>
+      <name>label</name>
+      <displayName>Label</displayName>
+      <description>General label text field</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Additional Settings</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'label' per device", "value": "${far.label}" }]</seedValues>
+    </propertyType>
+
+<propertyType>
+    <name>tunnelIP</name>
+    <displayName>Tunnel IP address</displayName>
+    <description>Tunnel IP address</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>Additional Settings</section>
+    <required>0</required>
+    <validationType>ipv4</validationType>
+    <dataType>string</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'tunnelIP' per device", "value": "${far.tunnelIP}" }]</seedValues>
+  </propertyType>
   </propertyTypes>
 </cgms>
