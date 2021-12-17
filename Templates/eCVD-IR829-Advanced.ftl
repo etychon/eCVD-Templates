@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD ADVANCED template for IR829 -----
-     ---- Version 1.98 -----------------------
+     ---- Version 1.99 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -762,7 +762,6 @@ interface ${cell_if1}
 interface Vlan1
     description Subtended network
     ip address ${far.lanIPAddress} ${far.lanNetmask}
-    ip nbar protocol-discovery
     ip nat inside
     ip verify unicast source reachable-via rx
     no shutdown

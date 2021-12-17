@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.94       -->
+<#-- Version 1.95       -->
 
 <#-- Set dumpAllVariables to true to dump all template variables
      in the config for debugging. This will also dump all passwords in
@@ -375,7 +375,6 @@ interface ${cell_if1}
 interface Vlan1
     description Subtended network
     ip address ${far.lanIPAddress} ${far.lanNetmask}
-    ip nbar protocol-discovery
     ip nat inside
     ip verify unicast source reachable-via rx
     no shut

@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR809 -----
-  ---- Version 1.94 -----------------------
+  ---- Version 1.95 -----------------------
   -----------------------------------------
   -- This template for IR809 was NOT     --
   -- validated by the CVD team and is    --
@@ -632,7 +632,6 @@ interface ${cell_if1}
 interface GigabitEthernet1
     description Subtended network
     ip address ${far.lanIPAddress} ${far.lanNetmask}
-    ip nbar protocol-discovery
     ip nat inside
     ip verify unicast source reachable-via rx
     no shutdown

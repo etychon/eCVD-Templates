@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR807 -----
-  ---- Version 1.85 -----------------------
+  ---- Version 1.86 -----------------------
   -----------------------------------------
   -- This template for IR807 was NOT     --
   -- validated by the CVD team and is    --
@@ -592,7 +592,6 @@ interface ${cell_if1}
 interface FastEthernet1
     description SUBTENDED NETWORK
     ip address ${far.lanIPAddress} ${far.lanNetmask}
-    ip nbar protocol-discovery
     ip nat inside
     ip verify unicast source reachable-via rx
     no shutdown
