@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR807 -----
-  ---- Version 1.86 -----------------------
+  ---- Version 1.87 -----------------------
   -----------------------------------------
   -- This template for IR807 was NOT     --
   -- validated by the CVD team and is    --
@@ -813,58 +813,36 @@ event manager applet ssh_crypto_key authorization bypass
   action 15 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confirm"
   action 20 cli command "y"
 </#if>
-!
-<#-- -- LOGGING ONLY if dumpAllVariables is true ------------ -->
 
+<#-- -- LOGGING ONLY ------------------------- -->
 <#if dumpAllVariables>
-
-  event manager applet ListAllParams
-  <#assign i = 100>
-  <#list far as key, value>
-    <#if value??>
-      <#if value?is_string>
-        action ${i} cli command "${key} = ${value}"
-        <#assign i = i + 1>
-      <#elseif value?is_sequence>
-          <#assign subi = 0>
-        <#list value as val>
-          <#list val as subkey, subvalue>
-          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
+  <#assign dumpSubParams = ['far', 'section', 'nms']>
+    <#list dumpSubParams as subParm>
+    event manager applet ListAll_${subParm}
+    <#assign i = 100>
+    <#list subParm?eval as key, value>
+      <#if value??>
+        <#if value?is_string>
+          action ${i} cli command "${subParm}.${key} = ${value}"
           <#assign i = i + 1>
-          </#list>
-          <#assign subi = subi + 1>
-        </#list>
-      </#if>
-    <#elseif !value??>
-        action ${i} cli command "${key} = *null*"
-        <#assign i = i + 1>
-    </#if>
-  </#list>
-
-  event manager applet ListAllSections
-  <#assign i = 100>
-  <#list section as key, value>
-    <#if value??>
-      <#if value?is_string>
-        action ${i} cli command "${key} = ${value}"
-        <#assign i = i + 1>
-      <#elseif value?is_sequence>
+        <#elseif value?is_sequence>
           <#assign subi = 0>
-        <#list value as val>
-          <#list val as subkey, subvalue>
-          action ${i} cli command "${key} [${subi}] ${subkey} = ${subvalue}"
-          <#assign i = i + 1>
+          <#list value as val>
+            <#list val as subkey, subvalue>
+              action ${i} cli command "${subParm}.${key} [${subi}] ${subkey} = ${subvalue}"
+              <#assign i = i + 1>
+            </#list>
+            <#assign subi = subi + 1>
           </#list>
-          <#assign subi = subi + 1>
-        </#list>
-      </#if>
-    <#elseif !value??>
-        action ${i} cli command "${key} = *null*"
+        </#if>
+      <#elseif !value??>
+        action ${i} cli command "${subParm}.${key} = *null*"
         <#assign i = i + 1>
-    </#if>
+      </#if>
+    </#list>
   </#list>
-
-</#if>
+</#if> <#-- end of dumpAllVariables -->
+<#-- END OF LOGGING ONLY --------------------- -->
 
 </#compress>
 

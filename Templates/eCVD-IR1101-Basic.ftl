@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR1101 -->
-<#-- Version 1.96        -->
+<#-- Version 1.97        -->
 
 <#-- Set dumpAllVariables to true to dump all template variables
      in the config for debugging. This will also dump all passwords in
@@ -566,6 +566,36 @@ event manager applet ssh_crypto_key authorization bypass
   action 5.1 syslog msg "EEM:ssh_crypto_key hara-kiri "
   action 5.2 cli command "config t"
   action 5.3 cli command "no event manager applet ssh_crypto_key"
+
+  <#-- -- LOGGING ONLY ------------------------- -->
+  <#if dumpAllVariables>
+    <#assign dumpSubParams = ['far', 'section', 'nms']>
+      <#list dumpSubParams as subParm>
+      event manager applet ListAll_${subParm}
+      <#assign i = 100>
+      <#list subParm?eval as key, value>
+        <#if value??>
+          <#if value?is_string>
+            action ${i} cli command "${subParm}.${key} = ${value}"
+            <#assign i = i + 1>
+          <#elseif value?is_sequence>
+            <#assign subi = 0>
+            <#list value as val>
+              <#list val as subkey, subvalue>
+                action ${i} cli command "${subParm}.${key} [${subi}] ${subkey} = ${subvalue}"
+                <#assign i = i + 1>
+              </#list>
+              <#assign subi = subi + 1>
+            </#list>
+          </#if>
+        <#elseif !value??>
+          action ${i} cli command "${subParm}.${key} = *null*"
+          <#assign i = i + 1>
+        </#if>
+      </#list>
+    </#list>
+  </#if> <#-- end of dumpAllVariables -->
+  <#-- END OF LOGGING ONLY --------------------- -->
 
 
 <#-- End eCVD template -->
