@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD ADVANCED template for IR829 -----
-     ---- Version 1.101 -----------------------
+     ---- Version 1.102 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -1009,8 +1009,9 @@ interface ${ether_if}
 
 <#-- generare RSA keys for SSH -->
 
+no event manager applet ssh_crypto_key authorization bypass
 event manager applet ssh_crypto_key authorization bypass
-  event timer watchdog time 5 maxrun 60
+  event timer watchdog time 30 maxrun 60
   action 1.0 cli command "enable"
   action 2.0 cli command "show ip ssh | include ^SSH"
   action 2.1 regexp "([ED][^ ]+)" "$_cli_result" _result
@@ -1024,11 +1025,17 @@ event manager applet ssh_crypto_key authorization bypass
   action 3.7   if $_regexp_result eq "1"
   action 3.8     cli command "y"
   action 3.9   end
+  action 3.10  wait 5
   action 4.0 end
-  action 5.1 syslog msg "EEM:ssh_crypto_key hara-kiri "
-  action 5.2 cli command "config t"
-  action 5.3 cli command "no event manager applet ssh_crypto_key"
-
+  action 5.0 cli command "show ip ssh | include ^SSH"
+  action 6.0 regexp "([ED][^ ]+)" "$_cli_result" _result
+  action 6.1 if $_result eq Enabled
+  action 6.2   syslog msg "EEM:ssh_crypto_key hara-kiri because SSH now enabled"
+  action 6.3   cli command "config t"
+  action 6.4   cli command "no event manager applet ssh_crypto_key"
+  action 7.0 else
+  action 7.1   syslog msg "EEM:ssh_crypto_key SSH could not be enabled, will try again later"
+  action 9.0 end
 
 <#-- Set APN -->
 
