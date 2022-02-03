@@ -5,7 +5,7 @@
 !
 <#assign recoveryTime = far.recoveryTimer!"120">
 <#if far.isRecoveryEnable?has_content && far.isRecoveryEnable == "true">
-<#assign recoveryTimeIOTD = recoveryTime?number / 2>
+<#assign recoveryTimeIOTD = (recoveryTime?number / 2)?round>
 !
 track 88 interface Tunnel1 line-protocol
 event manager environment outage_total_limit ${recoveryTime}
