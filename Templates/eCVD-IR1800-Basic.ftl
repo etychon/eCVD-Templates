@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR1800 -->
-<#-- Version 1.95       -->
+<#-- Version 1.96       -->
 
 <#compress>
 
@@ -194,7 +194,8 @@ service tcp-keepalives-out
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
-service call-home
+no service config
+no service call-home
 platform qfp utilization monitor load 80
 no platform punt-keepalive disable-kernel-core
 !

@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR807 -----
-  ---- Version 1.88 -----------------------
+  ---- Version 1.89 -----------------------
   -----------------------------------------
   -- This template for IR807 was NOT     --
   -- validated by the CVD team and is    --
@@ -231,7 +231,8 @@ service tcp-keepalives-out
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
-service call-home
+no service config
+no service call-home
 !
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}

@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD template for IR1800 -----
-     ---- Version 1.94 -----------------------
+     ---- Version 1.99 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -280,7 +280,8 @@ service tcp-keepalives-out
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
-service call-home
+no service config
+no service call-home
 platform qfp utilization monitor load 80
 no platform punt-keepalive disable-kernel-core
 !

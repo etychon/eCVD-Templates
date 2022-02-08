@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.98       -->
+<#-- Version 1.99       -->
 
 <#-- Set dumpAllVariables to true to dump all template variables
      in the config for debugging. This will also dump all passwords in
@@ -210,7 +210,8 @@ service tcp-keepalives-out
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
-service call-home
+no service config
+no service call-home
 !
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}

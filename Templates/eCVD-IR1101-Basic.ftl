@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR1101 -->
-<#-- Version 1.99        -->
+<#-- Version 1.100        -->
 
 <#-- Set dumpAllVariables to true to dump all template variables
      in the config for debugging. This will also dump all passwords in
@@ -192,7 +192,8 @@ service tcp-keepalives-out
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
-service call-home
+no service config
+no service call-home
 platform qfp utilization monitor load 80
 no platform punt-keepalive disable-kernel-core
 !
