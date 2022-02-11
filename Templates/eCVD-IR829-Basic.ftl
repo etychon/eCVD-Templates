@@ -1,5 +1,5 @@
 <#-- Begin eCVD BASIC template for IR829 -->
-<#-- Version 1.99       -->
+<#-- Version 2.0       -->
 
 <#-- Set dumpAllVariables to true to dump all template variables
      in the config for debugging. This will also dump all passwords in
@@ -210,8 +210,7 @@ service tcp-keepalives-out
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
-no service config
-no service call-home
+service call-home
 !
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
@@ -441,7 +440,17 @@ interface Vlan50
 </#if>
 
 <#-- remove this route from the bootstrap config to allow failover -->
-no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
+<#if isFirstCell == "true">
+! Remove routes from Bootstrap that we don't want
+event manager applet remove-cell0-route-failproof-cli
+  event timer countdown time 15
+  action 600 cli command "enable"
+  action 610 cli command "conf t"
+  action 620 cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100"
+  action 630 cli command "no event manager applet remove-cell0-route-failproof-cli"
+  action 640 cli command "exit"
+  action 650 cli command "write mem"
+</#if>
 
 <#list 1..4 as p>
   <#if isEthernetEnable == "true"
@@ -474,10 +483,10 @@ no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
     <#-- Config for Cell interface are slightly different -->
     <#if isCellIntTable[p] == "true">
       track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
-      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
+      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${70+p} track ${p+40}
       ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
     <#else>
-      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${100+p}
+      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}
       ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
     </#if>
     ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
@@ -531,7 +540,8 @@ no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
       <#if isCellIntTable[p] != "true">
         <#assign suffix = "dhcp">
       <#else>
-        <#assign suffix = " ">
+        <#assign track_num = p + 40>
+        <#assign suffix = "track " + track_num>
       </#if>
       <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
         ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix} ${p+40}
@@ -615,7 +625,6 @@ no ignition enable
 
 <#-- generare RSA keys for SSH -->
 
-no event manager applet ssh_crypto_key authorization bypass
 event manager applet ssh_crypto_key authorization bypass
   event timer watchdog time 30 maxrun 60
   action 1.0 cli command "enable"
@@ -631,17 +640,11 @@ event manager applet ssh_crypto_key authorization bypass
   action 3.7   if $_regexp_result eq "1"
   action 3.8     cli command "y"
   action 3.9   end
-  action 3.10  wait 5
   action 4.0 end
-  action 5.0 cli command "show ip ssh | include ^SSH"
-  action 6.0 regexp "([ED][^ ]+)" "$_cli_result" _result
-  action 6.1 if $_result eq Enabled
-  action 6.2   syslog msg "EEM:ssh_crypto_key hara-kiri because SSH now enabled"
-  action 6.3   cli command "config t"
-  action 6.4   cli command "no event manager applet ssh_crypto_key"
-  action 7.0 else
-  action 7.1   syslog msg "EEM:ssh_crypto_key SSH could not be enabled, will try again later"
-  action 9.0 end
+  action 5.1 syslog msg "EEM:ssh_crypto_key hara-kiri "
+  action 5.2 cli command "config t"
+  action 5.3 cli command "no event manager applet ssh_crypto_key"
+
 
 <#-- Set APN -->
 
