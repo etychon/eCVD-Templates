@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD ADVANCED template for IR829 -----
-     ---- Version 1.104 -----------------------
+     ---- Version 2.0 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -247,22 +247,6 @@
 	</#if>
 </#list>
 
-<#--
-<#if !section..devicesettings_snmp?? || section..devicesettings_snmp == "true">
-  <#assign isSnmp = "true">
-    <#if far..communityString?has_content>
-      <#assign communityString = far..communityString>
-    </#if>
-    <#if far..snmpVersion?has_content>
-      <#assign snmpVersion = far..snmpVersion>
-      <#if snmpVersion == "3">
-        <#assign snmpV3User = far..snmpV3User>
-      </#if>
-    </#if>
-<#else>
-  <#assign isSnmp = "false">
-</#if>
--->
 
 <#if section.network_qos?has_content && section.network_qos == "true">
   <#assign isQosEnabled = "true">
@@ -283,27 +267,9 @@ service tcp-keepalives-out
 service timestamps debug datetime msec show-timezone
 service timestamps log datetime msec show-timezone
 service password-encryption
-no service config
 no service call-home
+no service configuration
 !
-<#-- ADDED 3 LINES BELOW FOR ADVANCED -->
-<#--
-<#if isSnmp == "true">
-  <#if communityString?has_content>
-    <#list communityString as CS>
-      <#if CS['snmpCommunity']?has_content>
-        snmp-server community ${CS['snmpCommunity']} ${CS['snmpType']}
-      </#if>
-      <#if snmpVersion == "3">
-        snmp-server  user ${far..snmpV3User} group1 v3 auth md5 ${far..snmpV3Pass}
-        snmp-server  host ${far..snmpHost} version ${far..snmpVersion} auth ${CS['snmpCommunity']}
-      <#else>
-        snmp-server host ${far..snmpHost} version ${far..snmpVersion} ${CS['snmpCommunity']}
-      </#if>
-    </#list>
-  </#if>
-</#if>
--->
 !
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
@@ -458,10 +424,10 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
      <#-- Config for Cell interface are slightly different -->
      <#if isCellIntTable[p] == "true">
        track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
-       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
+       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${70+p} track ${p+40}
        ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
      <#else>
-       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${100+p}
+       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}
        ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
      </#if>
      ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
@@ -509,7 +475,8 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
        <#if isCellIntTable[p] != "true">
          <#assign suffix = "dhcp">
        <#else>
-         <#assign suffix = " ">
+         <#assign track_num = p + 40>
+         <#assign suffix = "track " + track_num>
        </#if>
        <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
          ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix} ${p+40}
@@ -872,7 +839,15 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#if>
 
 <#if isFirstCell == "true">
-no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
+! Remove routes from Bootstrap that we don't want
+event manager applet remove-cell0-route-failproof-cli
+  event timer countdown time 15
+  action 600 cli command "enable"
+  action 610 cli command "conf t"
+  action 620 cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100"
+  action 630 cli command "no event manager applet remove-cell0-route-failproof-cli"
+  action 640 cli command "exit"
+  action 650 cli command "write mem"
 </#if>
 
 <#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
@@ -1010,7 +985,6 @@ interface ${ether_if}
 
 <#-- generare RSA keys for SSH -->
 
-no event manager applet ssh_crypto_key authorization bypass
 event manager applet ssh_crypto_key authorization bypass
   event timer watchdog time 30 maxrun 60
   action 1.0 cli command "enable"
@@ -1026,17 +1000,11 @@ event manager applet ssh_crypto_key authorization bypass
   action 3.7   if $_regexp_result eq "1"
   action 3.8     cli command "y"
   action 3.9   end
-  action 3.10  wait 5
   action 4.0 end
-  action 5.0 cli command "show ip ssh | include ^SSH"
-  action 6.0 regexp "([ED][^ ]+)" "$_cli_result" _result
-  action 6.1 if $_result eq Enabled
-  action 6.2   syslog msg "EEM:ssh_crypto_key hara-kiri because SSH now enabled"
-  action 6.3   cli command "config t"
-  action 6.4   cli command "no event manager applet ssh_crypto_key"
-  action 7.0 else
-  action 7.1   syslog msg "EEM:ssh_crypto_key SSH could not be enabled, will try again later"
-  action 9.0 end
+  action 5.1 syslog msg "EEM:ssh_crypto_key hara-kiri "
+  action 5.2 cli command "config t"
+  action 5.3 cli command "no event manager applet ssh_crypto_key"
+
 
 <#-- Set APN -->
 
@@ -1144,6 +1112,170 @@ event manager applet CLEAR_DHCP
 </#if> <#-- end of dumpAllVariables -->
 <#-- END OF LOGGING ONLY --------------------- -->
 
+<#-- EEM to create backup config for 829 recovery, to bypass auto PnP Discovery-->
+event manager applet CREATECONF
+  event timer countdown time 60 maxrun 90
+  action 001 cli command "enable"
+  action 002 cli command "dir flash:/managed/bypass-discovery.cfg"
+  action 003 regexp "-rw-" "$_cli_result"
+  action 004 if $_regexp_result eq "0"
+  action 005  syslog msg "*** bypass-discovery.cfg file not found in /managed, will create it ***"
+  action 011  file open fd flash:/managed/bypass-discovery.cfg w
+  action 012  file puts fd "service timestamps debug datetime msec"
+  action 013  file puts fd "service timestamps log datetime msec"
+  action 014  file puts fd "no service password-encryption"
+  action 015  file puts fd "hostname IR800"
+  action 016  file puts fd "no ip http server"
+  action 017  file puts fd "no ip http secure-server"
+  action 018  file puts fd "ip http client secure-trustpoint CISCO_IDEVID_SUDI"
+  action 019  file puts fd "chat-script lte \"\" \"AT!CALL\" TIMEOUT 20 \"OK\""
+  action 020  file puts fd "ip domain name cisco.com"
+  action 021  file puts fd "ip name-server 8.8.8.8"
+  action 022  file puts fd "ip name-server 1.1.1.1"
+  action 023  file puts fd "controller Cellular 0"
+  action 024  file puts fd " lte sim fast-switchover enable"
+  action 025  file puts fd "interface ${ether_if}"
+  action 026  file puts fd " ip address dhcp"
+  action 027  file puts fd "ip route 0.0.0.0 0.0.0.0 ${ether_if} DHCP"
+  action 028  file puts fd "ip route 8.8.8.8 255.255.255.255 ${ether_if} DHCP"
+  action 029  file puts fd "ip route 1.1.1.1 255.255.255.255 ${ether_if} DHCP"
+  action 030  file puts fd "ip route 0.0.0.0 0.0.0.0 ${cell_if1} 110"
+  action 031  file puts fd "ip route 8.8.8.8 255.255.255.255 ${cell_if1} 110"
+  action 032  file puts fd "ip route 1.1.1.1 255.255.255.255 ${cell_if1} 110"
+  action 040  file puts fd "ipv6 route ::/0 ${ether_if}"
+  action 041  file puts fd "ipv6 route ::/0 ${cell_if1} 110"
+  action 042  file puts fd "dialer-list 1 protocol ip permit"
+  action 043  file puts fd "dialer-list 1 protocol ipv6 permit"
+  action 046  file puts fd "interface ${cell_if1}"
+  action 047  file puts fd " ip address negotiated"
+  action 048  file puts fd " encapsulation slip"
+  action 049  file puts fd " ip tcp adjust-mss 1460"
+  action 050  file puts fd " dialer in-band"
+  action 051  file puts fd " dialer idle-timeout 0"
+  action 052  file puts fd " dialer string lte"
+  action 053  file puts fd " dialer-group 1"
+  action 054  file puts fd " ipv6 address autoconfig"
+  action 055  file puts fd "line con 0"
+  action 056  file puts fd " exec-timeout 0 0"
+  action 057  file puts fd " stopbits 1"
+  action 058  file puts fd "line 1 2"
+  action 059  file puts fd " stopbits 1"
+  action 060  file puts fd "line 3"
+  action 070  file puts fd " script dialer lte"
+  action 071  file puts fd " no exec"
+  action 072  file puts fd " transport preferred none"
+  action 073  file puts fd " transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh"
+  action 074  file puts fd "line 8"
+  action 075  file puts fd " no exec"
+  action 076  file puts fd " transport preferred none"
+  action 077  file puts fd " transport output lat pad telnet rlogin lapb-ta mop udptn v120 ssh"
+  action 078  file puts fd "line 1/3 1/6"
+  action 079  file puts fd " transport preferred none"
+  action 080  file puts fd " transport output none"
+  action 081  file puts fd " stopbits 1"
+  action 082  file puts fd "line vty 0 4"
+  action 083  file puts fd " login"
+  action 084  file puts fd " transport input none"
+  action 085  file puts fd "event manager applet FIND_HELPER_IP"
+  action 086  file puts fd "  description \"Find devicehelper.cisco.com IP and insert pnp profile\""
+  action 087  file puts fd "  event timer watchdog time 30 maxrun 99"
+  action 088  file puts fd "  action 1.0  cli command \"enable\""
+  action 089  file puts fd "  action 2.0  cli command \"ping ip devicehelper.cisco.com\" pattern \"#\""
+  action 090  file puts fd "  action 3.0  set output \"\$_cli_result\""
+  action 100  file puts fd "  action 4.0  regexp \"Echos to.*,\" \"\$output\" IPALINE"
+  action 101  file puts fd "  action 5.0  if \$_regexp_result eq 0"
+  action 102  file puts fd "  action 5.1    syslog msg \"Modem still NOT up. devicehelper.cisco.com NOT reachable\""
+  action 103  file puts fd "  action 6.0  else "
+  action 104  file puts fd "  action 6.1    regexp \"([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)\" \"\$IPALINE\" IPA"
+  action 105  file puts fd "  action 6.2    syslog msg \"DEVICEHELPER IP in pnp profile: \$IPA\""
+  action 106  file puts fd "  action 6.3    cli command \"config t\""
+  action 107  file puts fd "  action 6.4    cli command \"pnp profile pnp_cco_profile\""
+  action 108  file puts fd "  action 6.5    cli command \"transport https host \$IPA port 443\""
+  action 109  file puts fd "  action 6.6    cli command \"no event manager applet FIND_HELPER_IP\""
+  action 110  file puts fd "  action 6.7  end"
+  action 111  file puts fd "end"
+  action 112  file close fd
+  action 113 end
+  action 114 cli command "config t"
+  action 115 cli command "no event manager applet CREATECONF"
+
+<#-- Recovery Scripts -->
+  !
+
+  <#if section.devicesettings_recovery?has_content && section.devicesettings_recovery == "true">
+    <#if !far.recoveryTimer?has_content>
+      <#assign recoveryTime = 120>
+    <#else>
+      <#assign recoveryTime = far.recoveryTimer>
+    </#if>
+    <#assign recoveryTimeIOTD = (recoveryTime?number / 2)?round>
+  !
+  track 88 interface Tunnel1 line-protocol
+  event manager environment outage_total_limit ${recoveryTime}
+  event manager environment outage_iotd_limit ${recoveryTimeIOTD}
+  event manager environment outage_current 0
+  !
+  event manager applet CHECK_IOTD_RECOVERY_STATUS
+    description "Check if connectivity is still lost"
+    event timer watchdog time 60 maxrun 99
+    action 1.0  cli command "enable"
+    action 2.0  track read 88
+    action 3.0  if $_track_state eq "down"
+    action 4.0    counter name "current_iotd_outage" op inc value 1
+    action 5.0    comment syslog msg "IOTD Connectivity failure. Outage increased to:  $_counter_value_remain"
+    action 5.1    cli command "config t"
+    action 5.2    cli command "event manager environment outage_current $_counter_value_remain"
+    action 6.0  end
+  !
+  event manager applet RESET_IOTD_RECOVERY_COUNTER
+    description "Reset counter when IOTD connectivity is restored."
+    event track 88 state up maxrun 99
+    action 1.0  cli command "enable"
+    action 2.0  syslog msg "Connectivity restored. Clearing GW recovery counter."
+    action 3.0  counter name "current_iotd_outage" op set value 0
+    action 3.1  cli command "config t"
+    action 3.2  cli command "event manager environment outage_current 0"
+  !
+  event manager applet INITIATE_GW_RECOVERY
+    description "Clear running config and register GW with IOTD if WAN connectivity lost > timer set"
+    event counter name current_iotd_outage entry-val ${recoveryTimeIOTD} entry-op ge exit-op ge exit-val ${recoveryTime} maxrun 120
+    action 1.0  counter name "current_iotd_outage" op nop
+    action 2.0  syslog msg "IOTD current outage is: $_counter_value_remain. Checking total outage timer."
+    action 2.1  if $_counter_value_remain gt $outage_total_limit
+    action 2.2    syslog msg "Both timers expired. Will initiate GW recovery."
+    action 2.3    counter name "current_iotd_outage" op set value 0
+    action 2.4    cli command "enable"
+    action 3.0    cli command "show platform nvram | redirect flash:iotd_recovery.log" pattern "confirm|#"
+    action 3.1    cli command ""
+    action 3.2    cli command "show platform hypervisor | append flash:iotd_recovery.log" pattern "#"
+    action 3.3    cli command "show iox host list detail | append flash:iotd_recovery.log" pattern "#"
+    action 3.4    cli command "dir /all /recursive all-filesystems | append flash:iotd_recovery.log" pattern "#"
+    action 3.5    cli command "show pnp tech-support | append flash:iotd_recovery.log" pattern "#"
+    action 3.6    cli command "show clock detail | append flash:iotd_recovery.log" pattern "#"
+    action 3.7    cli command "show tech-support | append flash:iotd_recovery.log" pattern "#"
+    action 3.8    cli command "show clock detail | append flash:iotd_recovery.log" pattern "#"
+    action 3.9    cli command "show logging | append flash:iotd_recovery.log" pattern "#"
+    action 4.0    cli command "dir flash:/managed/bypass-discovery.cfg"
+    action 4.1    regexp "-rw-" "$_cli_result"
+    action 4.2    if $_regexp_result eq "0"
+    action 4.3      syslog msg "*** bypass-discovery.cfg NOT found in flash:/managed, will attempt pnp reset ***"
+    action 4.4      cli command "pnpa service reset no-prompt"
+    action 4.5      reload
+    action 5.0    else
+    action 5.1      syslog msg "*** bypass-discovery.cfg FOUND in flash:/managed, performing reset ***"
+    action 5.2      cli command "copy flash:/managed/bypass-discovery.cfg startup-config" pattern "startup-config|#"
+    action 5.3      cli command ""
+    action 5.4      wait 10
+    action 5.5      reload
+    action 6.0    end
+    action 6.1  else
+    action 6.2    syslog msg "IOTD not reachable, but total outage limit $outage_total_limit not reached yet."
+    action 6.3    break
+    action 6.4  end
+  !
+  <#-- END of Recovery Scripts -->
+
+  </#if>
 
 </#compress>
 
