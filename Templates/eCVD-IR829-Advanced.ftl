@@ -267,7 +267,8 @@ service tcp-keepalives-out
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
-service call-home
+no service call-home
+no service config
 !
 !
 clock timezone ${clockTZ} ${offset}
