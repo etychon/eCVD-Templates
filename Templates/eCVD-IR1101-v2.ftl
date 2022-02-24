@@ -1,6 +1,6 @@
 <#--
-     ---- Begin eCVD template for IR1800 -----
-     ---- Version 1.99 -----------------------
+     ---- Begin eCVD template for IR1101 -----
+     ---- Version 2.0 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -15,16 +15,68 @@
      clear text. -->
 <#assign dumpAllVariables = false>
 
-<#-- extract PID and SN from EID - ie. IR1800-K9+FCW23510HKN -->
+<#-- extract PID and SN from EID - ie. IR1101-K9+FCW23510HKN -->
 <#assign sublist 		= "${far.eid}"?split("+")[0..1]>
 <#assign pid = sublist[0]>
 <#assign model = pid[0..5]>
 <#assign sn = sublist[1]>
 
+<#if pid != "IR1101-K9" && pid != "IR1101-A-K9">
+  ${provisioningFailed("This template is for IR1101 and does not support ${pid}")}
+</#if>
+
+
+<#-- Device Settings Menu -->
+<#if far.localDomainName?has_content>
+  <#assign domainName = "${far.localDomainName}">
+<#else>
+  <#assign domainName = "local">
+</#if>
+
+<#-- Allows the template to prompt for "admin" password.
+     IoTOC will generate one by default during claim but
+     can be changed here -->
+<#-- may cause issues if not net, password NULL -->
+<#-- assign adminPassword = far..adminPassword --->
+<#-- USER MANAGEMENT SECTION -->
+<#if far.Users?has_content>
+  <#list far.Users as user >
+    <#if user['userName']?has_content &&
+          user['userPassword']?has_content &&
+          user['userPriv']?has_content>
+		  <#if user['userName'] == "admin">
+		    <#-- "admin" user is already used by IoT OC, ignore -->
+		    <#continue>
+		  </#if>
+      <#-- here we made sure to have username, password and pivillege defined -->
+		  username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
+    </#if>
+  </#list>
+</#if>
+
+<#-- VPN Settings Menu -->
+<#assign isPrimaryHeadEndEnable = "false">
+<#assign isSecondaryHeadEndEnable = "false">
+<#if section.vpn_primaryheadend?has_content && section.vpn_primaryheadend == "true">
+  <#if far.herIpAddress?has_content && far.herPsk?has_content>
+    <#assign herIpAddress 	= "${far.herIpAddress}">
+    <#assign herPsk			    = "${far.herPsk}">
+    <#assign isPrimaryHeadEndEnable = "true">
+  </#if>
+  <#if section.vpn_backupheadend?has_content && section.vpn_backupheadend == "true">
+    <#if far.backupHerIpAddress?has_content && far.backupHerPsk?has_content>
+      <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
+      <#assign backupHerPsk	= "${far.backupHerPsk}">
+      <#assign isSecondaryHeadEndEnable = "true">
+    </#if>
+  </#if>
+</#if>
+
+
 <#-- PLATFORM SPECIFIC VARIABLES -->
 <#assign ether_if = "GigabitEthernet 0/0/0">
-<#assign cell_if1 = "Cellular 0/4/0">
-<#assign cell_if2 = "Cellular 0/5/0">
+<#assign cell_if1 = "Cellular 0/1/0">
+<#assign cell_if2 = "Cellular 0/3/0">
 <#assign vpnTunnelIntf = "Tunnel2">
 <#assign isWgbEnable = "false">
 
@@ -43,35 +95,73 @@
 <#assign Cell1PortPriority = 200>
 
 
-<#-- IP SLA destination IP addresses -->
-
-<#assign ipslaDestIPaddress = [far.IcmpReachableIPaddress1!"4.2.2.1",
-    far.IcmpReachableIPaddress2!"4.2.2.2",
-    far.IcmpReachableIPaddress3!"9.9.9.10",
-    far.IcmpReachableIPaddress4!"9.9.9.11"]>
-
-<#-- ADDED 1 LINES BELOW FOR ADVANCED -->
-
-<#-- Interface Menu - which Ethernet interfaces are enabled? -->
-<#assign GigEthernet1_enabled = far.gigEthernet1!"true">
-<#assign GigEthernet2_enabled = far.gigEthernet2!"true">
-<#assign GigEthernet3_enabled = far.gigEthernet3!"true">
-<#assign GigEthernet4_enabled = far.gigEthernet4!"true">
-
-<#-- Allows the template to prompt for "admin" password.
-     IoTOC will generate one by default during claim but
-     can be changed here -->
-<#-- may cause issues if not net, password NULL -->
-<#-- assign adminPassword = far..adminPassword --->
-
 <#-- WAN Menu -->
 
-<#if section.wan_ethernet?has_content && section.wan_ethernet == "true">
-  <#assign isEthernetEnable = "true">
-  <#assign ethernetPriority = far.ethernetPriority>
+<#assign ipslaDestIPaddress = []>
+
+<#assign isEthernetEnable = "false">
+<#assign isFirstCell = "false">
+<#assign isSecondCell = "false">
+
+<#assign interfaces_list=[]>
+<#assign wan_descriptions = []>
+<#assign wan_eth_description = "">
+<#assign wan_cell1_description = "">
+<#assign wan_cell2_description = "">
+
+
+<#assign wan_link1_interface = far.wanUplink1Interface>
+<#assign interfaces_list += [wan_link1_interface]>
+<#if far.wanUplink1Description?has_content && far.wanUplink1Description != "null">
+  <#assign wan_descriptions += [far.wanUplink1Description]>
 <#else>
-  <#assign isEthernetEnable = "false">
+  <#assign wan_descriptions += [""]>
 </#if>
+<#assign wan_link1_sla = far.wanUplink1SLA>
+<#if wan_link1_interface == "cellular1" && far.wan1APN?has_content && far.wan1APN != "null">
+  <#assign APN1 = far.wan1APN>
+<#elseif wan_link1_interface == "cellular2" && far.wan1APN?has_content && far.wan1APN != "null">
+  <#assign APN2 = far.wan1APN>
+</#if>
+
+<#if section.wan_wanuplink2?has_content && section.wan_wanuplink2 == "true">
+  <#assign wan_link2_interface = far.wanUplink2Interface>
+  <#assign interfaces_list += [wan_link2_interface]>
+  <#if far.wanUplink2Description?has_content && far.wanUplink2Description != "null">
+    <#assign wan_descriptions += [far.wanUplink2Description]>
+  <#else>
+    <#assign wan_descriptions += [""]>
+  </#if>
+  <#assign wan_link2_sla = far.wanUplink2SLA>
+  <#if wan_link2_interface == "cellular1" && far.wan2APN?has_content && far.wan2APN != "null">
+    <#assign APN1 = far.wan2APN>
+  <#elseif wan_link2_interface == "cellular2" && far.wan2APN?has_content && far.wan2APN != "null">
+    <#assign APN2 = far.wan2APN>
+  </#if>
+</#if>
+
+<#if section.wan_wanuplink3?has_content && section.wan_wanuplink3 == "true">
+  <#assign wan_link3_interface = far.wanUplink3Interface>
+  <#assign interfaces_list += [wan_link3_interface]>
+  <#if far.wanUplink3Description?has_content && far.wanUplink3Description != "null">
+    <#assign wan_descriptions += [far.wanUplink3Description]>
+  <#else>
+    <#assign wan_descriptions += [""]>
+  </#if>
+  <#assign wan_link3_sla = far.wanUplink3SLA>
+  <#if wan_link3_interface == "cellular1" && far.wan3APN?has_content && far.wan3APN != "null">
+    <#assign APN1 = far.wan3APN>
+  <#elseif wan_link3_interface == "cellular2" && far.wan3APN?has_content && far.wan3APN != "null">
+    <#assign APN2 = far.wan3APN>
+  </#if>
+</#if>
+
+
+<#-- IP SLA destination IP addresses -->
+
+<#assign ipslaDestIPaddress = [far.wanUplink2SLA!"4.2.2.1",
+    far.wanUplink2SLA!"4.2.2.2",
+    far.wanUplink3SLA!"9.9.9.10"]>
 
 <#-- by default GPS is off -->
 <#assign isGpsEnabled = "false">
@@ -82,82 +172,33 @@
 </#if>
 
 
-<#assign isFirstCell = "false">
 
-<#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
-  <#assign isFirstCell = "true">
-  <#if far.apn1?has_content && far.apn1 != "null">
-    <#assign APN1 = far.apn1>
-
-
-
-
-
-  </#if>
+<#-- DHCP Menu -->
+<#assign lanIP 		= "${far.dhcpIPAddress}"?split(".")>
+<#assign lanNet 	= "${far.dhcpNetmask}"?split(".")>
+<#-- DHCP Range Exclusion start = far.dhcpExcludeRangeStart -->
+<#-- DHCP Range Exclusion end = far.dhcpExcludeRangeEnd -->
+<#if far.dhcpHelperIP?has_content && far.dhcpHelperIP != "null">
+  <#assign helper_address = far.dhcpHelperIP>
 </#if>
 
-<#assign isSecondCell = "false">
-<#if section.wan_cellular2?has_content && section.wan_cellular2 == "true">
-  <#assign isSecondCell = "true">
-  <#if far.apn2?has_content && far.apn2 != "null">
-    <#assign APN2 = far.apn2>
-  </#if>
-</#if>
-
-<#-- LAN Menu -->
-<#assign lanIP 		= "${far.lanIPAddress}"?split(".")>
-<#assign lanNet 	= "${far.lanNetmask}"?split(".")>
-
-<#-- Network Menu -->
-
-<#-- Security Menu -->
-<#assign isUmbrella = "false">
-<#if section.security_umbrella?has_content && section.security_umbrella == "true" && far.umbrellaToken?has_content>
-  <#assign isUmbrella = "true">
-
-  <#assign UmbrellaToken = "${far.umbrellaToken}">
-
-</#if>
-
-<#assign isNetflow = "false">
-<#if section.security_netflow?has_content && section.security_netflow == "true">
-  <#assign isNetflow = "true">
-  <#if far.netflowCollectorIP?has_content>
-    <#assign netflowCollectorIP = far.netflowCollectorIP>
-  </#if>
-</#if>
-
-<#-- VPN Settings Menu -->
-<#assign isPrimaryHeadEndEnable = "false">
-<#assign isSecondaryHeadEndEnable = "false">
-<#if section.vpn_primaryheadend?has_content && section.vpn_primaryheadend == "true">
-  <#if far.herIpAddress?has_content && far.herPsk?has_content>
-    <#assign herIpAddress   = "${far.herIpAddress}">
-    <#assign herPsk         = "${far.herPsk}">
-    <#assign isPrimaryHeadEndEnable = "true">
-  </#if>
-  <#if section.vpn_backupheadend?has_content && section.vpn_backupheadend == "true">
-    <#if far.backupHerIpAddress?has_content && far.backupHerPsk?has_content>
-      <#assign backupHerIpAddress = "${far.backupHerIpAddress}">
-      <#assign backupHerPsk = "${far.backupHerPsk}">
-      <#assign isSecondaryHeadEndEnable = "true">
-    </#if>
-  </#if>
-</#if>
-
-<#-- Device Settings Menu -->
-<#if far.localDomainName?has_content>
-  <#assign domainName = "${far.localDomainName}">
-<#else>
-  <#assign domainName = "local">
-</#if>
-
+<#-- DNS/NTP Section -->
 <#-- If no DNS specified, assign Umbrella DNS servers -->
+
 <#assign umbrella_dns1_ip = "208.67.222.222">
 <#assign umbrella_dns2_ip = "208.67.220.220">
-<#assign dns1 = far.lanDNSIPAddress1!umbrella_dns1_ip>
-<#assign dns2 = far.lanDNSIPAddress2!umbrella_dns2_ip>
+<#assign dns1 = far.dnsIPAddress1!umbrella_dns1_ip>
+<#assign dns2 = far.dnsIPAddress2!umbrella_dns2_ip>
 <#assign DNSIP		= "${dns1} ${dns2}">
+
+<#if far.ntpPrimaryIP?has_content>
+  <#assign ntpIP = far.ntpPrimaryIP>
+  <#if far.ntpSecondaryIP?has_content>
+    <#assign ntpIP2 = far.ntpSecondaryIP>
+  </#if>
+<#else>
+  <#assign ntpIP = "time.nist.gov">
+</#if>
 
 <#-- Setting up time zone settings -->
 <#if far.clockTZ?has_content>
@@ -166,10 +207,28 @@
   <#assign clockTZ = "gmt">
 </#if>
 
-<#if far.ntpIP?has_content>
-  <#assign ntpIP = far.ntpIP>
-<#else>
-  <#assign ntpIP = "time.nist.gov">
+<#-- Interface Menu - which Ethernet interfaces are enabled? -->
+<#assign FastEthernet1_enabled = far.intFastEthernet1!"true">
+<#assign FastEthernet2_enabled = far.intFastEthernet2!"true">
+<#assign FastEthernet3_enabled = far.intFastEthernet3!"true">
+<#assign FastEthernet4_enabled = far.intFastEthernet4!"true">
+
+<#assign fastEth1Des = "SUBTENDED">
+<#assign fastEth2Des = "SUBTENDED">
+<#assign fastEth3Des = "SUBTENDED">
+<#assign fastEth4Des = "SUBTENDED">
+
+<#if far.fastEthernet1Description?has_content && far.fastEthernet1Description != "null">
+  <#assign fastEth1Des = far.fastEthernet1Description!"true">
+</#if>
+<#if far.fastEthernet2Description?has_content && far.fastEthernet2Description != "null">
+  <#assign fastEth2Des = far.fastEthernet2Description!"true">
+</#if>
+<#if far.fastEthernet3Description?has_content && far.fastEthernet3Description != "null">
+  <#assign fastEth3Des = far.fastEthernet1Description!"true">
+</#if>
+<#if far.fastEthernet4Description?has_content && far.fastEthernet4Description != "null">
+  <#assign fastEth4Des = far.fastEthernet1Description!"true">
 </#if>
 
 <#-- Calculate Netmasks -->
@@ -244,22 +303,8 @@
 	</#if>
 </#list>
 
-<#--
-<#if !section..devicesettings_snmp?? || section..devicesettings_snmp == "true">
-  <#assign isSnmp = "true">
-    <#if far..communityString?has_content>
-      <#assign communityString = far..communityString>
-    </#if>
-    <#if far..snmpVersion?has_content>
-      <#assign snmpVersion = far..snmpVersion>
-      <#if snmpVersion == "3">
-        <#assign snmpV3User = far..snmpV3User>
-      </#if>
-    </#if>
-<#else>
-  <#assign isSnmp = "false">
-</#if>
--->
+
+<#-- NETWORK Menu -->
 
 <#if section.network_qos?has_content && section.network_qos == "true">
   <#assign isQosEnabled = "true">
@@ -273,6 +318,23 @@
   <#assign isQosEnabled = "false">
 </#if>
 
+
+<#-- Security Menu -->
+<#assign isNetflow = "false">
+<#if section.security_netflow?has_content && section.security_netflow == "true">
+  <#assign isNetflow = "true">
+  <#if far.netflowCollectorIP?has_content>
+    <#assign netflowCollectorIP = far.netflowCollectorIP>
+  </#if>
+</#if>
+
+<#assign isUmbrella = "false">
+<#if section.security_umbrella?has_content && section.security_umbrella == "true" && far.umbrellaToken?has_content>
+  <#assign isUmbrella = "true">
+  <#assign UmbrellaToken = "${far.umbrellaToken}">
+</#if>
+
+
 <#-- Configure Device Settings -->
 
 service tcp-keepalives-in
@@ -280,63 +342,29 @@ service tcp-keepalives-out
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
-no service config
-no service call-home
+service call-home
 platform qfp utilization monitor load 80
 no platform punt-keepalive disable-kernel-core
 !
 <#-- #TODO We may need to disable logging console later in production -->
 <#-- no logging console -->
 !
-<#-- ADDED 3 LINES BELOW FOR ADVANCED -->
-<#--
-<#if isSnmp == "true">
-  <#if communityString?has_content>
-    <#list communityString as CS>
-      <#if CS['snmpCommunity']?has_content>
-        snmp-server community ${CS['snmpCommunity']} ${CS['snmpType']}
-      </#if>
-      <#if snmpVersion == "3">
-        snmp-server  user ${far..snmpV3User} group1 v3 auth md5 ${far..snmpV3Pass}
-        snmp-server  host ${far..snmpHost} version ${far..snmpVersion} auth ${CS['snmpCommunity']}
-      <#else>
-        snmp-server host ${far..snmpHost} version ${far..snmpVersion} ${CS['snmpCommunity']}
-      </#if>
-    </#list>
-  </#if>
-</#if>
--->
-!
+
+
+
 clock timezone ${clockTZ} ${offset}
 ntp server ${ntpIP}
 !
 ip domain name ${domainName}
 !
 ip dhcp pool subtended
-    network ${lanNtwk} ${far.lanNetmask}
-    default-router ${far.lanIPAddress}
+    network ${lanNtwk} ${far.dhcpNetmask}
+    default-router ${far.dhcpIPAddress}
     dns-server ${DNSIP}
     lease 0 0 10
 !
-<#if far.lanIPAddressDHCPexcludeRangeStart?has_content && far.lanIPAddressDHCPexcludeRangeEnd?has_content>
-  ip dhcp excluded-address ${far.lanIPAddressDHCPexcludeRangeStart} ${far.lanIPAddressDHCPexcludeRangeEnd}
-</#if>
-!
-<#-- create users as defined in the template -->
-<#if far.Users?has_content>
-  <#list far.Users as user >
-    <#if user['userName']?has_content &&
-          user['userPassword']?has_content &&
-          user['userPriv']?has_content>
-      <#if user['userName'] == "admin">
-        <#-- "admin" user is already used by IoT OC, ignore -->
-        <#continue>
-      </#if>
-      <#-- here we made sure to have username, password and pivillege defined -->
-      username ${user['userName']} privilege ${user['userPriv']} algorithm-type scrypt secret ${user['userPassword']}
-
-    </#if>
-  </#list>
+<#if far.dhcpExcludeRangeStart?has_content && far.dhcpExcludeRangeEnd?has_content>
+  ip dhcp excluded-address ${far.dhcpExcludeRangeStart} ${far.dhcpExcludeRangeEnd}
 </#if>
 !
 !
@@ -404,30 +432,49 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
 
 <#-- interface priorities -->
 
-<#list 1..4 as p>
-  <#if isEthernetEnable == "true"
-        && ether_if?has_content && ethernetPriority?has_content
-        && ethernetPriority == p?string>
-    <#assign priorityIfNameTable += [ether_if]>
-    <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
-    <#assign isCellIntTable += ["false"]>
-    <#assign EthernetPortPriority = 100+p>
-  <#elseif isFirstCell == "true"
-        && cell_if1?has_content && far.firstCellularIntPriority?has_content
-        && far.firstCellularIntPriority == p?string>
-    <#assign priorityIfNameTable += [cell_if1]>
-    <#assign isTunnelEnabledTable += [far.enableTunnelOverCell1!"false"]>
-    <#assign isCellIntTable += ["true"]>
-    <#assign Cell1PortPriority = 100+p>
-  <#elseif isSecondCell == "true"
-        && cell_if2?has_content && far.secondCellularIntPriority?has_content
-        && far.secondCellularIntPriority == p?string>
-    <#assign priorityIfNameTable += [cell_if2]>
-    <#assign isTunnelEnabledTable += [far.enableTunnelOverCell2!"false"]>
-    <#assign isCellIntTable += ["true"]>
-    <#assign Cell2PortPriority = 100+p>
+<#assign used_int = []>
+
+<#list 0 .. (interfaces_list?size-1) as x>
+  <#if interfaces_list[x] == "ethernet" && !used_int?seq_contains(interfaces_list[x])>
+   <#assign used_int += [interfaces_list[x]]>
+   <#if wan_descriptions[x] != "">
+    <#assign wan_eth_description = wan_descriptions[x]>
+   </#if>
+   <#assign isEthernetEnable = "true">
+   <#assign ethernetPriority = x + 1>
+   <#assign priorityIfNameTable += [ether_if]>
+   <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
+   <#assign isCellIntTable += ["false"]>
+   <#assign EthernetPortPriority = 100+x>
+  </#if>
+
+  <#if interfaces_list[x] == "cellular1" && !used_int?seq_contains(interfaces_list[x])>
+   <#assign used_int += [interfaces_list[x]]>
+   <#if wan_descriptions[x] != "">
+    <#assign wan_cell1_description = wan_descriptions[x]>
+   </#if>
+   <#assign isFirstCell = "true">
+   <#assign firstCellPriority = x + 1>
+   <#assign priorityIfNameTable += [cell_if1]>
+   <#assign isTunnelEnabledTable += [far.enableTunnelOverCell1!"false"]>
+   <#assign isCellIntTable += ["true"]>
+   <#assign Cell1PortPriority = 100+x>
+  </#if>
+
+  <#if interfaces_list[x] == "cellular2" && !used_int?seq_contains(interfaces_list[x])>
+   <#assign used_int += [interfaces_list[x]]>
+   <#if wan_descriptions[x] != "">
+    <#assign wan_cell2_description = wan_descriptions[x]>
+   </#if>
+   <#assign isSecondCell = "true">
+   <#assign secondCellPriority = x + 1>
+   <#assign priorityIfNameTable += [cell_if2]>
+   <#assign isTunnelEnabledTable += [far.enableTunnelOverCell2!"false"]>
+   <#assign isCellIntTable += ["true"]>
+   <#assign Cell2PortPriority = 100+x>
   </#if>
 </#list>
+
 
 <#if priorityIfNameTable?size <=0>
   <#-- No interface in the priority table
@@ -442,17 +489,17 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
     <#-- Config for Cell interface are slightly different -->
     <#if isCellIntTable[p] == "true">
       track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
-      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${100+p} track ${p+40}
+      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${70+p} track ${p+40}
       ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
     <#else>
-      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${100+p}
+      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}
       ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
     </#if>
     ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
     ip sla ${p+40}
       <#-- Cell interface do not require the source for the SLA -->
       <#if isCellIntTable[p] == "true">
-        icmp-echo ${ipslaDestIPaddress[p]}
+      	icmp-echo ${ipslaDestIPaddress[p]}
         frequency 50
       <#else>
         icmp-echo ${ipslaDestIPaddress[p]} source-interface ${priorityIfNameTable[p]}
@@ -505,7 +552,8 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
       <#if isCellIntTable[p] != "true">
         <#assign suffix = "dhcp">
       <#else>
-        <#assign suffix = " ">
+        <#assign track_num = p + 40>
+        <#assign suffix = "track " + track_num>
       </#if>
       <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
         ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} ${suffix} ${p+40}
@@ -518,7 +566,6 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
 </#if>
 
 <#-- Umbrella DNS -->
-
 <#if isUmbrella == "true">
 crypto pki trustpoint umbrella
  revocation-check none
@@ -588,11 +635,6 @@ interface Vlan1
 !
 </#if>
 
-
-
-
-
-
 <#-- Zone based firewall.  Expands on Bootstrap config -->
 
 ip access-list extended eCVD-deny-from-outside
@@ -646,7 +688,7 @@ ip access-list extended eCVD-deny-from-outside
 !
 int ${ether_if}
   zone-member security INTERNET
-  !
+!
 <#if isFirstCell == "true">
 int ${cell_if1}
   zone-member security INTERNET
@@ -741,9 +783,6 @@ int ${cell_if2}
 </#if>
 
 <#-- --- END OF QoS CONFIG ----------------------------- -->
-
-
-!
 !
 <#-- IoT OD location tracking magic -->
 <#if config.enableLocationTracking>
@@ -752,7 +791,6 @@ int ${cell_if2}
   event manager policy fnd-push-gps.tcl type user
   event manager applet GNSS_ENABLE
   event timer cron cron-entry "*/1 * * * *"
-
   action 010 cli command "enable"
   action 020 cli command "show ${cell_if1} firmware"
   action 030 regexp "Modem is still down, please wait for modem to come up" $_cli_result match
@@ -799,7 +837,6 @@ int ${cell_if2}
      action 390 end
    action 400 end
   action 410 end
-
 </#if>
 !
 <#if isFirstCell == "true">
@@ -818,62 +855,92 @@ interface ${cell_if2}
     dialer idle-timeout 0
     dialer-group 1
     pulse-time 1
+    no shutdown
 </#if>
 !
 interface Vlan1
-    ip address ${far.lanIPAddress} ${far.lanNetmask}
-    ip nbar protocol-discovery
-    ip nat inside
-    ip verify unicast source reachable-via rx
-    <#if isUmbrella == "true">
-       umbrella in my_tag
-    </#if>
-    no shutdown
+ip address ${far.dhcpIPAddress} ${far.dhcpNetmask}
+ip nbar protocol-discovery
+ip nat inside
+ip verify unicast source reachable-via rx
+<#if isUmbrella == "true">
+   umbrella in my_tag
+</#if>
+<#if helper_address?has_content>
+  ip helper-address ${helper_address}
+  no shutdown
+<#else>
+  no shutdown
+  ip dhcp pool subtended
+  network ${lanNtwk} ${far.dhcpNetmask}
+  default-router ${far.dhcpIPAddress}
+  dns-server ${DNSIP}
+  lease 0 0 10
+!
+  <#if far.dhcpExcludeRangeStart?has_content && far.dhcpExcludeRangeEnd?has_content>
+    ip dhcp excluded-address ${far.dhcpExcludeRangeStart} ${far.dhcpExcludeRangeEnd}
+  </#if>
+</#if>
 !
 !
 <#-- enabling/disabling of ethernet ports -->
 
-interface GigabitEthernet0/1/0
-<#if GigEthernet1_enabled != "true">
+interface FastEthernet0/0/1
+  description ${fastEth1Des}
+<#if FastEthernet1_enabled != "true">
     shutdown
 <#else>
-  description SUBTENDED NETWORK
 	no shutdown
 </#if>
 !
-interface GigabitEthernet0/1/1
-<#if GigEthernet2_enabled != "true">
+interface FastEthernet0/0/2
+  description ${fastEth2Des}
+<#if FastEthernet2_enabled != "true">
     shutdown
 <#else>
-  description SUBTENDED NETWORK
 	no shutdown
 </#if>
 !
-interface GigabitEthernet0/1/2
-<#if GigEthernet3_enabled != "true">
+interface FastEthernet0/0/3
+  description ${fastEth3Des}
+<#if FastEthernet3_enabled != "true">
     shutdown
 <#else>
-  description SUBTENDED NETWORK
 	no shutdown
 </#if>
 !
-interface GigabitEthernet0/1/3
-<#if GigEthernet4_enabled != "true">
+interface FastEthernet0/0/4
+  description ${fastEth4Des}
+<#if FastEthernet4_enabled != "true">
+    shutdown
+<#else>
+	no shutdown
+</#if>
 
-<#else>
-  description SUBTENDED NETWORK
-	no shutdown
+<#-- Setting Descriptions of WAN links -->
+
+<#if wan_eth_description != "">
+  interface ${ether_if}
+    description ${wan_eth_description}
 </#if>
 
+<#if wan_cell1_description != "">
+  interface ${cell_if1}
+    description ${wan_cell1_description}
+</#if>
+
+<#if wan_cell2_description != "">
+  interface ${cell_if2}
+    description ${wan_cell2_description}
+</#if>
 
 <#-- Enable NAT and routing -->
-<#assign gwips = far.lanIPAddress?split(".")>
+<#assign gwips = far.dhcpIPAddress?split(".")>
 <#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
 <#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + (nwk_suffix + 5)>
 ip access-list extended NAT_ACL
   permit ip ${lanNtwk} ${lanWild} any
   permit ip ${nwk_addr} 0.0.0.31 any
-
 !
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
@@ -928,7 +995,15 @@ ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
 </#list>
 </#if>
 
-no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100
+! Remove routes from Bootstrap that we don't want
+event manager applet remove-cell0-route-failproof-cli
+  event timer countdown time 15
+  action 600 cli command "enable"
+  action 610 cli command "conf t"
+  action 620 cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100"
+  action 630 cli command "no event manager applet remove-cell0-route-failproof-cli"
+  action 640 cli command "exit"
+  action 650 cli command "write mem"
 
 <#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
   ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
@@ -1016,36 +1091,11 @@ interface Async0/2/0
   no ip address
   encapsulation relay-line
 !
-
 line vty 0 4
     exec-timeout 5 0
     length 0
     transport input ssh
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+!
 !
 <#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- Netflow -->
@@ -1089,7 +1139,6 @@ interface ${ether_if}
 <#-- generare RSA keys for SSH -->
 
 event manager applet ssh_crypto_key authorization bypass
-
   event timer watchdog time 5 maxrun 60
   action 1.0 cli command "enable"
   action 2.0 cli command "show ip ssh | include ^SSH"
@@ -1113,17 +1162,13 @@ event manager applet ssh_crypto_key authorization bypass
 
 
 <#if isFirstCell == "true" && APN1?has_content>
-
-
   <#-- if fist cell is enabled and there is an APN set -->
   <#-- get the current APN set for first cell interface -->
   event manager applet change_apn_cell1
   event timer countdown time 120
   action 005 set _match1 ""
   action 010 syslog msg "Verifying APN Profile"
-
   action 020 cli command "enable"
-
   action 030 cli command "show ${cell_if1} profile | i Access Point Name"
   action 040 regexp "^.* = ([A-Za-z0-9\.]+)" $_cli_result _match _match1
   action 050 if $_regexp_result eq 1
@@ -1138,7 +1183,6 @@ event manager applet ssh_crypto_key authorization bypass
   <#-- configure new APN, interface will be down 10-20 seconds -->
   action 120 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confirm"
   action 130 cli command "y"
-
   action 140 end
 </#if>
 !
@@ -1147,7 +1191,6 @@ event manager applet ssh_crypto_key authorization bypass
   <#-- get the current APN set for second cell interface -->
   event manager applet change_apn_cell2
   event timer countdown time 120
-
   action 005 set _match1 ""
   action 010 syslog msg "Verifying APN Profile"
   action 020 cli command "enable"
@@ -1167,11 +1210,6 @@ event manager applet ssh_crypto_key authorization bypass
   action 130 cli command "y"
   action 140 end
 </#if>
-
-
-
-
-<#-- -- LOGGING ONLY ------------------------- -->
 
 <#-- -- LOGGING ONLY ------------------------- -->
 <#if dumpAllVariables>
@@ -1202,6 +1240,85 @@ event manager applet ssh_crypto_key authorization bypass
   </#list>
 </#if> <#-- end of dumpAllVariables -->
 <#-- END OF LOGGING ONLY --------------------- -->
+
+! GW Recovery Scripts
+!
+<#if section.devicesettings_recovery?has_content && section.devicesettings_recovery == "true">
+  <#if !far.recoveryTimer?has_content>
+    <#assign recoveryTime = 120>
+  <#else>
+    <#assign recoveryTime = far.recoveryTimer>
+  </#if>
+  <#assign recoveryTimeIOTD = (recoveryTime?number / 2)?round>
+!
+track 88 interface Tunnel1 line-protocol
+event manager environment outage_total_limit ${recoveryTime}
+event manager environment outage_iotd_limit ${recoveryTimeIOTD}
+event manager environment outage_current 0
+!
+event manager applet CHECK_IOTD_RECOVERY_STATUS
+  description "Check if connectivity is still lost"
+  event timer watchdog time 60 maxrun 99
+  action 1.0  cli command "enable"
+  action 2.0  track read 88
+  action 3.0  if $_track_state eq "down"
+  action 4.0    counter name "current_iotd_outage" op inc value 1
+  action 5.0    comment syslog msg "IOTD Connectivity failure. Outage increased to:  $_counter_value_remain"
+  action 5.1    cli command "config t"
+  action 5.2    cli command "event manager environment outage_current $_counter_value_remain"
+  action 6.0  end
+!
+event manager applet RESET_IOTD_RECOVERY_COUNTER
+  description "Reset counter when IOTD connectivity is restored."
+  event track 88 state up maxrun 99
+  action 1.0  cli command "enable"
+  action 2.0  syslog msg "Connectivity restored. Clearing GW recovery counter."
+  action 3.0  counter name "current_iotd_outage" op set value 0
+  action 3.1  cli command "config t"
+  action 3.2  cli command "event manager environment outage_current 0"
+!
+event manager applet INITIATE_GW_RECOVERY
+  description "Clear running config and register GW with IOTD if WAN connectivity lost > timer set"
+  event counter name current_iotd_outage entry-val ${recoveryTimeIOTD} entry-op ge exit-op ge exit-val ${recoveryTime} maxrun 360
+  action 1.0  counter name "current_iotd_outage" op nop
+  action 2.0  syslog msg "IOTD current outage is: $_counter_value_remain. Checking total outage timer."
+  action 3.0  if $_counter_value_remain gt $outage_total_limit
+  action 3.1    syslog msg "Both timers expired. Will initiate GW recovery."
+  action 3.2    counter name "current_iotd_outage" op set value 0
+  action 3.3    cli command "enable"
+  action 3.4    syslog msg "Recovery Script STARTING collection of data"
+  action 4.0    cli command "show romvar | redirect flash:iotd_recovery.log" pattern "confirm|#"
+  action 4.1    cli command ""
+  action 4.2    syslog msg "STARTING dir /all /recursive all-filesystems "
+  action 4.3    cli command "dir /all /recursive all-filesystems | append bootflash:iotd_recovery.log" pattern "#"
+  action 4.4    syslog msg "STARTING show pnp tech-support "
+  action 4.5    cli command "show pnp tech-support | append bootflash:iotd_recovery.log" pattern "#"
+  action 4.6    cli command "show clock detail | append bootflash:iotd_recovery.log" pattern "#"
+  action 4.7    syslog msg "STARTING show tech-support "
+  action 4.8    cli command "show tech-support | append bootflash:iotd_recovery.log" pattern "#"
+  action 4.9    cli command "show clock detail | append bootflash:iotd_recovery.log" pattern "#"
+  action 5.0    syslog msg "STARTING show show logging "
+  action 5.1    cli command "show logging | append bootflash:iotd_recovery.log" pattern "#"
+  action 5.2    syslog msg "Recovery Script FINISHED collecting"
+  action 5.3    cli command "dir bootflash:/managed/bypass-discovery.cfg | inc 2609"
+  action 5.4    regexp "-rw-" "$_cli_result"
+  action 6.0    if $_regexp_result eq "0"
+  action 6.1      syslog msg "*** bypass-discovery.cfg NOT found in bootflash:/managed, will attempt pnp reset ***"
+  action 6.2      cli command "pnpa service reset no-prompt"
+  action 6.3      reload
+  action 6.4    else
+  action 6.5      syslog msg "*** bypass-discovery.cfg FOUND in bootflash:/managed, performing reset ***"
+  action 6.6      cli command "copy flash:/managed/bypass-discovery.cfg startup-config" pattern "startup-config|#"
+  action 6.7      cli command ""
+  action 6.8      wait 10
+  action 6.9      reload
+  action 7.0    end
+  action 7.1  else
+  action 7.2    syslog msg "IOTD not reachable, but total outage limit $outage_total_limit not reached yet."
+  action 7.3    break
+  action 7.4  end
+</#if>
+
 
 
 </#compress>
