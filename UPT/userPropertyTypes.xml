@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.20        -->
+<!-- Version 1.22        -->
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -2693,5 +2693,650 @@
     <deviceSpecific>1</deviceSpecific>
     <seedValues>[{ "key": "Provide 'tunnelIP' per device", "value": "${far.tunnelIP}" }]</seedValues>
   </propertyType>
+
+<!-- ###############################################  -->
+<!-- VARIABLES BELOW THIS LINE ARE FOR 2.0 TEMPLATES  -->
+<!-- ###############################################  -->
+
+
+<!-- ###############################################  -->
+<!-- VARIABLES for 2.0 WAN Section  -->
+<!-- ###############################################  -->
+
+
+<propertyType>
+  <name>wanUplink1Interface</name>
+  <displayName>Interface</displayName>
+  <description>WAN Uplink 1 Interface</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 1</section>
+  <sectionLevelInTree>1</sectionLevelInTree>
+  <required>1</required>
+  <validationType>non-empty</validationType>
+  <dataType>array</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[ { "key": "Provide 'wanUplink1Interface' per device", "value": "${far.wanUplink1Interface}" },
+          { "key": "Ethernet", "value": "ethernet" },
+          { "key": "Cellular 1", "value": "cellular1" },
+          { "key": "Cellular 2", "value": "cellular2" }
+  ]</seedValues>
+</propertyType>
+
+<propertyType>
+    <name>wanUplink1Description</name>
+    <displayName>Description</displayName>
+    <description>WAN Uplink 1 Description</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>WAN>WAN Uplink 1</section>
+    <required>0</required>
+    <sectionLevelInTree>1</sectionLevelInTree>
+    <validationType>non-empty</validationType>
+    <dataType>string</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'wanUplink1Description' per device", "value": "${far.wanUplink1Description}"}]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>wanUplink1SLA</name>
+  <displayName>IP Address for IP SLA Test</displayName>
+  <description>First IPv4 address for IP SLA ICMP ping test</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 1</section>
+  <required>1</required>
+  <defaultValue>4.2.2.1</defaultValue>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'wanUplink1SLA' per device", "value": "${far.wanUplink1SLA}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>wan1APN</name>
+  <displayName>Cellular Access Point Name (If Applicable)</displayName>
+  <description>Enter the Cellular Access Point Name if Applicable</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 1</section>
+  <required>0</required>
+  <validationType>non-empty</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'wan1APN' per device", "value": "${far.wan1APN}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>wanUplink2Interface</name>
+  <displayName>Interface</displayName>
+  <description>WAN Uplink 2 Interface</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 2</section>
+  <sectionLevelInTree>1</sectionLevelInTree>
+  <defaultValue>Cellular 1</defaultValue>
+  <required>1</required>
+  <validationType>non-empty</validationType>
+  <dataType>array</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[ { "key": "Provide 'wanUplink2Interface' per device", "value": "${far.wanUplink2Interface}" },
+          { "key": "Ethernet", "value": "ethernet" },
+          { "key": "Cellular 1", "value": "cellular1" },
+          { "key": "Cellular 2", "value": "cellular2" }
+  ]</seedValues>
+</propertyType>
+
+<propertyType>
+    <name>wanUplink2Description</name>
+    <displayName>Description</displayName>
+    <description>WAN Uplink 2 Description</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>WAN>WAN Uplink 2</section>
+    <required>0</required>
+    <sectionLevelInTree>1</sectionLevelInTree>
+    <validationType>non-empty</validationType>
+    <dataType>string</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'wanUplink2Description' per device", "value": "${far.wanUplink2Description}"}]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>wanUplink2SLA</name>
+  <displayName>IP Address for IP SLA Test</displayName>
+  <description>Second IPv4 address for IP SLA ICMP ping test</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 2</section>
+  <required>1</required>
+  <defaultValue>4.2.2.2</defaultValue>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'wanUplink2SLA' per device", "value": "${far.wanUplink2SLA}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>wan2APN</name>
+  <displayName>Cellular Access Point Name (If Applicable)</displayName>
+  <description>Enter the Cellular Access Point Name if Applicable</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 2</section>
+  <required>0</required>
+  <validationType>non-empty</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'wan2APN' per device", "value": "${far.wan2APN}" }]</seedValues>
+</propertyType>
+
+
+<propertyType>
+  <name>wanUplink3Interface</name>
+  <displayName>Interface</displayName>
+  <description>WAN Uplink 3 Interface</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 3</section>
+  <sectionLevelInTree>1</sectionLevelInTree>
+  <defaultValue>Cellular 2</defaultValue>
+  <required>1</required>
+  <validationType>non-empty</validationType>
+  <dataType>array</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[ { "key": "Provide 'wanUplink3Interface' per device", "value": "${far.wanUplink3Interface}" },
+          { "key": "Ethernet", "value": "ethernet" },
+          { "key": "Cellular 1", "value": "cellular1" },
+          { "key": "Cellular 2", "value": "cellular2" }
+  ]</seedValues>
+</propertyType>
+
+<propertyType>
+    <name>wanUplink3Description</name>
+    <displayName>Description</displayName>
+    <description>WAN Uplink 3 Description</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>WAN>WAN Uplink 3</section>
+    <required>0</required>
+    <sectionLevelInTree>1</sectionLevelInTree>
+    <validationType>non-empty</validationType>
+    <dataType>string</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'wanUplink3Description' per device", "value": "${far.wanUplink3Description}"}]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>wanUplink3SLA</name>
+  <displayName>IP Address for IP SLA Test</displayName>
+  <description>Third IPv4 address for IP SLA ICMP ping test</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 3</section>
+  <required>1</required>
+  <defaultValue>9.9.9.10</defaultValue>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'wanUplink3SLA' per device", "value": "${far.wanUplink3SLA}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>wan3APN</name>
+  <displayName>Cellular Access Point Name (If Applicable)</displayName>
+  <description>Enter the Cellular Access Point Name if Applicable</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 3</section>
+  <required>0</required>
+  <validationType>non-empty</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'wan3APN' per device", "value": "${far.wan3APN}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>wanUplink4Interface</name>
+  <displayName>Interface</displayName>
+  <description>WAN Uplink 4 Interface</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 4</section>
+  <sectionLevelInTree>1</sectionLevelInTree>
+  <defaultValue>WGB</defaultValue>
+  <required>1</required>
+  <validationType>non-empty</validationType>
+  <dataType>array</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[ { "key": "Provide 'wanUplink1Interface' per device", "value": "${far.wanUplink4Interface}" },
+          { "key": "Ethernet", "value": "ethernet" },
+          { "key": "Cellular 1", "value": "cellular1" },
+          { "key": "Cellular 2", "value": "cellular2" }
+  ]</seedValues>
+</propertyType>
+
+<propertyType>
+    <name>wanUplink4Description</name>
+    <displayName>Description</displayName>
+    <description>WAN Uplink 4 Description</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>WAN>WAN Uplink 4</section>
+    <required>0</required>
+    <sectionLevelInTree>1</sectionLevelInTree>
+    <validationType>non-empty</validationType>
+    <dataType>string</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>[{ "key": "Provide 'wanUplink4Description' per device", "value": "${far.wanUplink4Description}"}]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>wanUplink4SLA</name>
+  <displayName>IP Address for IP SLA Test</displayName>
+  <description>Fourth IPv4 address for IP SLA ICMP ping test</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 4</section>
+  <required>1</required>
+  <defaultValue>9.9.9.11</defaultValue>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'wanUplink4SLA' per device", "value": "${far.wanUplink4SLA}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>wan4APN</name>
+  <displayName>Cellular Access Point Name (If Applicable)</displayName>
+  <description>Enter the Cellular Access Point Name if Applicable</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>WAN>WAN Uplink 4</section>
+  <required>0</required>
+  <validationType>non-empty</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'wan4APN' per device", "value": "${far.wan4APN}" }]</seedValues>
+</propertyType>
+
+<!-- ###############################################  -->
+<!-- VARIABLES for 2.0 DHCP Section  -->
+<!-- ###############################################  -->
+
+<propertyType>
+  <name>dhcpIPAddress</name>
+  <displayName>DHCP IP Address for VLAN1</displayName>
+  <description>LAN IPv4 Address</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>DHCP>Dynamic Host Configuration Protocol</section>
+  <required>1</required>
+  <defaultValue>192.168.21.1</defaultValue>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <tooltip>Enter Text Here</tooltip>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'dhcpIPAddress' per device", "value": "${far.dhcpIPAddress}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>dhcpNetmask</name>
+  <displayName>DHCP IP Address for VLAN1 Netmask</displayName>
+  <description>LAN IPv4 Subnet mask</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>DHCP>Dynamic Host Configuration Protocol</section>
+  <defaultValue>255.255.255.0</defaultValue>
+  <required>1</required>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'dhcpNetmask' per device", "value": "${far.dhcpNetmask}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>dhcpExcludeRangeStart</name>
+  <displayName>DHCP exclude range start IP</displayName>
+  <description>DHCP exclude range start IP</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>DHCP>Advanced Settings>DHCP Exclude Range</section>
+  <required>0</required>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'dhcpExcludeRangeStart' per device", "value": "${far.dhcpExcludeRangeStart}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>dhcpExcludeRangeEnd</name>
+  <displayName>DHCP exclude range end IP</displayName>
+  <description>DHCP exclude range end IP</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>DHCP>Advanced Settings>DHCP Exclude Range</section>
+  <required>0</required>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'dhcpExcludeRangeEnd' per device", "value": "${far.dhcpExcludeRangeEnd}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>dhcpHelperIP</name>
+  <displayName>DHCP Helper IP Address</displayName>
+  <description>IPv4 Address of the DHCP Helper</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>DHCP>Advanced Settings>IP DHCP Helper Address</section>
+  <required>0</required>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'dhcpHelperIP' per device", "value": "${far.dhcpHelperIP}" }]</seedValues>
+</propertyType>
+
+<!-- ###############################################  -->
+<!-- VARIABLES for 2.0 DNS/NTP Section  -->
+<!-- ###############################################  -->
+
+<propertyType>
+  <name>dnsIPAddress1</name>
+  <displayName>Primary LAN DNS IP Address</displayName>
+  <description>Primary LAN DNS IPv4 Address</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <section>DNS/NTP>DNS Settings</section>
+  <required>1</required>
+  <defaultValue>208.67.222.222</defaultValue>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'dnsIPAddress1' per device", "value": "${far.dnsIPAddress1}" }]</seedValues>
+</propertyType>
+
+ <propertyType>
+  <name>dnsIPAddress2</name>
+  <displayName>Secondary LAN DNS IP Address</displayName>
+  <description>Secondary DNS IPv4 Address</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+  <defaultValue>208.67.220.220</defaultValue>
+  <section>DNS/NTP>DNS Settings</section>
+  <required>1</required>
+  <validationType>ipv4</validationType>
+  <dataType>string</dataType>
+  <deviceSpecific>1</deviceSpecific>
+  <seedValues>[{ "key": "Provide 'dnsIPAddress2' per device", "value": "${far.dnsIPAddress2}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+   <name>ntpPrimaryIP</name>
+   <displayName>Primary Network Time Server</displayName>
+   <description>Enter the NTP address to sync time</description>
+   <exportAsTemplateKeys>1</exportAsTemplateKeys>
+   <section>DNS/NTP>NTP Settings</section>
+   <sectionLevelInTree>1</sectionLevelInTree>
+   <required>0</required>
+   <defaultValue>time.nist.gov</defaultValue>
+   <validationType>non-empty</validationType>
+   <dataType>string</dataType>
+   <deviceSpecific>1</deviceSpecific>
+   <seedValues>[{ "key": "Provide 'ntpPrimaryIP' per device", "value": "${far.ntpPrimaryIP}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+   <name>ntpSecondaryIP</name>
+   <displayName>Secondary Network Time Server</displayName>
+   <description>Enter the NTP address to sync time</description>
+   <exportAsTemplateKeys>1</exportAsTemplateKeys>
+   <section>DNS/NTP>NTP Settings</section>
+   <sectionLevelInTree>1</sectionLevelInTree>
+   <required>0</required>
+   <validationType>non-empty</validationType>
+   <dataType>string</dataType>
+   <deviceSpecific>1</deviceSpecific>
+   <seedValues>[{ "key": "Provide 'ntpSecondaryIP' per device", "value": "${far.ntpSecondaryIP}" }]</seedValues>
+</propertyType>
+
+<!-- ###############################################  -->
+<!-- VARIABLES for 2.0 LAN Section  -->
+<!-- ###############################################  -->
+
+<propertyType>
+  <name>intFastEthernet1</name>
+  <displayName>Interface Status</displayName>
+  <description>Enable/Disable Fast Ethernet Port 1</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>LAN>Fast Ethernet 1</section>
+    <required>0</required>
+    <defaultValue>true</defaultValue>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'intFastEthernet1' per device", "value": "${far.intFastEthernet1}" },
+      { "key": "Enable", "value": true },
+      { "key": "Disable", "value": false }]
+    </seedValues>
+</propertyType>
+
+<propertyType>
+   <name>fastEthernet1Description</name>
+   <displayName>Description for Fast Ethernet 1</displayName>
+   <description>Description for Fast Ethernet 1</description>
+   <exportAsTemplateKeys>1</exportAsTemplateKeys>
+   <section>LAN>Fast Ethernet 1</section>
+   <sectionLevelInTree>1</sectionLevelInTree>
+   <required>0</required>
+   <validationType>non-empty</validationType>
+   <dataType>string</dataType>
+   <deviceSpecific>1</deviceSpecific>
+   <seedValues>[{ "key": "Provide 'fastEthernet1Description' per device", "value": "${far.fastEthernet1Description}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+    <name>intFastEthernet2</name>
+    <displayName>Interface Status</displayName>
+    <description>Enable/Disable Fast Ethernet Port 2</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>LAN>Fast Ethernet 2</section>
+    <required>0</required>
+    <defaultValue>true</defaultValue>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'intFastEthernet2' per device", "value": "${far.intFastEthernet2}" },
+      { "key": "Enable", "value": true },
+      { "key": "Disable", "value": false }]
+    </seedValues>
+</propertyType>
+
+<propertyType>
+   <name>fastEthernet2Description</name>
+   <displayName>Description for Fast Ethernet 2</displayName>
+   <description>Description for Fast Ethernet 2</description>
+   <exportAsTemplateKeys>1</exportAsTemplateKeys>
+   <section>LAN>Fast Ethernet 2</section>
+   <sectionLevelInTree>1</sectionLevelInTree>
+   <required>0</required>
+   <validationType>non-empty</validationType>
+   <dataType>string</dataType>
+   <deviceSpecific>1</deviceSpecific>
+   <seedValues>[{ "key": "Provide 'fastEthernet2Description' per device", "value": "${far.fastEthernet2Description}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+    <name>intFastEthernet3</name>
+    <displayName>Interface Status</displayName>
+    <description>Enable/Disable Fast Ethernet Port 3</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>LAN>Fast Ethernet 3</section>
+    <required>0</required>
+    <defaultValue>true</defaultValue>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'intFastEthernet3' per device", "value": "${far.intFastEthernet3}" },
+      { "key": "Enable", "value": true },
+      { "key": "Disable", "value": false }]
+    </seedValues>
+</propertyType>
+
+<propertyType>
+   <name>fastEthernet3Description</name>
+   <displayName>Description for Fast Ethernet 3</displayName>
+   <description>Description for Fast Ethernet 3</description>
+   <exportAsTemplateKeys>1</exportAsTemplateKeys>
+   <section>LAN>Fast Ethernet 3</section>
+   <sectionLevelInTree>1</sectionLevelInTree>
+   <required>0</required>
+   <validationType>non-empty</validationType>
+   <dataType>string</dataType>
+   <deviceSpecific>1</deviceSpecific>
+   <seedValues>[{ "key": "Provide 'fastEthernet3Description' per device", "value": "${far.fastEthernet3Description}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+    <name>intFastEthernet4</name>
+    <displayName>Interface Status</displayName>
+    <description>Enable/Disable Fast Ethernet Port 4</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>LAN>Fast Ethernet 4</section>
+    <required>0</required>
+    <defaultValue>true</defaultValue>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'intFastEthernet4' per device", "value": "${far.intFastEthernet4}" },
+      { "key": "Enable", "value": true },
+      { "key": "Disable", "value": false }]
+    </seedValues>
+</propertyType>
+
+<propertyType>
+   <name>fastEthernet4Description</name>
+   <displayName>Description for Fast Ethernet 4</displayName>
+   <description>Description for Fast Ethernet 4</description>
+   <exportAsTemplateKeys>1</exportAsTemplateKeys>
+   <section>LAN>Fast Ethernet 4</section>
+   <sectionLevelInTree>1</sectionLevelInTree>
+   <required>0</required>
+   <validationType>non-empty</validationType>
+   <dataType>string</dataType>
+   <deviceSpecific>1</deviceSpecific>
+   <seedValues>[{ "key": "Provide 'fastEthernet4Description' per device", "value": "${far.fastEthernet4Description}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+  <name>intGigEthernet1</name>
+  <displayName>Interface Status</displayName>
+  <description>Enable/Disable Gigabit Ethernet Port 1</description>
+  <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>LAN>Gigabit Ethernet 1</section>
+    <defaultValue>true</defaultValue>
+    <required>0</required>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'intGigEthernet1' per device", "value": "${far.intGigEthernet1}" },
+      { "key": "Enable", "value": true },
+      { "key": "Disable", "value": false }]
+    </seedValues>
+</propertyType>
+
+<propertyType>
+   <name>gigEthernet1Description</name>
+   <displayName>Description for Gigabit Ethernet 1</displayName>
+   <description>Description for Gigabit Ethernet 1</description>
+   <exportAsTemplateKeys>1</exportAsTemplateKeys>
+   <section>LAN>Gigabit Ethernet 1</section>
+   <sectionLevelInTree>1</sectionLevelInTree>
+   <required>0</required>
+   <validationType>non-empty</validationType>
+   <dataType>string</dataType>
+   <deviceSpecific>1</deviceSpecific>
+   <seedValues>[{ "key": "Provide 'gigEthernet1Description' per device", "value": "${far.gigEthernet1Description}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+    <name>intGigEthernet2</name>
+    <displayName>Interface Status</displayName>
+    <description>Enable/Disable Gigabit Ethernet Port 2</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>LAN>Gigabit Ethernet 2</section>
+    <required>0</required>
+    <defaultValue>true</defaultValue>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'intGigEthernet2' per device", "value": "${far.intGigEthernet2}" },
+      { "key": "Enable", "value": true },
+      { "key": "Disable", "value": false }]
+    </seedValues>
+</propertyType>
+
+<propertyType>
+   <name>gigEthernet2Description</name>
+   <displayName>Description for Gigabit Ethernet 2</displayName>
+   <description>Description for Gigabit Ethernet 2</description>
+   <exportAsTemplateKeys>1</exportAsTemplateKeys>
+   <section>LAN>Gigabit Ethernet 2</section>
+   <sectionLevelInTree>1</sectionLevelInTree>
+   <required>0</required>
+   <validationType>non-empty</validationType>
+   <dataType>string</dataType>
+   <deviceSpecific>1</deviceSpecific>
+   <seedValues>[{ "key": "Provide 'gigEthernet2Description' per device", "value": "${far.gigEthernet2Description}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+    <name>intGigEthernet3</name>
+    <displayName>Interface Status</displayName>
+    <description>Enable/Disable Gigabit Ethernet Port 3</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>LAN>Gigabit Ethernet 3</section>
+    <required>0</required>
+    <defaultValue>true</defaultValue>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'intGigEthernet3' per device", "value": "${far.intGigEthernet3}" },
+      { "key": "Enable", "value": true },
+      { "key": "Disable", "value": false }]
+    </seedValues>
+</propertyType>
+
+<propertyType>
+   <name>gigEthernet3Description</name>
+   <displayName>Description for Gigabit Ethernet 3</displayName>
+   <description>Description for Gigabit Ethernet 3</description>
+   <exportAsTemplateKeys>1</exportAsTemplateKeys>
+   <section>LAN>Gigabit Ethernet 3</section>
+   <sectionLevelInTree>1</sectionLevelInTree>
+   <required>0</required>
+   <validationType>non-empty</validationType>
+   <dataType>string</dataType>
+   <deviceSpecific>1</deviceSpecific>
+   <seedValues>[{ "key": "Provide 'gigEthernet3Description' per device", "value": "${far.gigEthernet3Description}" }]</seedValues>
+</propertyType>
+
+<propertyType>
+    <name>intGigEthernet4</name>
+    <displayName>Interface Status</displayName>
+    <description>Enable/Disable Gigabit Ethernet Port 4</description>
+    <exportAsTemplateKeys>1</exportAsTemplateKeys>
+    <section>LAN>Gigabit Ethernet 4</section>
+    <required>0</required>
+    <defaultValue>true</defaultValue>
+    <validationType>non-empty</validationType>
+    <dataType>boolean</dataType>
+    <deviceSpecific>1</deviceSpecific>
+    <seedValues>
+      [{ "key": "Provide 'intGigEthernet4' per device", "value": "${far.intGigEthernet4}" },
+      { "key": "Enable", "value": true },
+      { "key": "Disable", "value": false }]
+    </seedValues>
+</propertyType>
+
+<propertyType>
+   <name>gigEthernet4Description</name>
+   <displayName>Description for Gigabit Ethernet 4</displayName>
+   <description>Description for Gigabit Ethernet 4</description>
+   <exportAsTemplateKeys>1</exportAsTemplateKeys>
+   <section>LAN>Gigabit Ethernet 4</section>
+   <sectionLevelInTree>1</sectionLevelInTree>
+   <required>0</required>
+   <validationType>non-empty</validationType>
+   <dataType>string</dataType>
+   <deviceSpecific>1</deviceSpecific>
+   <seedValues>[{ "key": "Provide 'gigEthernet4Description' per device", "value": "${far.gigEthernet4Description}" }]</seedValues>
+</propertyType>
+
+
   </propertyTypes>
 </cgms>
