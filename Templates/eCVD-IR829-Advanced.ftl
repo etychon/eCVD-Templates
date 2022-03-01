@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD ADVANCED template for IR829 -----
-     ---- Version 1.103 -----------------------
+     ---- Version 1.104 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -280,8 +280,8 @@
 
 service tcp-keepalives-in
 service tcp-keepalives-out
-service timestamps debug datetime msec
-service timestamps log datetime msec
+service timestamps debug datetime msec show-timezone
+service timestamps log datetime msec show-timezone
 service password-encryption
 no service config
 no service call-home

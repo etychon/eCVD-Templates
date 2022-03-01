@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR809 -----
-  ---- Version 1.98 -----------------------
+  ---- Version 1.99 -----------------------
   -----------------------------------------
   -- This template for IR809 was NOT     --
   -- validated by the CVD team and is    --
@@ -248,8 +248,8 @@
 
 service tcp-keepalives-in
 service tcp-keepalives-out
-service timestamps debug datetime msec
-service timestamps log datetime msec
+service timestamps debug datetime msec show-timezone
+service timestamps log datetime msec show-timezone
 service password-encryption
 no service config
 no service call-home

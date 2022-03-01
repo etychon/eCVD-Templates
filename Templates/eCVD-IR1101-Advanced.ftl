@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD ADVANCED template for IR1101 -----
-     ---- Version 1.100 -----------------------
+     ---- Version 1.101 -----------------------
      -----------------------------------------
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -273,8 +273,8 @@
 
 service tcp-keepalives-in
 service tcp-keepalives-out
-service timestamps debug datetime msec
-service timestamps log datetime msec
+service timestamps debug datetime msec show-timezone
+service timestamps log datetime msec show-timezone
 service password-encryption
 no service config
 no service call-home
