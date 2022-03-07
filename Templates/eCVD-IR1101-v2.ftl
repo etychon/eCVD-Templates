@@ -225,10 +225,10 @@
   <#assign fastEth2Des = far.fastEthernet2Description!"true">
 </#if>
 <#if far.fastEthernet3Description?has_content && far.fastEthernet3Description != "null">
-  <#assign fastEth3Des = far.fastEthernet1Description!"true">
+  <#assign fastEth3Des = far.fastEthernet3Description!"true">
 </#if>
 <#if far.fastEthernet4Description?has_content && far.fastEthernet4Description != "null">
-  <#assign fastEth4Des = far.fastEthernet1Description!"true">
+  <#assign fastEth4Des = far.fastEthernet4Description!"true">
 </#if>
 
 <#-- Calculate Netmasks -->
