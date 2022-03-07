@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD template for IR809 -----
-  ---- Version 1.99 -----------------------
+  ---- Version 1.100 -----------------------
   -----------------------------------------
   -- This template for IR809 was NOT     --
   -- validated by the CVD team and is    --
@@ -845,7 +845,7 @@ interface ${ether_if}
 <#-- generare RSA keys for SSH -->
 
 event manager applet ssh_crypto_key authorization bypass
-  event timer watchdog time 5 maxrun 60
+  event timer watchdog time 30 maxrun 60
   action 1.0 cli command "enable"
   action 2.0 cli command "show ip ssh | include ^SSH"
   action 2.1 regexp "([ED][^ ]+)" "$_cli_result" _result
