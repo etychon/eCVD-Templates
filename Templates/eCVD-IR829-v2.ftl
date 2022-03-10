@@ -1,6 +1,7 @@
 <#-- ---- Begin eCVD ADVANCED template for IR829 -----
-     ---- Version 2.0 -----------------------
+     ---- Version 2.01 -----------------------
      -----------------------------------------
+     -- March 2022 Release                  --
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
 -->
@@ -267,8 +268,7 @@ service tcp-keepalives-out
 service timestamps debug datetime msec
 service timestamps log datetime msec
 service password-encryption
-no service call-home
-no service config
+service call-home
 !
 !
 clock timezone ${clockTZ} ${offset}
@@ -371,6 +371,21 @@ crypto ikev2 client flexvpn ${vpnTunnelIntf}
   </#if>
   client connect ${vpnTunnelIntf}
 !
+
+<#-- Allows ESP from Head end so that Site to Site VPN passes through ZBFW -->
+ip access-list extended permit-vpn
+ permit esp any host ${herIpAddress}
+ permit esp host ${herIpAddress} any
+ <#if isSecondaryHeadEndEnable == "true">
+  <#if backupHerIpAddress?has_content && backupHerPsk?has_content>
+    permit esp any host ${backupHerIpAddress}
+    permit esp host ${backupHerIpAddress} any
+  </#if>
+ </#if>
+!
+class-map type inspect match-any bypass-cm
+ match access-group name permit-vpn
+
 </#if>
 
  <#-- interface priorities -->
