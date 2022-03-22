@@ -160,7 +160,7 @@
 
 <#-- IP SLA destination IP addresses -->
 
-<#assign ipslaDestIPaddress = [far.wanUplink2SLA!"4.2.2.1",
+<#assign ipslaDestIPaddress = [far.wanUplink1SLA!"4.2.2.1",
     far.wanUplink2SLA!"4.2.2.2",
     far.wanUplink3SLA!"9.9.9.10"]>
 
