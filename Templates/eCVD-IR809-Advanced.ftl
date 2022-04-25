@@ -868,14 +868,29 @@ event manager applet ssh_crypto_key authorization bypass
 <#-- Set APN -->
 
 <#if isFirstCell?has_content && isFirstCell == "true" && APN1?has_content>
+  <#-- if fist cell is enabled and there is an APN set -->
+  <#-- get the current APN set for first cell interface -->
   event manager applet change_apn_cell1
-  event timer countdown time 10
-  action 5 syslog msg "Changing APN Profile"
-  action 10 cli command "enable"
-  action 15 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confirm"
-  action 20 cli command "y"
+  event timer countdown time 120
+  action 005 set _match1 ""
+  action 010 syslog msg "Verifying APN Profile"
+  action 020 cli command "enable"
+  action 030 cli command "show ${cell_if1} profile 1 | i Access Point Name"
+  action 040 regexp "^.* = ([A-Za-z0-9\.]+)" $_cli_result _match _match1
+  action 050 if $_regexp_result eq 1
+  action 060 syslog msg  "Current APN in ${cell_if1} is $_match1"
+  action 070 end
+  <#-- compare APN of first cell int with APN configured in IoT OD -->
+  action 080 if $_match1 eq "${APN1}"
+  <#-- already set, no change -->
+  action 090 syslog msg  "APN is already set to $_match1"
+  action 100 else
+  action 110 syslog msg  "changing APN to ${APN1}"
+  <#-- configure new APN, interface will be down 10-20 seconds -->
+  action 120 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confirm"
+  action 130 cli command "y"
+  action 140 end
 </#if>
-!
 
 <#-- -- LOGGING ONLY ------------------------- -->
 <#if dumpAllVariables>
