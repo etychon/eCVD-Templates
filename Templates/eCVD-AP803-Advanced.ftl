@@ -207,7 +207,6 @@ interface BVI1
     ip http authentication local
     ip http secure-server
     ip http secure-port 8443
-    !ip http secure-trustpoint LDevID
     !
     wsma agent exec
     profile exec
