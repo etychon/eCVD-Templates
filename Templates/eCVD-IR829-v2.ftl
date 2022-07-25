@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD ADVANCED template for IR829 -----
-     ---- Version 2.01 -----------------------
+     ---- Version 2.01b ----------------------
      -----------------------------------------
      -- March 2022 Release                  --
      -- Support single and dual Radio       --
@@ -464,6 +464,34 @@ class-map type inspect match-any bypass-cm
        action 0.1 syslog msg "${priorityIfNameTable[p]} connectivity change, clearing NAT translations"
        action 0.2 cli command "enable"
        action 1.0 cli command "clear ip nat translation *"
+     <#if isCellIntTable[p] != "true">
+       event manager applet lanup_40
+        event track 40 state up
+        action 0.1 syslog msg "LAN UP"
+        action 0.2 cli command "enable"
+        action 0.3 cli command "conf t"
+        <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
+         action 0.4 cli command "ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} dhcp"
+         <#if backupHerIpAddress?has_content && isSecondaryHeadEndEnable == "true">
+           action 0.5 cli command "ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} dhcp"
+         </#if>
+        </#if>
+        action 0.8 cli command "ip route ${nms.herIP} 255.255.255.255 ${priorityIfNameTable[p]} dhcp"
+        action 0.9 cli command "end"
+       event manager applet landown_40
+        event track 40 state down
+        action 0.1 syslog msg "LAN DOWN"
+        action 0.2 cli command "enable"
+        action 0.3 cli command "conf t"
+        <#if herIpAddress?has_content && isPrimaryHeadEndEnable == "true">
+         action 0.4 cli command "no ip route ${herIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} dhcp"
+         <#if backupHerIpAddress?has_content && isSecondaryHeadEndEnable == "true">
+           action 0.5 cli command "no ip route ${backupHerIpAddress} 255.255.255.255 ${priorityIfNameTable[p]} dhcp"
+         </#if>
+        </#if>
+        action 0.8 cli command "no ip route ${nms.herIP} 255.255.255.255 ${priorityIfNameTable[p]} dhcp"
+        action 0.9 cli command "end"
+     </#if>
      <#if isWGBIntTable[p] == "true">
        event manager applet WGB_HEALTH_CHECK
         event track ${p+40} stat down
