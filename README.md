@@ -3,7 +3,7 @@
 
 This repository contains eCVD templates for Cisco IoT Operations Dashboard (IoT OD). These templates are based on user feedback and testing performed by the Cisco Validated Design (CVD) team, and are meant to used with Cisco IoT OD.
 
-[Cisco IoT Operations Dashboard](https://developer.cisco.com/docs/iotod/) is a device management platform to manage Cisco industrial network devices such as IR1101, IR829, IR809, and IR807. Devices are onboarded using [Cisco Plug and Play Connect](https://www.cisco.com/c/en/us/buy/smart-accounts/plug-play-connect.html).
+[Cisco IoT Operations Dashboard](https://developer.cisco.com/docs/iotod/) is a device management platform to manage Cisco industrial network devices such as IR1800, IR1101, IR829, IR809, and IR807. Devices are onboarded using [Cisco Plug and Play Connect](https://www.cisco.com/c/en/us/buy/smart-accounts/plug-play-connect.html).
 
 # How it works
 
@@ -26,9 +26,20 @@ The ultimate output of a template is a Cisco IOS configuration that will be push
 
 How to use templates provided here in Cisco IoT Operations Dashbord is explained in [Cisco DevNet IoT OD documentation](https://developer.cisco.com/docs/iotod/#!manage-templates-and-groups/add-and-manage-configurations).
 
-# Templates provided
+# Templates (Version 2)
 
-This repo contains templates for IR829, IR1101, and IR829's access point (AP803). They are two versions of the templates: Basic (B) and Advanced (A).
+This repo contains the new v2 templates for IR829 and IR1101. You can differentiate them as they have `v2` in their name (ie: `eCVD-IR1101-v2.ftl`)
+
+Version 2 templates are automatically tested in Cisco IoT OD regression test suite, which means we have validated that we have not introduced any issues (regression issue) for each production update of Cisco IoT OD.
+
+Version 1 templates are not tested.
+
+# Templates (Version 1)
+
+This repo contains v1 templates for IR829, IR1101, and IR829's access point (AP803). They are two versions of the templates: Basic (B) and Advanced (A).
+
+**The version 1 templates are not tested as part of the product validation**
+
 
 The table below lists what's supported by each template type, either `A` for Advanced, `B` for Basic, and `A+B` for both:
 
