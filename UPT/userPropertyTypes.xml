@@ -2070,6 +2070,205 @@
       Device Settings>Time Settings
       TODO: Scrub 1100 properties from this section after identifying usage
     -->
+
+    <propertyType>
+      <name>fastEthernet0</name>
+      <displayName>Fast Ethernet0</displayName>
+      <description>Enable/Disable Fast Ethernet Port 0</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Interface</section>
+      <required>0</required>
+      <defaultValue>true</defaultValue>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'fastEthernet0' per device", "value": "${far.fastEthernet0}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>fastEthernet1</name>
+      <displayName>Fast Ethernet1</displayName>
+      <description>Enable/Disable Fast Ethernet Port 1</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Interface</section>
+      <required>0</required>
+      <defaultValue>true</defaultValue>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'fastEthernet1' per device", "value": "${far.fastEthernet1}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>fastEthernet2</name>
+      <displayName>Fast Ethernet2</displayName>
+      <description>Enable/Disable Fast Ethernet Port 2</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Interface</section>
+      <required>0</required>
+      <defaultValue>true</defaultValue>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'fastEthernet2' per device", "value": "${far.fastEthernet2}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>fastEthernet3</name>
+      <displayName>Fast Ethernet3</displayName>
+      <description>Enable/Disable Fast Ethernet Port 3</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Interface</section>
+      <required>0</required>
+      <defaultValue>true</defaultValue>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'fastEthernet3' per device", "value": "${far.fastEthernet3}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>fastEthernet4</name>
+      <displayName>Fast Ethernet4</displayName>
+      <description>Enable/Disable Fast Ethernet Port 4</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Interface</section>
+      <required>0</required>
+      <defaultValue>true</defaultValue>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [{ "key": "Provide 'fastEthernet4' per device", "value": "${far.fastEthernet4}" },
+        { "key": "True", "value": true },
+        { "key": "False", "value": false }]
+      </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>lanNetwork</name>
+      <displayName>LAN Network</displayName>
+      <description>IPv4 Address of the LAN Network</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>LAN</section>
+      <required>1</required>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'lanNetwork' per device", "value": "${far.lanNetwork}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>lanWildcard</name>
+      <displayName>LAN Wildcard</displayName>
+      <description>Wildcard used for LAN network</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>LAN</section>
+      <required>1</required>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'lanWildcard' per device", "value": "${far.lanWildcard}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>lanIPAddress</name>
+      <displayName>LAN IP DHCP Scope Address</displayName>
+      <description>LAN IPv4 Address</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>LAN</section>
+      <required>1</required>
+      <defaultValue>192.168.1.1</defaultValue>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'lanIPAddress' per device", "value": "${far.lanIPAddress}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>lanDNSIPAddress1</name>
+      <displayName>Primary LAN DNS IP Address</displayName>
+      <description>Primary LAN DNS IPv4 Address</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>LAN</section>
+      <required>1</required>
+      <defaultValue>208.67.222.222</defaultValue>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'lanDNSIPAddress1' per device", "value": "${far.lanDNSIPAddress1}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>lanDNSIPAddress2</name>
+      <displayName>Secondary LAN DNS IP Address</displayName>
+      <description>Secondary DNS IPv4 Address</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <defaultValue>208.67.220.220</defaultValue>
+      <section>LAN</section>
+      <required>1</required>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'lanDNSIPAddress2' per device", "value": "${far.lanDNSIPAddress2}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>lanNetmask</name>
+      <displayName>LAN Subnet DHCP Scope Netmask</displayName>
+      <description>LAN IPv4 Subnet mask</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>LAN</section>
+      <defaultValue>255.255.255.0</defaultValue>
+      <required>1</required>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'lanNetmask' per device", "value": "${far.lanNetmask}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>lanIPAddressDHCPexcludeRangeStart</name>
+      <displayName>LAN Subnet DHCP exclude range start IP</displayName>
+      <description>LAN Subnet DHCP exclude range start IP</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>LAN</section>
+      <required>0</required>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'lanIPAddressDHCPexcludeRangeStart' per device", "value": "${far.lanIPAddressDHCPexcludeRangeStart}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>lanIPAddressDHCPexcludeRangeEnd</name>
+      <displayName>LAN Subnet DHCP exclude range end IP</displayName>
+      <description>LAN Subnet DHCP exclude range end IP</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>LAN</section>
+      <required>0</required>
+      <validationType>ipv4</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'lanIPAddressDHCPexcludeRangeEnd' per device", "value": "${far.lanIPAddressDHCPexcludeRangeEnd}" }]</seedValues>
+    </propertyType>
+    
     <propertyType>
       <name>isEthernetEnable</name>
       <displayName>Enable Ethernet WAN</displayName>
@@ -3278,205 +3477,7 @@
       </seedValues>
     </propertyType>
 
-    <propertyType>
-      <name>fastEthernet0</name>
-      <displayName>Fast Ethernet0</displayName>
-      <description>Enable/Disable Fast Ethernet Port 0</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Interface</section>
-      <required>0</required>
-      <defaultValue>true</defaultValue>
-      <validationType>non-empty</validationType>
-      <dataType>boolean</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>
-        [{ "key": "Provide 'fastEthernet0' per device", "value": "${far.fastEthernet0}" },
-        { "key": "True", "value": true },
-        { "key": "False", "value": false }]
-      </seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>fastEthernet1</name>
-      <displayName>Fast Ethernet1</displayName>
-      <description>Enable/Disable Fast Ethernet Port 1</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Interface</section>
-      <required>0</required>
-      <defaultValue>true</defaultValue>
-      <validationType>non-empty</validationType>
-      <dataType>boolean</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>
-        [{ "key": "Provide 'fastEthernet1' per device", "value": "${far.fastEthernet1}" },
-        { "key": "True", "value": true },
-        { "key": "False", "value": false }]
-      </seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>fastEthernet2</name>
-      <displayName>Fast Ethernet2</displayName>
-      <description>Enable/Disable Fast Ethernet Port 2</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Interface</section>
-      <required>0</required>
-      <defaultValue>true</defaultValue>
-      <validationType>non-empty</validationType>
-      <dataType>boolean</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>
-        [{ "key": "Provide 'fastEthernet2' per device", "value": "${far.fastEthernet2}" },
-        { "key": "True", "value": true },
-        { "key": "False", "value": false }]
-      </seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>fastEthernet3</name>
-      <displayName>Fast Ethernet3</displayName>
-      <description>Enable/Disable Fast Ethernet Port 3</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Interface</section>
-      <required>0</required>
-      <defaultValue>true</defaultValue>
-      <validationType>non-empty</validationType>
-      <dataType>boolean</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>
-        [{ "key": "Provide 'fastEthernet3' per device", "value": "${far.fastEthernet3}" },
-        { "key": "True", "value": true },
-        { "key": "False", "value": false }]
-      </seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>fastEthernet4</name>
-      <displayName>Fast Ethernet4</displayName>
-      <description>Enable/Disable Fast Ethernet Port 4</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Interface</section>
-      <required>0</required>
-      <defaultValue>true</defaultValue>
-      <validationType>non-empty</validationType>
-      <dataType>boolean</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>
-        [{ "key": "Provide 'fastEthernet4' per device", "value": "${far.fastEthernet4}" },
-        { "key": "True", "value": true },
-        { "key": "False", "value": false }]
-      </seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>lanNetwork</name>
-      <displayName>LAN Network</displayName>
-      <description>IPv4 Address of the LAN Network</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>LAN</section>
-      <required>1</required>
-      <validationType>ipv4</validationType>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'lanNetwork' per device", "value": "${far.lanNetwork}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>lanWildcard</name>
-      <displayName>LAN Wildcard</displayName>
-      <description>Wildcard used for LAN network</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>LAN</section>
-      <required>1</required>
-      <validationType>ipv4</validationType>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'lanWildcard' per device", "value": "${far.lanWildcard}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>lanIPAddress</name>
-      <displayName>LAN IP DHCP Scope Address</displayName>
-      <description>LAN IPv4 Address</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>LAN</section>
-      <required>1</required>
-      <defaultValue>192.168.1.1</defaultValue>
-      <validationType>ipv4</validationType>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'lanIPAddress' per device", "value": "${far.lanIPAddress}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>lanDNSIPAddress1</name>
-      <displayName>Primary LAN DNS IP Address</displayName>
-      <description>Primary LAN DNS IPv4 Address</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>LAN</section>
-      <required>1</required>
-      <defaultValue>208.67.222.222</defaultValue>
-      <validationType>ipv4</validationType>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'lanDNSIPAddress1' per device", "value": "${far.lanDNSIPAddress1}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>lanDNSIPAddress2</name>
-      <displayName>Secondary LAN DNS IP Address</displayName>
-      <description>Secondary DNS IPv4 Address</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <defaultValue>208.67.220.220</defaultValue>
-      <section>LAN</section>
-      <required>1</required>
-      <validationType>ipv4</validationType>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'lanDNSIPAddress2' per device", "value": "${far.lanDNSIPAddress2}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>lanNetmask</name>
-      <displayName>LAN Subnet DHCP Scope Netmask</displayName>
-      <description>LAN IPv4 Subnet mask</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>LAN</section>
-      <defaultValue>255.255.255.0</defaultValue>
-      <required>1</required>
-      <validationType>ipv4</validationType>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'lanNetmask' per device", "value": "${far.lanNetmask}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>lanIPAddressDHCPexcludeRangeStart</name>
-      <displayName>LAN Subnet DHCP exclude range start IP</displayName>
-      <description>LAN Subnet DHCP exclude range start IP</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>LAN</section>
-      <required>0</required>
-      <validationType>ipv4</validationType>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'lanIPAddressDHCPexcludeRangeStart' per device", "value": "${far.lanIPAddressDHCPexcludeRangeStart}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>lanIPAddressDHCPexcludeRangeEnd</name>
-      <displayName>LAN Subnet DHCP exclude range end IP</displayName>
-      <description>LAN Subnet DHCP exclude range end IP</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>LAN</section>
-      <required>0</required>
-      <validationType>ipv4</validationType>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'lanIPAddressDHCPexcludeRangeEnd' per device", "value": "${far.lanIPAddressDHCPexcludeRangeEnd}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
+    <propertyType> 
       <name>successRedirectURL</name>
       <displayName>Splash Page Successful Redirect URL</displayName>
       <description>Splash Page Successful Redirect URL</description>
