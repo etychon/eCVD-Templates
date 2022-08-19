@@ -61,7 +61,6 @@ event manager applet PERFORM_RECOVERY_ACTIONS
  action 2.2 cli command "config t"
  action 2.4 cli command "event manager environment outage_current $outage_current"
  action 2.6 cli command "end"
- <#if isFirstCell == "true">
  action 2.8 track read 51
  action 3.0 if $_track_state eq "down"
    !
@@ -74,17 +73,18 @@ event manager applet PERFORM_RECOVERY_ACTIONS
      action 4.0 file puts fd "$outage_current"
    action 4.2 reload
  action 4.4 end
- </#if>
  !
  ! Reboot modem when no net & IOTOD connectivity outage lasts longer than configured modem reload time
  !
- action 4.6 divide $outage_current $modem_reboot_time
- action 4.8 if $_remainder eq 0
- action 5.0 syslog msg "Internet connectivity lost for $outage_current min. Attempting modem reload"
- action 5.2 cli command "enable"
- action 5.4 cli command "test ${cell_if1} modem-power-cycle" pattern "#"
- action 5.6 end
- action 5.8 end
+ <#if isFirstCell == "true">
+   action 4.6 divide $outage_current $modem_reboot_time
+   action 4.8 if $_remainder eq 0
+   action 5.0 syslog msg "Internet connectivity lost for $outage_current min. Attempting modem reload"
+   action 5.2 cli command "enable"
+   action 5.4 cli command "test ${cell_if1} modem-power-cycle" pattern "#"
+   action 5.6 end
+   action 5.8 end
+ </#if>
  !
  ! Perform router recovery from pnp when recovery timer is exceeded
  !
