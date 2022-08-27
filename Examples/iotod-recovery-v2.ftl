@@ -13,7 +13,6 @@ ip sla schedule 51 life forever start-time now
 track 51 ip sla 51 reachability
 track 88 interface Tunnel1 line-protocol
 event manager environment outage_total_limit ${recoveryTime}
-event manager environment outage_total_limit 360
 event manager environment gateway_reboot_time 60
 event manager environment modem_reboot_time 30
 event manager environment outage_current 0
@@ -107,7 +106,6 @@ event manager applet PERFORM_RECOVERY_ACTIONS
  action 7.6 cli command "delete /f flash:/-*"
  action 7.7 cli command "delete /f flash:/current_outage_timer"
  action 7.8 cli command "dir flash:/managed/bypass-discovery.cfg"
- action 7.8 cli command "dir flash:/config"
  action 8.0 regexp "-rw-" "$_cli_result"
  action 8.1 if $_regexp_result eq "0"
  action 8.2 syslog msg "*** bypass-discovery.cfg file NOT found in dir /managed, Performing full pnp ***"
@@ -117,7 +115,6 @@ event manager applet PERFORM_RECOVERY_ACTIONS
  action 8.6 else
  action 8.7 syslog msg "*** bypass-discovery.cfg FOUND in flash:/managed, performing reset ***"
  action 8.8 cli command "copy flash:/managed/bypass-discovery.cfg startup-config" pattern "startup-config|#"
- action 8.8 cli command "copy flash:/config startup-config" pattern "startup-config|#"
  action 9.0 cli command ""
  action 9.1 wait 10
  action 9.2 reload
