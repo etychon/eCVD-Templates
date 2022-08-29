@@ -45,7 +45,6 @@ event manager applet RESET_RECOVERY_COUNTER
  action 1.0 cli command "enable"
  action 2.0 syslog msg "Connectivity restored. Clearing GW recovery counter and send periodic update."
  action 2.2 cli command "cgna exec profile cg-nms-periodic"
- action 3.0 counter name "current_iotd_outage" op set value 0
  action 3.1 cli command "config t"
  action 3.2 cli command "event manager environment outage_current 0"
 !
