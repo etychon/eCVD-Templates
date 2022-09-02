@@ -23,7 +23,7 @@ event manager environment outage_current 0
 no event manager applet READ_CURRENT_OUTAGE
 event manager applet READ_CURRENT_OUTAGE
   description "Read current outage timer value if one exists on flash"
-  event timer countdown time 60 maxrun 99
+  event timer countdown time 30 maxrun 99
   action 1.0  cli command "enable"
   action 1.2  cli command "config t"
   action 1.4  track read 88
@@ -75,7 +75,7 @@ event manager applet PERFORM_OUTAGE_ACTIONS
   !
   ! Perform router recovery from pnp when recovery timer is exceeded
   !
-  action 2.8    if $outage_current gt $outage_total_limit
+  action 2.8    if $outage_current ge $outage_total_limit
   action 3.0      syslog msg "Recovery timer expired. Initiating GW recovery." 
   action 3.2      cli command "enable"
   action 3.4      cli command "show platform nvram | redirect flash:iotd_recovery.log" pattern "confirm|#"
@@ -104,7 +104,7 @@ event manager applet PERFORM_OUTAGE_ACTIONS
   action 8.0        syslog msg "*** bypass-discovery.cfg FOUND in flash:/managed, performing reset ***"
   action 8.2        cli command "copy flash:/managed/bypass-discovery.cfg startup-config" pattern "startup-config|#" 
   action 8.4        cli command "" 
-  action 8.6        wait 10
+  action 8.6        wait 5
   action 8.8        reload 
   action 9.0      end
   action 9.2    end
@@ -117,9 +117,10 @@ event manager applet PERFORM_OUTAGE_ACTIONS
   action 9.81     if $_remainder eq 0
   action 9.82       syslog msg "Internet connectivity lost for $outage_current min. Attempting gateway reload"
   action 9.83       file open fd flash:/current_outage_timer w 
-  action 9.84       file puts fd "$outage_current" 
-  action 9.85       reload
-  action 9.86     end
+  action 9.84       file puts fd "$outage_current"
+  action 9.85       file close fd
+  action 9.86       reload
+  action 9.87     end
   !
   ! Reboot modem when no net & IOTOD connectivity outage lasts longer than configured modem reload time
   !
