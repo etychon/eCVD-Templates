@@ -1073,12 +1073,6 @@
     action 640 cli command "exit"
     action 650 cli command "write mem"
 
-    <#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
-        ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
-        <#if isSecondaryHeadEndEnable == "true" && backupHerIpAddress?has_content>
-            ip route ${backupHerIpAddress} 255.255.255.255 ${ether_if} dhcp
-        </#if>
-    </#if>
 
     !
 <#-- User defined static routes with either next hop or egress interface -->
