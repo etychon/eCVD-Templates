@@ -865,12 +865,6 @@ event manager applet remove-cell0-route-failproof-cli
   action 650 cli command "write mem"
 </#if>
 
-<#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
-  ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
-  <#if isSecondaryHeadEndEnable == "true" && backupHerIpAddress?has_content>
-    ip route ${backupHerIpAddress} 255.255.255.255 ${ether_if} dhcp
-  </#if>
-</#if>
 !
 <#-- User defined static routes with either next hop or egress interface -->
 <#if far.staticRoute?has_content>
