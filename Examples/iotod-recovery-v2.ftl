@@ -119,8 +119,11 @@ event manager applet PERFORM_OUTAGE_ACTIONS
   action 9.83       file open fd flash:/current_outage_timer w 
   action 9.84       file puts fd "$outage_current"
   action 9.85       file close fd
-  action 9.86       reload
-  action 9.87     end
+  action 9.86       cli command "enable"
+  action 9.87       cli command "show logging | append redirect flash:iotd_recovery_reload.log" pattern "confirm|#"
+  action 9.88       cli command ""
+  action 9.89       reload
+  action 9.90     end
   !
   ! Reboot modem when no net & IOTOD connectivity outage lasts longer than configured modem reload time
   !
