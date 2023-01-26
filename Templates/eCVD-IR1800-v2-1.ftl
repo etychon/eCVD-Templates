@@ -1,8 +1,8 @@
 <#--
      ---- Begin eCVD template for IR1800 -----
-     ---- Version 2.1 TEMPLATE ---------------
+     ---- Version 2.3 TEMPLATE ---------------
      -----------------------------------------
-     -- June 2022 Release                  --
+     -- January 2023 Release                --
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
      -- QoS, Port Forwarding, Static Route  --
@@ -34,6 +34,43 @@
     <#assign cell_if2 = "Cellular 0/5/0">
     <#assign vpnTunnelIntf = "Tunnel2">
     <#assign isWgbEnable = "false">
+    <#assign wgb_vlan = "50">
+    <#assign wgb_if = "Vlan${wgb_vlan}">
+
+    <#-- List all cellular interfaces/controllers for modular DUAL LTE router -->
+    <#assign cell_ifs = ["Cellular 0/1/0", "Cellular 0/3/0", "Cellular 0/4/0"]>
+    <#assign cell_contrs = ["Cellular 0/1/0", "Cellular 0/3/0", "Cellular 0/4/0"]>
+    <#assign active_cell_if_primary = "">
+      <#assign active_cell_ifs = []>
+      <#assign all_present_cell_ifs = []>
+      <#if deviceDefault.interfaces("cell", "0")?has_content>
+        <#list deviceDefault.interfaces("cell", "0") as interface>
+          <#list interface as propName, propValue>
+            <#if propValue?has_content && propValue?is_string>
+              <#if propName == "cellularStatus" && propValue == "Active">
+                <#if active_cell_if_primary?has_content == false>
+                  <#assign active_cell_if_primary = interface.name?replace("Cellular", "Cellular ")>
+                </#if>
+                <#assign active_cell_ifs += [interface.name?replace("Cellular", "Cellular ")]>
+              </#if>
+            </#if>
+          </#list>
+          <#assign all_present_cell_ifs += [interface.name?replace("Cellular", "Cellular ")]>
+        </#list>
+      </#if>
+
+      <#if active_cell_if_primary?has_content>
+        <#assign active_cell_contr = active_cell_if_primary>
+        <#if pid?contains("2LTE")>
+          <#assign active_cell_contr = active_cell_if_primary?replace("/[0-9]", "", "r")>
+        </#if>
+        <#assign cell_ifs = [active_cell_if_primary] + cell_ifs>
+        <#assign cell_contrs = [active_cell_contr] + cell_contrs>
+      </#if>
+
+    <#if (all_present_cell_ifs?size) gt 1>
+    	<#assign cell_if2 = all_present_cell_ifs[1]>
+    </#if>
 
 <#-- TEMPLATE CONSTANTS -->
     <#assign umbrella_dns1_ip = "208.67.222.222">
@@ -44,13 +81,14 @@
     <#assign priorityIfNameTable = []>
     <#assign isTunnelEnabledTable = []>
     <#assign isCellIntTable = []>
+    <#assign isWGBIntTable = []>
     <#assign EthernetPortPriority = 200>
     <#assign WgbIntPriority = 200>
     <#assign Cell2PortPriority = 200>
     <#assign Cell1PortPriority = 200>
 
 
-<#-- WAN Menu -->
+    <#-- WAN Menu -->
 
     <#assign ipslaDestIPaddress = []>
 
@@ -63,61 +101,161 @@
     <#assign wan_eth_description = "">
     <#assign wan_cell1_description = "">
     <#assign wan_cell2_description = "">
+    <#assign cell1_sim1_installed = "false">
+    <#assign cell2_sim1_installed = "false">
+    <#assign cell1_sim1_apn = "">
+    <#assign cell1_sim1_jitter = "">
+    <#assign cell1_sim1_rtt = "">
+    <#assign cell1_sim1_time = "">
+    <#assign cell2_sim1_apn = "">
+    <#assign cell2_sim1_jitter = "">
+    <#assign cell2_sim1_rtt = "">
+    <#assign cell2_sim1_time = "">
 
 
-    <#assign wan_link1_interface = far.wanUplink1InterfaceNew>
+
+
+    <#assign wan_link1_interface = far.wanUplink1InterfaceDLTE>
     <#assign interfaces_list += [wan_link1_interface]>
-    <#if far.wanUplink1DescriptionNew?has_content && far.wanUplink1DescriptionNew != "null">
-        <#assign wan_descriptions += [far.wanUplink1DescriptionNew]>
+    <#if far.wanUplink1DescriptionDLTE?has_content && far.wanUplink1DescriptionDLTE != "null">
+      <#assign wan_descriptions += [far.wanUplink1DescriptionDLTE]>
     <#else>
-        <#assign wan_descriptions += [""]>
+      <#assign wan_descriptions += [""]>
     </#if>
-    <#assign wan_link1_sla = far.wanUplink1SLANew>
-    <#if wan_link1_interface == "cellular1" && far.wan1APNNew?has_content && far.wan1APNNew != "null">
-        <#assign APN1 = far.wan1APNNew>
-    <#elseif wan_link1_interface == "cellular2" && far.wan1APNNew?has_content && far.wan1APNNew != "null">
-        <#assign APN2 = far.wan1APNNew>
+    <#assign wan_link1_sla = far.wanUplink1SLADLTE>
+    <#if wan_link1_interface == "cellular1" && far.wan1APNDLTE?has_content && far.wan1APNDLTE != "null">
+      <#assign APN1 = far.wan1APNDLTE>
+    <#elseif wan_link1_interface == "cellular2" && far.wan1APNDLTE?has_content && far.wan1APNDLTE != "null">
+      <#assign APN2 = far.wan1APNDLTE>
+    </#if>
+    <#-- Dual SIM Variables for WAN Uplink 1 -->
+    <#if wan_link1_interface == "cellular1" || wan_link1_interface == "cellular2">
+      <#if far.wan1SecondSimEnabledDLTE == "true">
+        <#if wan_link1_interface == "cellular1">
+          <#assign cell1_sim1_installed = "true">
+          <#assign cell1_sim1_apn = far.wan1SecondAPNDLTE!"">
+          <#assign cell1_sim1_jitter = far.wan1JitterDLTE!"30">
+          <#assign cell1_sim1_rtt = far.wan1RTTDLTE!"500">
+          <#assign cell1_sim1_time = far.wan1TimeDLTE!"960">
+        <#elseif wan_link1_interface == "cellular2">
+          <#assign cell2_sim1_installed = "true">
+          <#assign cell2_sim1_apn = far.wan1SecondAPNDLTE!"">
+          <#assign cell2_sim1_jitter = far.wan1JitterDLTE!"30">
+          <#assign cell2_sim1_rtt = far.wan1RTTDLTE!"500">
+          <#assign cell2_sim1_time = far.wan1TimeDLTE!"960">
+        </#if>
+      </#if>
     </#if>
 
     <#if section.wanuplink_wanuplink2?has_content && section.wanuplink_wanuplink2 == "true">
-        <#assign wan_link2_interface = far.wanUplink2InterfaceNew>
-        <#assign interfaces_list += [wan_link2_interface]>
-        <#if far.wanUplink2DescriptionNew?has_content && far.wanUplink2DescriptionNew != "null">
-            <#assign wan_descriptions += [far.wanUplink2DescriptionNew]>
-        <#else>
-            <#assign wan_descriptions += [""]>
+      <#assign wan_link2_interface = far.wanUplink2InterfaceDLTE>
+      <#assign interfaces_list += [wan_link2_interface]>
+      <#if far.wanUplink2DescriptionDLTE?has_content && far.wanUplink2DescriptionDLTE != "null">
+        <#assign wan_descriptions += [far.wanUplink2DescriptionDLTE]>
+      <#else>
+        <#assign wan_descriptions += [""]>
+      </#if>
+      <#assign wan_link2_sla = far.wanUplink2SLADLTE>
+      <#if wan_link2_interface == "cellular1" && far.wan2APNDLTE?has_content && far.wan2APNDLTE != "null">
+        <#assign APN1 = far.wan2APNDLTE>
+      <#elseif wan_link2_interface == "cellular2" && far.wan2APNDLTE?has_content && far.wan2APNDLTE != "null">
+        <#assign APN2 = far.wan2APNDLTE>
+      </#if>
+      <#-- Dual SIM Variables for WAN Uplink 2-->
+      <#if wan_link2_interface == "cellular1" || wan_link2_interface == "cellular2">
+        <#if far.wan2SecondSimEnabledDLTE == "true">
+          <#if wan_link2_interface == "cellular1">
+            <#assign cell1_sim1_installed = "true">
+            <#assign cell1_sim1_apn = far.wan2SecondAPNDLTE!"">
+            <#assign cell1_sim1_jitter = far.wan2JitterDLTE!"30">
+            <#assign cell1_sim1_rtt = far.wan2RTTDLTE!"500">
+            <#assign cell1_sim1_time = far.wan2TimeDLTE!"960">
+          <#elseif wan_link2_interface == "cellular2">
+            <#assign cell2_sim1_installed = "true">
+            <#assign cell2_sim1_apn = far.wan2SecondAPNDLTE!"">
+            <#assign cell2_sim1_jitter = far.wan2JitterDLTE!"30">
+            <#assign cell2_sim1_rtt = far.wan2RTTDLTE!"500">
+            <#assign cell2_sim1_time = far.wan2TimeDLTE!"960">
+          </#if>
         </#if>
-        <#assign wan_link2_sla = far.wanUplink2SLANew>
-        <#if wan_link2_interface == "cellular1" && far.wan2APNNew?has_content && far.wan2APNNew != "null">
-            <#assign APN1 = far.wan2APNNew>
-        <#elseif wan_link2_interface == "cellular2" && far.wan2APNNew?has_content && far.wan2APNNew != "null">
-            <#assign APN2 = far.wan2APNNew>
-        </#if>
+      </#if>
     </#if>
+
 
     <#if section.wanuplink_wanuplink3?has_content && section.wanuplink_wanuplink3 == "true">
-        <#assign wan_link3_interface = far.wanUplink3InterfaceNew>
-        <#assign interfaces_list += [wan_link3_interface]>
-        <#if far.wanUplink3DescriptionNew?has_content && far.wanUplink3DescriptionNew != "null">
-            <#assign wan_descriptions += [far.wanUplink3DescriptionNew]>
-        <#else>
-            <#assign wan_descriptions += [""]>
+      <#assign wan_link3_interface = far.wanUplink3InterfaceDLTE>
+      <#assign interfaces_list += [wan_link3_interface]>
+      <#if far.wanUplink3DescriptionDLTE?has_content && far.wanUplink3DescriptionDLTE != "null">
+        <#assign wan_descriptions += [far.wanUplink3DescriptionDLTE]>
+      <#else>
+        <#assign wan_descriptions += [""]>
+      </#if>
+      <#assign wan_link3_sla = far.wanUplink3SLADLTE>
+      <#if wan_link3_interface == "cellular1" && far.wan3APNDLTE?has_content && far.wan3APNDLTE != "null">
+        <#assign APN1 = far.wan3APNDLTE>
+      <#elseif wan_link3_interface == "cellular2" && far.wan3APNDLTE?has_content && far.wan3APNDLTE != "null">
+        <#assign APN2 = far.wan3APNDLTE>
+      </#if>
+      <#-- Dual SIM Variables for WAN Uplink 3-->
+      <#if wan_link3_interface == "cellular1" || wan_link3_interface == "cellular2">
+        <#if far.wan3SecondSimEnabledDLTE == "true">
+          <#if wan_link3_interface == "cellular1">
+            <#assign cell1_sim1_installed = "true">
+            <#assign cell1_sim1_apn = far.wan3SecondAPNDLTE!"">
+            <#assign cell1_sim1_jitter = far.wan3JitterDLTE!"30">
+            <#assign cell1_sim1_rtt = far.wan3RTTDLTE!"500">
+            <#assign cell1_sim1_time = far.wan3TimeDLTE!"960">
+          <#elseif wan_link3_interface == "cellular2">
+            <#assign cell2_sim1_installed = "true">
+            <#assign cell2_sim1_apn = far.wan3SecondAPNDLTE!"">
+            <#assign cell2_sim1_jitter = far.wan3JitterDLTE!"30">
+            <#assign cell2_sim1_rtt = far.wan3RTTDLTE!"500">
+            <#assign cell2_sim1_time = far.wan3TimeDLTE!"960">
+          </#if>
         </#if>
-        <#assign wan_link3_sla = far.wanUplink3SLANew>
-        <#if wan_link3_interface == "cellular1" && far.wan3APNNew?has_content && far.wan3APNNew != "null">
-            <#assign APN1 = far.wan3APNNew>
-        <#elseif wan_link3_interface == "cellular2" && far.wan3APNNew?has_content && far.wan3APNNew != "null">
-            <#assign APN2 = far.wan3APNNew>
-        </#if>
+      </#if>
     </#if>
 
+    <#if section.wanuplink_wanuplink4?has_content && section.wanuplink_wanuplink4 == "true">
+      <#assign wan_link4_interface = far.wanUplink4InterfaceDLTE>
+      <#assign interfaces_list += [wan_link4_interface]>
+      <#if far.wanUplink4DescriptionDLTE?has_content && far.wanUplink4DescriptionDLTE != "null">
+        <#assign wan_descriptions += [far.wanUplink4DescriptionDLTE]>
+      <#else>
+        <#assign wan_descriptions += [""]>
+      </#if>
+      <#assign wan_link4_sla = far.wanUplink4SLADLTE>
+      <#if wan_link4_interface == "cellular1" && far.wan4APNDLTE?has_content && far.wan4APNDLTE != "null">
+        <#assign APN1 = far.wan4APNDLTE>
+      <#elseif wan_link4_interface == "cellular2" && far.wan4APNDLTE?has_content && far.wan4APNDLTE != "null">
+        <#assign APN2 = far.wan4APNDLTE>
+      </#if>
+      <#-- Dual SIM Variables for WAN Uplink 3-->
+      <#if wan_link4_interface == "cellular1" || wan_link4_interface == "cellular2">
+        <#if far.wan4SecondSimEnabledDLTE == "true">
+          <#if wan_link4_interface == "cellular1">
+            <#assign cell1_sim1_installed = "true">
+            <#assign cell1_sim1_apn = far.wan4SecondAPNDLTE!"">
+            <#assign cell1_sim1_jitter = far.wan4JitterDLTE!"30">
+            <#assign cell1_sim1_rtt = far.wan4RTTDLTE!"500">
+            <#assign cell1_sim1_time = far.wan4TimeDLTE!"960">
+          <#elseif wan_link4_interface == "cellular2">
+            <#assign cell2_sim1_installed = "true">
+            <#assign cell2_sim1_apn = far.wan4SecondAPNDLTE!"">
+            <#assign cell2_sim1_jitter = far.wan4JitterDLTE!"30">
+            <#assign cell2_sim1_rtt = far.wan4RTTDLTE!"500">
+            <#assign cell2_sim1_time = far.wan4TimeDLTE!"960">
+          </#if>
+        </#if>
+      </#if>
+    </#if>
 
-<#-- IP SLA destination IP addresses -->
+    <#-- IP SLA destination IP addresses -->
 
-    <#assign ipslaDestIPaddress = [far.wanUplink1SLANew!"4.2.2.1",
-    far.wanUplink2SLANew!"4.2.2.2",
-    far.wanUplink3SLANew!"9.9.9.10"]>
-
+    <#assign ipslaDestIPaddress = [far.wanUplink1SLADLTE!"4.2.2.1",
+        far.wanUplink2SLADLTE!"4.2.2.2",
+        far.wanUplink3SLADLTE!"9.9.9.10",
+        far.wanUplink4SLADLTE!"9.9.9.11"]>
 
 <#-- Ethernet Menu - which Ethernet interfaces are enabled? -->
     <#assign GigEthernet1_enabled = far.intGigEthernet1!"true">
@@ -333,6 +471,38 @@
         <#assign domainName = "local">
     </#if>
 
+    <#-- Ignition Variables -->
+    <#assign isIPM = "false">
+    <#assign isIgnSense = "false">
+    <#assign ignitionmv = "">
+    <#assign ignitionvolts = "">
+    <#assign ignitiontimer = "">
+    <#if section.devicemanagement_vehicle?has_content && section.devicemanagement_vehicle == "true">
+      <#assign isIPM = "true">
+      <#assign isIgnSense = far.isIgnitionSense!"true">
+      <#assign ignitiontimer = far.ignitionOffTimerSeconds!"300">
+      <#assign ignitionvolts = far.ignitionSenseThresholdVolts!"13">
+      <#assign ignitionmv = far.ignitionSenseThresholdMillivolts!"0">
+    </#if>
+
+
+    <#-- Ignition Configuration -->
+    <#if isIPM = "true">
+      ignition enable
+      <#if isIgnSense = "true">
+        ignition sense
+      </#if>
+      <#if ignitionvolts?has_content>
+        ignition sense-voltage threshold ${ignitionvolts} ${ignitionmv}
+      </#if>
+      <#if ignitiontimer?has_content>
+        ignition off-timer ${ignitiontimer}
+      </#if>
+    <#else>
+      no ignition enable
+      no ignition sense
+    </#if>
+
 <#-- Allows the template to prompt for "admin" password.
      IoTOD will generate one by default during claim but
      can be changed here -->
@@ -376,12 +546,20 @@
 
     clock timezone ${clockTZ} ${offset}
     <#if far.ntpOrLocal == "1" && far.ntpPrimaryIP?has_content>
-        ntp server ${ntpIP1}
+        ntp server ip ${ntpIP1}
     </#if>
     <#if far.ntpOrLocal == "1" && far.ntpSecondaryIP?has_content>
-        ntp server ${ntpIP2}
+        ntp server ip ${ntpIP2}
     </#if>
     !
+    <#-- Adding DNS server through EEM since IOS has limitation of 6 DNS Servers-->
+    event manager applet addDNS
+      event timer watchdog time 500
+      action 010  cli command "enable"
+      action 020  cli command "conf t"
+      action 030  cli command "ip name-server ${DNSIP}"
+      action 040  cli command "exit"
+
     ip domain name ${domainName}
     !
 
@@ -555,6 +733,7 @@
             <#assign isTunnelEnabledTable += [far.enableTunnelOverEthernet!"false"]>
             <#assign isCellIntTable += ["false"]>
             <#assign EthernetPortPriority = 100+x>
+            <#assign isWGBIntTable += ["false"]>
         </#if>
 
         <#if interfaces_list[x] == "cellular1" && !used_int?seq_contains(interfaces_list[x])>
@@ -568,6 +747,7 @@
             <#assign isTunnelEnabledTable += [far.enableTunnelOverCell1!"false"]>
             <#assign isCellIntTable += ["true"]>
             <#assign Cell1PortPriority = 100+x>
+            <#assign isWGBIntTable += ["false"]>
         </#if>
 
         <#if interfaces_list[x] == "cellular2" && !used_int?seq_contains(interfaces_list[x])>
@@ -581,9 +761,46 @@
             <#assign isTunnelEnabledTable += [far.enableTunnelOverCell2!"false"]>
             <#assign isCellIntTable += ["true"]>
             <#assign Cell2PortPriority = 100+x>
+            <#assign isWGBIntTable += ["false"]>
+        </#if>
+
+        <#if interfaces_list[x] == "wgb" && !used_int?seq_contains(interfaces_list[x])>
+         <#assign used_int += [interfaces_list[x]]>
+         <#if wan_descriptions[x] != "">
+          <#assign wan_wgb_description = wan_descriptions[x]>
+         </#if>
+         <#assign isWgbEnable = "true">
+         <#assign wgbPriority = x + 1>
+         <#assign priorityIfNameTable += [wgb_if]>
+         <#assign isTunnelEnabledTable += [far.enableTunnelOverWGB!"false"]>
+         <#assign isCellIntTable += ["false"]>
+         <#assign WgbIntPriority = 100+x>
+         <#assign isWGBIntTable += ["true"]>
         </#if>
     </#list>
 
+    <#assign modifyTunnelList = []>
+    <#assign modifyTunnelList += priorityIfNameTable>
+
+    <#if isWgbEnable == "true">
+      !
+      interface ${wgb_if}
+        ip address dhcp
+        ip nat outside
+        ip dhcp client client-id vlan ${wgb_vlan}
+      !
+      route-map RM_WGB_ACL permit 10
+        match ip address NAT_ACL
+        match interface ${wgb_if}
+      !
+      interface Wl0/1/4
+        switchport mode trunk
+        switchport trunk native vlan ${wgb_vlan}
+        switchport trunk allowed vlan ${wgb_vlan}
+      ip nat inside source route-map RM_WGB_ACL interface ${wgb_if} overload
+      !
+      vlan ${wgb_vlan}
+    </#if>
 
     <#if priorityIfNameTable?size <=0>
     <#-- No interface in the priority table
@@ -602,7 +819,7 @@
                 ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
             <#else>
                 ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}
-                ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
+                ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} dhcp
             </#if>
             ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
             ip sla ${p+40}
@@ -648,6 +865,26 @@
                 action 8.1 cli command "exit"
                 action 9.0 cli command "write mem"
             </#if>
+            <#if isWGBIntTable[p] == "true">
+              event manager applet WGB_HEALTH_CHECK
+               event tag W1 track ${p+40} state down
+               event tag W2 timer watchdog time 60
+               trigger
+                correlate event W1 or event W2
+               action 0.1  track read ${p+40}
+               action 0.2  if $_track_state ne "down"
+               action 0.3   exit
+               action 0.4  end
+               action 1    cli command "enable"
+               action 2    cli command "ping ${ipslaDestIPaddress[p]} time 1 repeat 3"
+               action 3    regexp "(!!)" "$_cli_result" _match
+               action 4    if $_regexp_result ne "1"
+               action 4.1   syslog priority warnings msg "WGB Test Failed"
+               action 4.42   cli command "release dhcp ${wgb_if}"
+               action 4.43   wait 5
+               action 4.44   cli command "renew dhcp ${wgb_if}"
+               action 5    end
+            </#if>
             int ${priorityIfNameTable[p]}
             zone-member security INTERNET
             ip nat outside
@@ -673,7 +910,6 @@
             </#if>
         </#list>
     </#if>
-
 
 
 <#-- Zone based firewall.  Expands on Bootstrap config -->
@@ -825,61 +1061,6 @@
 
 <#-- --- END OF QoS CONFIG ----------------------------- -->
     !
-<#-- IoT OD location tracking magic -->
-    <#if config.enableLocationTracking>
-        event manager environment _gps_poll_interval ${config.locStreamRate}
-        event manager environment _gps_threshold ${config.distThreshold}
-        event manager policy fnd-push-gps.tcl type user
-        event manager applet GNSS_ENABLE
-        event timer cron cron-entry "*/1 * * * *"
-        action 010 cli command "enable"
-        action 020 cli command "show ${cell_if1} firmware"
-        action 030 regexp "Modem is still down, please wait for modem to come up" $_cli_result match
-        action 031 if $_regexp_result eq 1
-        action 032 syslog msg  "Modem is DOWN, not touching anything and exiting"
-        action 033 exit
-        action 034 end
-        action 035 cli command "show ${cell_if1} gps"
-        ! action 036 syslog msg  "FULL OUTPUT: $_cli_result"
-        action 040 foreach line $_cli_result "\r\n"
-        !  action 045 syslog msg  "PROCESSING LINE '$line'"
-        action 050 regexp "^GPS Mode Configured =[ ]+(.+)$" $line match _gps_mode
-        action 060 if $_regexp_result eq 1
-        ! action 070 syslog msg  "GPS MODE $_gps_mode"
-        action 080 if $_gps_mode eq "not configured"
-        action 090 syslog msg  "Enabling GPS standalone mode"
-        action 100 cli command "conf t"
-        action 110 cli command "controller ${cell_if1}"
-        action 120 cli command "lte gps mode standalone"
-        action 130 cli command "lte gps nmea"
-        action 140 cli command "service internal"
-        action 150 cli command "do test ${cell_if1} modem-power-cycle"
-        action 160 cli command "end"
-        action 170 break
-        action 180 end
-        action 190 if $_gps_mode eq "Modem reset/power-cycle is needed to change GPS Mode to not configured"
-        action 200 syslog msg  "LTE module being power-cycled"
-        action 210 cli command "conf t"
-        action 220 cli command "service internal"
-        action 230 cli command "do test ${cell_if1} modem-power-cycle"
-        action 240 cli command "end"
-        action 250 break
-        action 260 end
-        action 270 end
-        action 300 regexp "^GPS Status =[ ]+(.+)$" $line match _gps_status
-        action 310 if $_regexp_result eq 1
-        ! action 320 syslog msg "GPS STATUS '$_gps_status'"
-        action 330 if $_gps_status eq "NMEA Disabled"
-        action 340 syslog msg "Configuring NMEA mode on GPS"
-        action 350 cli command "conf t"
-        action 360 cli command "controller ${cell_if1}"
-        action 370 cli command "lte gps nmea"
-        action 380 break
-        action 390 end
-        action 400 end
-        action 410 end
-    </#if>
-    !
     <#if isFirstCell == "true">
         interface ${cell_if1}
         ip address negotiated
@@ -1002,6 +1183,22 @@
         description ${wan_cell2_description}
     </#if>
 
+    <#-- Use default i/f to set PAT -->
+
+        <#if far.portForwarding?has_content>
+            <#list far.portForwarding as PAT>
+                <#if PAT['protocol']?has_content>
+                    <#if EthernetPortPriority == 101>
+                        ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${ether_if} ${PAT['publicPort']}
+                    <#else>
+                        <#if isFirstCell == "true">
+                            ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${cell_if1} ${PAT['publicPort']}
+                        </#if>
+                    </#if>
+                </#if>
+            </#list>
+        </#if>
+
 <#-- Enable NAT and routing -->
     <#assign gwips = far.dhcpIPAddress?split(".")>
     <#assign nwk_suffix = (gwips[3]?number / 32)?int * 32>
@@ -1045,22 +1242,6 @@
 <#-- ADDED 1 LINES BELOW FOR ADVANCED -->
     <#if isSecondCell == "true">
         ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
-    </#if>
-
-<#-- Use default i/f to set PAT -->
-
-    <#if far.portForwarding?has_content>
-        <#list far.portForwarding as PAT>
-            <#if PAT['protocol']?has_content>
-                <#if EthernetPortPriority == 101>
-                    ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${ether_if} ${PAT['publicPort']}
-                <#else>
-                    <#if isFirstCell == "true">
-                        ip nat inside source static ${PAT['protocol']} ${PAT['privateIP']} ${PAT['localPort']} interface ${cell_if1} ${PAT['publicPort']}
-                    </#if>
-                </#if>
-            </#if>
-        </#list>
     </#if>
 
     ! Remove routes from Bootstrap that we don't want
@@ -1200,7 +1381,72 @@
 <#-- ------------------------------------------ -->
 <#-- ------------------------------------------ -->
 
-<#-- generare RSA keys for SSH -->
+<#-- Modify Tunnel Priorities Based on User Selection -->
+<#assign herip = nms.herIP>
+<#assign her_name = nms.herHost>
+<#if modifyTunnelList?has_content>
+  event manager applet modify_tunnel_priorities
+    event timer watchdog time 140
+    action 1.1 cli command "en"
+    action 1.2 cli command "sh cgna profile-state name cg-nms-register | i State"
+    action 1.3 string match "*Profile disabled*" "$_cli_result"
+    action 1.4 set register_present $_string_result
+    action 1.5 if $register_present eq "0"
+    action 1.6 exit
+    action 1.7 end
+    action 2.0 syslog msg "Changing Management Tunnel Priorities"
+    action 2.1 cli command "conf t"
+    action 2.11 cli command "no event manager applet MgmtTuRecvryRetry"
+    action 2.12 cli command "no event manager applet updateRoutesDualLte"
+    action 2.13 cli command "no event manager applet MgmtTuRecvry"
+    action 2.14 cli command "no event manager applet managementVpnConnectionDown"
+    action 2.15 cli command "no event manager applet checkManagementVpnActive"
+    action 2.16 cli command "no event manager applet cell_pnp_Cellular0/1/0"
+    action 2.17 cli command "no event manager applet cell_pnp_Cellular0/4/0"
+    action 2.18 cli command "no event manager applet cell_pnp_Cellular0/3/0"
+    action 2.19 cli command "no event manager applet cell_module_detected"
+    action 2.2 cli command "no ip route $herip 255.255.255.255 ${ether_if} dhcp"
+    action 2.3 cli command "no ip route $herip 255.255.255.255 ${cell_if2}"
+    action 2.4 cli command "no ip route $herip 255.255.255.255 ${cell_if1}"
+    action 2.5 cli command "crypto ikev2 client flexvpn Tunnel1"
+    action 2.6 cli command "no source 1"
+    action 2.7 cli command "no source 2"
+    action 2.8 cli command "no source 3"
+    action 2.81 cli command "no source 4"
+    action 2.9 cli command ""
+    <#assign source_num = 0>
+  <#list 0 .. (modifyTunnelList?size-1) as p>
+    <#assign source_num += 1>
+    action 3.${p} cli command "source ${source_num} ${modifyTunnelList[p]} track ${p+40}"
+  </#list>
+  <#list 0 .. (modifyTunnelList?size-1) as m>
+    <#-- Need the second m+40 for the AD of the route -->
+    <#-- Add DHCP in for the route via Ethernet-->
+    <#if isCellIntTable[m] == "true">
+      action 4.${m} cli command "ip route ${herip} 255.255.255.255 ${modifyTunnelList[m]} track ${m+40} ${m+40}"
+    <#else>
+      action 4.${m} cli command "ip route ${herip} 255.255.255.255 ${modifyTunnelList[m]} dhcp ${m+40}"
+    </#if>
+  </#list>
+    action 5.0 cli command "crypto ikev2 keyring Flex_key"
+    action 5.1 cli command "peer cloud-core-router"
+    action 5.2 cli command "no address"
+    action 5.3 cli command "hostname ${her_name}"
+    action 5.4 cli command "address 0.0.0.0 0.0.0.0"
+    action 5.5 cli command "exit"
+    action 5.6 cli command "exit"
+    action 5.7 cli command "crypto ikev2 client flexvpn Tunnel1"
+    action 5.8 cli command "no peer 1"
+    action 5.9 cli command "peer 1 fqdn ${her_name} dynamic"
+    action 6.0 cli command "exit"
+    action 8.0 cli command "no event manager applet modify_tunnel_priorities"
+    action 8.1 cli command "exit"
+    action 8.2 cli command "write mem"
+</#if>
+
+
+
+<#-- Generate RSA keys for SSH -->
 
     event manager applet ssh_crypto_key authorization bypass
     event timer watchdog time 5 maxrun 60
@@ -1233,7 +1479,7 @@
         action 005 set _match1 ""
         action 010 syslog msg "Verifying APN Profile"
         action 020 cli command "enable"
-        action 030 cli command "show ${cell_if1} profile | i Access Point Name"
+        action 030 cli command "show ${cell_if1} profile 1 | i Access Point Name"
         action 040 regexp "^.* = ([A-Za-z0-9\.]+)" $_cli_result _match _match1
         action 050 if $_regexp_result eq 1
         action 060 syslog msg  "Current APN in ${cell_if1} is $_match1"
@@ -1258,7 +1504,7 @@
         action 005 set _match1 ""
         action 010 syslog msg "Verifying APN Profile"
         action 020 cli command "enable"
-        action 030 cli command "show ${cell_if2} profile | i Access Point Name"
+        action 030 cli command "show ${cell_if2} profile 1 | i Access Point Name"
         action 040 regexp "^.* = ([A-Za-z0-9\.]+)" $_cli_result _match _match1
         action 050 if $_regexp_result eq 1
         action 060 syslog msg  "Current APN in ${cell_if2} is $_match1"
@@ -1276,7 +1522,140 @@
     </#if>
 
 
+        <#-- Dual SIM Config -->
+    <#assign dlte_interfaces = []>
+    <#assign dlte_jitter = []>
+    <#assign dlte_rtt = []>
+    <#assign dlte_time = []>
 
+    <#assign dlte_int_enable = [cell1_sim1_installed, cell2_sim1_installed]>
+    <#assign dlte_interfaces = [cell_if1, cell_if2]>
+    <#assign dlte_jitter = [cell1_sim1_jitter, cell2_sim1_jitter]>
+    <#assign dlte_rtt = [cell1_sim1_rtt, cell2_sim1_rtt]>
+
+    <#-- Configure APN for second SIM card on modem -->
+    <#if cell1_sim1_installed == "true" || cell2_sim1_installed == "true">
+      <#if cell1_sim1_apn?has_content || cell2_sim1_apn?has_content>
+        event manager applet change_apns_dlte
+          event timer countdown time 400
+          action 0.1 syslog msg "Changing APN's for Dual LTE"
+          action 0.2 cli command "enable"
+          action 0.3 cli command "conf t"
+          <#if cell1_sim1_installed == "true" && cell1_sim1_apn?has_content>
+             action 1.0 cli command "controller ${cell_if1}"
+             action 1.1 cli command "lte sim data-profile 2 attach-profile 2 slot 1"
+             action 1.2 cli command "profile id 2 apn ${cell1_sim1_apn}"
+             action 1.3 cli command "lte sim primary slot 0"
+             action 1.4 cli command "lte firmware auto-sim"
+             action 1.5 cli command "exit"
+          </#if>
+          <#if cell2_sim1_installed == "true" && cell2_sim1_apn?has_content>
+             action 2.0 cli command "controller ${cell_if2}"
+             action 2.1 cli command "lte sim data-profile 2 attach-profile 2 slot 1"
+             action 2.2 cli command "profile id 2 apn ${cell2_sim1_apn}"
+             action 2.3 cli command "lte sim primary slot 0"
+             action 2.4 cli command "lte firmware auto-sim"
+             action 2.5 cli command "exit"
+          </#if>
+          action 3.0 cli command "no event manager applet change_apns_dlte"
+      </#if>
+    </#if>
+
+
+
+    <#assign dlte_ips = ["1.0.0.1","9.9.9.9"]>
+
+
+    <#list 0 .. (dlte_interfaces?size - 1) as x>
+      <#if dlte_int_enable[x] == "true">
+        ip route ${dlte_ips[x]} 255.255.255.255 ${dlte_interfaces[x]}
+        ip route ${dlte_ips[x]} 255.255.255.255 Null0 3
+        ip sla ${x+20}
+          path-jitter ${dlte_ips[x]} interval 15 num-packets 15 targetOnly
+            owner admin
+            timeout 2000
+            threshold 1000
+            frequency 180
+        ip sla schedule ${x+20} life forever start-time now
+        track ${x+20} ip sla ${x+20} reachability
+        event manager environment LTE_RTT_THRESH_${x} ${dlte_rtt[x]}
+        event manager environment LTE_RTT_VIOLATIONS_${x} 0
+        event manager environment LTE_JITTER_THRESH_${x} ${dlte_jitter[x]}
+        event manager environment LTE_JITTER_VIOLATIONS_${x} 0
+        event manager applet LTE_SLA_MEASURE_${x}
+          event timer watchdog time 180 maxrun 99
+          action 1.0 cli command "enable"
+          action 1.2 cli command "sh ip sla stat ${x+20} | i RTT Min"
+          action 1.4 regexp "([0-9]+\/[0-9]+ ms)" "$_cli_result" RTT3
+          action 1.6 regexp "([0-9]+\/)" "$RTT3" RTT2
+          action 1.8 string trimright "$RTT2" "\/"
+          action 2.0 set RTT "$_string_result"
+          action 2.2 if $RTT gt "$LTE_RTT_THRESH_${x}"
+          action 2.4   counter name "RTT_violations_${x}" op inc value 1
+          action 2.6   cli command "config t"
+          action 2.8   cli command "event manager environment LTE_RTT_VIOLATIONS_${x} $_counter_value_remain"
+          action 3.0   cli command "end"
+          action 3.2 end
+          action 3.4 cli command "sh ip sla stat ${x+20} | i Jitter Min"
+          action 3.6 regexp "([0-9]+\/[0-9]+ ms)" "$_cli_result" Jitter3
+          action 3.8 regexp "([0-9]+\/)" "$Jitter3" Jitter2
+          action 4.0 string trimright "$Jitter2" "\/"
+          action 4.2 set Jitter "$_string_result"
+          action 4.4 if $Jitter gt "$LTE_JITTER_THRESH_${x}"
+          action 4.6   counter name "Jitter_violations" op inc value 1
+          action 4.8   cli command "config t"
+          action 5.0   cli command "event manager environment LTE_JITTER_VIOLATIONS_${x} $_counter_value_remain"
+          action 5.2   cli command "end"
+          action 5.4 end
+        !
+        !
+        event manager applet LTE_SWITCH_SIM_${x}
+          event tag 1 timer watchdog time 900 maxrun 99
+          event tag 2 track ${x+20} state down
+          event tag 3 counter name RTT_violations_${x} entry-val 3 entry-op eq exit-val 0 exit-op eq
+          event tag 4 counter name Jitter_violations_${x} entry-val 3 entry-op eq exit-val 0 exit-op eq
+          trigger
+            correlate event 1 or event 2 or event 3 or event 4
+          action 1.0 cli command "enable"
+          action 1.2 cli command "sh controller ${dlte_interfaces[x]} | i active SIM"
+          action 1.4 string index "$_cli_result" 4
+          action 1.6 if $_string_result eq "0"
+          action 1.8   set activate "1"
+          action 2.0 else
+          action 2.2   set activate "0"
+          action 2.4 end
+          action 2.6 track read ${x+20}
+          action 2.8 if $_track_state eq "down"
+          action 3.0   cli command "clear interface ${dlte_interfaces[x]}"
+          action 3.2   cli command "${dlte_interfaces[x]} lte sim activate slot $activate"
+          action 3.4   cli command "clear ip route *"
+          action 3.6   counter name "RTT_violations_${x}" op set value 0
+          action 3.8   counter name "Jitter_violations_${x}" op set value 0
+          action 4.0   syslog msg "SIM failover activating SIM in slot $activate due to track ${x+20} down"
+          action 4.2   exit
+          action 4.4 end
+          action 4.6 counter name "RTT_violations_${x}" op nop
+          action 4.8 if $_counter_value_remain eq "3"
+          action 4.9   cli command "clear interface ${dlte_interfaces[x]}"
+          action 5.0   cli command "${dlte_interfaces[x]} lte sim activate slot $activate"
+          action 5.2   cli command "clear ip route *"
+          action 5.4   counter name "RTT_violations_${x}" op set value 0
+          action 5.6   syslog msg "SIM failover activating SIM in slot $activate due to RTT violations"
+          action 5.8   exit
+          action 6.0 end
+          action 6.2 counter name "Jitter_violations_${x}" op nop
+          action 6.4 if $_counter_value_remain eq "3"
+          action 6.5   cli command "clear interface ${dlte_interfaces[x]}"
+          action 6.6   cli command "${dlte_interfaces[x]} lte sim activate slot $activate"
+          action 6.8   cli command "clear ip route *"
+          action 7.0   counter name "Jitter_violations_${x}" op set value 0
+          action 7.2   syslog msg "SIM failover activating SIM in slot $activate due to Jitter violations"
+          action 7.4   exit
+          action 7.6 end
+          action 7.8 counter name "RTT_violations_${x}" op set value 0
+          action 8.0 counter name "Jitter_violations_${x}" op set value 0
+      </#if>
+    </#list>
 
 
 <#-- -- LOGGING ONLY ------------------------- -->
@@ -1310,7 +1689,28 @@
 <#-- END OF LOGGING ONLY --------------------- -->
 
 
+<#assign isWifi = far.isWifi>
 
+<#if isWifi == "true">
+  <#if far.wifiDeploymentMode?has_content>
+    <#assign wifidepmode = far.wifiDeploymentMode>
+    <#if wifidepmode == "wgb">
+      <#if far.wgbSSID1800?has_content>
+        <#assign wgbSSID1800 = far.wgbSSID1800>
+      </#if>
+      <#if far.wgbPSK1800?has_content>
+        <#assign wgbPSK1800 = far.wgbPSK1800>
+      </#if>
+    <#elseif wifidepmode == "controller">
+      <#if far.primaryControllerIP?has_content>
+        <#assign primaryControllerIP = far.primaryControllerIP>
+        <#if far.secondaryControllerIP?has_content>
+          <#assign secondaryControllerIP = far.secondaryControllerIP>
+        </#if>
+      </#if>
+    </#if>
+  </#if>
+</#if>
 
 </#compress>
 
