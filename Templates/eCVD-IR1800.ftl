@@ -2,7 +2,7 @@
      ---- Begin eCVD template for IR1800 -----
      ---- Version 2.3 TEMPLATE ---------------
      -----------------------------------------
-     -- January 2023 Release                --
+     -- February 2023 Release               --
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
      -- QoS, Port Forwarding, Static Route  --
@@ -1695,22 +1695,17 @@
   <#if far.wifiDeploymentMode?has_content>
     <#assign wifidepmode = far.wifiDeploymentMode>
     <#if wifidepmode == "wgb">
+      <#assign depMode = section.wifi_wifimodesettings>
       <#if far.wgbSSID1800?has_content>
         <#assign wgbSSID1800 = far.wgbSSID1800>
       </#if>
       <#if far.wgbPSK1800?has_content>
         <#assign wgbPSK1800 = far.wgbPSK1800>
       </#if>
-    <#elseif wifidepmode == "controller">
-      <#if far.primaryControllerIP?has_content>
-        <#assign primaryControllerIP = far.primaryControllerIP>
-        <#if far.secondaryControllerIP?has_content>
-          <#assign secondaryControllerIP = far.secondaryControllerIP>
-        </#if>
-      </#if>
     </#if>
   </#if>
 </#if>
+
 
 </#compress>
 

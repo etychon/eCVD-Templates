@@ -3365,8 +3365,8 @@
 
     <propertyType>
       <name>isWifi</name>
-      <displayName>Enable Wifi Radio</displayName>
-      <description>Enable Wifi</description>
+      <displayName>Enable Wi-Fi Radio</displayName>
+      <description>Enable Wi-Fi</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Wi-Fi</section>
       <sectionLevelInTree>1</sectionLevelInTree>
@@ -3379,7 +3379,34 @@
         {"field":"wifi:wifi_wifimodesettings:primaryControllerIP","value":false},
         {"field":"wifi:wifi_wifimodesettings:secondaryControllerIP","value":false},
         {"field":"wifi:wifi_wifimodesettings:wgbSSID1800","value":false},
-        {"field":"wifi:wifi_wifimodesettings:wgbPSK1800","value":false}]</hiddenCondition>
+        {"field":"wifi:wifi_wifimodesettings:wgbPSK1800","value":false}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wifi</name>
+      <propertyKind>1</propertyKind>
+      <info>
+        [
+        {
+        "type": "tooltip",
+        "iconType": "information",
+        "filled": false,
+        "text": "&lt;p&gt; Please ensure all antennas are properly installed on the Wi-Fi Module &amp;nbsp;&lt;br&gt; If the Wi-Fi Mode is WGB also enable WGB as an Uplink in the WAN Uplink section &lt;/p&gt;",
+        "placement": "right-start"
+        },
+        {
+        "type": "banner",
+        "iconType": "warning",
+        "filled": true,
+        "flavor": null,
+        "text": "&lt;p&gt; Minimum Software version on the IR1800 is 17.10.1a and for the Wi-Fi Module is 17.9.2 &amp;nbsp;&lt;br&gt; For more information on the Wi-Fi mode, please visit IoT OD Documentation &amp;nbsp;&lt;/p&gt;",
+        "border": true,
+        "closeButton": true,
+        "placement": null
+        }
+        ]
+      </info>
     </propertyType>
 
     <propertyType>
@@ -3393,16 +3420,20 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "WGB", "value":"wgb" }]
+      <seedValues>[{ "key": "WGB", "value":"wgb" },
+      { "key": "Controller", "value":"controller" }]
       </seedValues>
       <hiddenCondition>[{"field":"wifi:wifi_wifimodesettings:primaryControllerIP","value":"wgb"},
-        {"field":"wifi:wifi_wifimodesettings:secondaryControllerIP","value":"wgb"}]</hiddenCondition>
+        {"field":"wifi:wifi_wifimodesettings:secondaryControllerIP","value":"wgb"},
+        {"field":"wifi:wifi_wifimodesettings:wgbSSID1800","value":"controller"},
+        {"field":"wifi:wifi_wifimodesettings:wgbPSK1800","value":"controller"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
       <name>wgbSSID1800</name>
-      <displayName>WiFi Uplink (WGB) SSID</displayName>
-      <description>WiFi Uplink (WGB) SSID</description>
+      <displayName>Wi-Fi Uplink (WGB) SSID</displayName>
+      <description>Wi-Fi Uplink (WGB) SSID</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Wi-Fi>Wi-Fi Mode Settings</section>
       <required>1</required>
@@ -3417,8 +3448,8 @@
           "type": "tooltip",
           "iconType": "information",
           "filled": false,
-          "text": "Please ensure that all antennas necessary are isntalled on the Wi-Fi Module",
-          "placement": "right-start"
+          "text": "Please ensure WGB is also enabled in the WAN Uplink section",
+          "placement": null
         }
       ]
       </info>
@@ -3427,8 +3458,8 @@
 
     <propertyType>
       <name>wgbPSK1800</name>
-      <displayName>WiFi Uplink (WGB) Pre-shared Key</displayName>
-      <description>WiFi Uplink (WGB) Pre-shared Key</description>
+      <displayName>Wi-Fi Uplink (WGB) Pre-shared Key</displayName>
+      <description>Wi-Fi Uplink (WGB) Pre-shared Key</description>
       <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Wi-Fi>Wi-Fi Mode Settings</section>
@@ -3453,6 +3484,17 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'primaryControllerIP' per device", "value": "${far.primaryControllerIP}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "The Controller IP's will be added in Option 43 in the DHCP Pool",
+          "placement": null
+        }
+      ]
+      </info>
     </propertyType>
 
     <propertyType>
@@ -3581,7 +3623,13 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink1:wan1APNDLTE","value":"ethernet"},
                         {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondSimEnabledDLTE","value":"ethernet"},
                         {"field":"wanuplink:wanuplink_wanuplink1:wan1APNDLTE","value":"wgb"},
-                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondSimEnabledDLTE","value":"wgb"}]
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondSimEnabledDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SIMPinDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1APNUsernameDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1APNPasswordDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SIMPinDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1APNUsernameDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1APNPasswordDLTE","value":"ethernet"}]
       </hiddenCondition>
     </propertyType>
 
@@ -3627,6 +3675,58 @@
     </propertyType>
 
     <propertyType>
+      <name>wan1SIMPinDLTE</name>
+      <displayName>Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1SIMPinDLTE' per device", "value": "${far.wan1SIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan1APNUsernameDLTE</name>
+      <displayName>Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1APNUsernameDLTE' per device", "value": "${far.wan1APNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan1APNPasswordDLTE</name>
+      <displayName>Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1APNPasswordDLTE' per device", "value": "${far.wan1APNPasswordDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
       <name>wan1SecondSimEnabledDLTE</name>
       <displayName>Enable Second SIM (If Applicable)</displayName>
       <description>Enable or Disable Second SIM</description>
@@ -3656,7 +3756,63 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink1:wan1SecondAPNDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink1:wan1JitterDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink1:wan1RTTDLTE","value":"false"},
-                        {"field":"wanuplink:wanuplink_wanuplink1:wan1TimeDLTE","value":"false"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1TimeDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondSIMPinDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondAPNUsernameDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondAPNPasswordDLTE","value":"false"}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wan1SecondSIMPinDLTE</name>
+      <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1SecondSIMPinDLTE' per device", "value": "${far.wan1SecondSIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan1SecondAPNUsernameDLTE</name>
+      <displayName>Second SIM Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1SecondAPNUsernameDLTE' per device", "value": "${far.wan1SecondAPNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan1SecondAPNPasswordDLTE</name>
+      <displayName>Second SIM Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1SecondAPNPasswordDLTE' per device", "value": "${far.wan1SecondAPNPasswordDLTE}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -3769,7 +3925,13 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink2:wan2APNDLTE","value":"ethernet"},
                         {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondSimEnabledDLTE","value":"ethernet"},
                         {"field":"wanuplink:wanuplink_wanuplink2:wan2APNDLTE","value":"wgb"},
-                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondSimEnabledDLTE","value":"wgb"}]
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondSimEnabledDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SIMPinDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2APNUsernameDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2APNPasswordDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SIMPinDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2APNUsernameDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2APNPasswordDLTE","value":"ethernet"}]
       </hiddenCondition>
     </propertyType>
 
@@ -3815,6 +3977,58 @@
     </propertyType>
 
     <propertyType>
+      <name>wan2SIMPinDLTE</name>
+      <displayName>Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2SIMPinDLTE' per device", "value": "${far.wan2SIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan2APNUsernameDLTE</name>
+      <displayName>Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2APNUsernameDLTE' per device", "value": "${far.wan2APNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan2APNPasswordDLTE</name>
+      <displayName>Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2APNPasswordDLTE' per device", "value": "${far.wan2APNPasswordDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
       <name>wan2SecondSimEnabledDLTE</name>
       <displayName>Enable Second SIM (If Applicable)</displayName>
       <description>Enable or Disable Second SIM</description>
@@ -3844,7 +4058,63 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink2:wan2SecondAPNDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink2:wan2JitterDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink2:wan2RTTDLTE","value":"false"},
-                        {"field":"wanuplink:wanuplink_wanuplink2:wan2TimeDLTE","value":"false"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2TimeDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan2SecondSIMPinDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan2SecondAPNUsernameDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan2SecondAPNPasswordDLTE","value":"false"}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wan2SecondSIMPinDLTE</name>
+      <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2SecondSIMPinDLTE' per device", "value": "${far.wan2SecondSIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan2SecondAPNUsernameDLTE</name>
+      <displayName>Second SIM Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2SecondAPNUsernameDLTE' per device", "value": "${far.wan2SecondAPNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan2SecondAPNPasswordDLTE</name>
+      <displayName>Second SIM Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2SecondAPNPasswordDLTE' per device", "value": "${far.wan2SecondAPNPasswordDLTE}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -3957,7 +4227,13 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink3:wan3APNDLTE","value":"ethernet"},
                         {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondSimEnabledDLTE","value":"ethernet"},
                         {"field":"wanuplink:wanuplink_wanuplink3:wan3APNDLTE","value":"wgb"},
-                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondSimEnabledDLTE","value":"wgb"}]
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondSimEnabledDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SIMPinDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3APNUsernameDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3APNPasswordDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SIMPinDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3APNUsernameDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3APNPasswordDLTE","value":"ethernet"}]
       </hiddenCondition>
     </propertyType>
 
@@ -4003,6 +4279,58 @@
     </propertyType>
 
     <propertyType>
+      <name>wan3SIMPinDLTE</name>
+      <displayName>Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3SIMPinDLTE' per device", "value": "${far.wan3SIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan3APNUsernameDLTE</name>
+      <displayName>Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3APNUsernameDLTE' per device", "value": "${far.wan3APNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan3APNPasswordDLTE</name>
+      <displayName>Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3APNPasswordDLTE' per device", "value": "${far.wan3APNPasswordDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
       <name>wan3SecondSimEnabledDLTE</name>
       <displayName>Enable Second SIM (If Applicable)</displayName>
       <description>Enable or Disable Second SIM</description>
@@ -4032,7 +4360,63 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink3:wan3SecondAPNDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink3:wan3JitterDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink3:wan3RTTDLTE","value":"false"},
-                        {"field":"wanuplink:wanuplink_wanuplink3:wan3TimeDLTE","value":"false"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3TimeDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondSIMPinDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondAPNUsernameDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondAPNPasswordDLTE","value":"false"}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wan3SecondSIMPinDLTE</name>
+      <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3SecondSIMPinDLTE' per device", "value": "${far.wan3SecondSIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan3SecondAPNUsernameDLTE</name>
+      <displayName>Second SIM Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3SecondAPNUsernameDLTE' per device", "value": "${far.wan3SecondAPNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan3SecondAPNPasswordDLTE</name>
+      <displayName>Second SIM Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3SecondAPNPasswordDLTE' per device", "value": "${far.wan3SecondAPNPasswordDLTE}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -4145,7 +4529,13 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink4:wan4APNDLTE","value":"ethernet"},
                         {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondSimEnabledDLTE","value":"ethernet"},
                         {"field":"wanuplink:wanuplink_wanuplink4:wan4APNDLTE","value":"wgb"},
-                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondSimEnabledDLTE","value":"wgb"}]
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondSimEnabledDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SIMPinDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4APNUsernameDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4APNPasswordDLTE","value":"wgb"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SIMPinDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4APNUsernameDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4APNPasswordDLTE","value":"ethernet"}]
       </hiddenCondition>
     </propertyType>
 
@@ -4191,6 +4581,58 @@
     </propertyType>
 
     <propertyType>
+      <name>wan4SIMPinDLTE</name>
+      <displayName>Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4SIMPinDLTE' per device", "value": "${far.wan4SIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan4APNUsernameDLTE</name>
+      <displayName>Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4APNUsernameDLTE' per device", "value": "${far.wan4APNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan4APNPasswordDLTE</name>
+      <displayName>Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4APNPasswordDLTE' per device", "value": "${far.wan4APNPasswordDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
       <name>wan4SecondSimEnabledDLTE</name>
       <displayName>Enable Second SIM (If Applicable)</displayName>
       <description>Enable or Disable Second SIM</description>
@@ -4220,7 +4662,62 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink4:wan4SecondAPNDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink4:wan4JitterDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink4:wan4RTTDLTE","value":"false"},
-                        {"field":"wanuplink:wanuplink_wanuplink4:wan4TimeDLTE","value":"false"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4TimeDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondSIMPinDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondAPNUsernameDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondAPNPasswordDLTE","value":"false"}]</hiddenCondition>
+    </propertyType>
+
+     <propertyType>
+      <name>wan4SecondSIMPinDLTE</name>
+      <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4SecondSIMPinDLTE' per device", "value": "${far.wan4SecondSIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan4SecondAPNUsernameDLTE</name>
+      <displayName>Second SIM Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4SecondAPNUsernameDLTE' per device", "value": "${far.wan4SecondAPNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan4SecondAPNPasswordDLTE</name>
+      <displayName>Second SIM Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4SecondAPNPasswordDLTE' per device", "value": "${far.wan4SecondAPNPasswordDLTE}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -5065,7 +5562,11 @@
         { "key": "Cellular 2", "value": "cellular2" }
         ]</seedValues>
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink1:wan1APNDLTE","value":"ethernet"},
-                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondSimEnabledDLTE","value":"ethernet"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondSimEnabledDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SIMPinDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1APNUsernameDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1APNPasswordDLTE","value":"ethernet"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -5110,6 +5611,58 @@
     </propertyType>
 
     <propertyType>
+      <name>wan1SIMPinDLTE</name>
+      <displayName>Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1SIMPinDLTE' per device", "value": "${far.wan1SIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan1APNUsernameDLTE</name>
+      <displayName>Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1APNUsernameDLTE' per device", "value": "${far.wan1APNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan1APNPasswordDLTE</name>
+      <displayName>Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1APNPasswordDLTE' per device", "value": "${far.wan1APNPasswordDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
       <name>wan1SecondSimEnabledDLTE</name>
       <displayName>Enable Second SIM (If Applicable)</displayName>
       <description>Enable or Disable Second SIM</description>
@@ -5139,7 +5692,63 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink1:wan1SecondAPNDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink1:wan1JitterDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink1:wan1RTTDLTE","value":"false"},
-                        {"field":"wanuplink:wanuplink_wanuplink1:wan1TimeDLTE","value":"false"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1TimeDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondSIMPinDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondAPNUsernameDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink1:wan1SecondAPNPasswordDLTE","value":"false"}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wan1SecondSIMPinDLTE</name>
+      <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1SecondSIMPinDLTE' per device", "value": "${far.wan1SecondSIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan1SecondAPNUsernameDLTE</name>
+      <displayName>Second SIM Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1SecondAPNUsernameDLTE' per device", "value": "${far.wan1SecondAPNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan1SecondAPNPasswordDLTE</name>
+      <displayName>Second SIM Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 1</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan1SecondAPNPasswordDLTE' per device", "value": "${far.wan1SecondAPNPasswordDLTE}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -5249,7 +5858,11 @@
         { "key": "Cellular 2", "value": "cellular2" }
         ]</seedValues>
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink2:wan2APNDLTE","value":"ethernet"},
-                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondSimEnabledDLTE","value":"ethernet"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondSimEnabledDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondSimEnabledDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondSimEnabledDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondSimEnabledDLTE","value":"ethernet"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -5294,6 +5907,58 @@
     </propertyType>
 
     <propertyType>
+      <name>wan2SIMPinDLTE</name>
+      <displayName>Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2SIMPinDLTE' per device", "value": "${far.wan2SIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan2APNUsernameDLTE</name>
+      <displayName>Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2APNUsernameDLTE' per device", "value": "${far.wan2APNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan2APNPasswordDLTE</name>
+      <displayName>Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2APNPasswordDLTE' per device", "value": "${far.wan2APNPasswordDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
       <name>wan2SecondSimEnabledDLTE</name>
       <displayName>Enable Second SIM (If Applicable)</displayName>
       <description>Enable or Disable Second SIM</description>
@@ -5323,7 +5988,63 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink2:wan2SecondAPNDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink2:wan2JitterDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink2:wan2RTTDLTE","value":"false"},
-                        {"field":"wanuplink:wanuplink_wanuplink2:wan2TimeDLTE","value":"false"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2TimeDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondSIMPinDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondAPNUsernameDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink2:wan2SecondAPNPasswordDLTE","value":"false"}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wan2SecondSIMPinDLTE</name>
+      <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2SecondSIMPinDLTE' per device", "value": "${far.wan2SecondSIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan2SecondAPNUsernameDLTE</name>
+      <displayName>Second SIM Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2SecondAPNUsernameDLTE' per device", "value": "${far.wan2SecondAPNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan2SecondAPNPasswordDLTE</name>
+      <displayName>Second SIM Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 2</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan2SecondAPNPasswordDLTE' per device", "value": "${far.wan2SecondAPNPasswordDLTE}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -5433,7 +6154,11 @@
         { "key": "Cellular 2", "value": "cellular2" }
         ]</seedValues>
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink3:wan3APNDLTE","value":"ethernet"},
-                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondSimEnabledDLTE","value":"ethernet"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondSimEnabledDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondSimEnabledDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondSimEnabledDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondSimEnabledDLTE","value":"ethernet"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -5477,6 +6202,58 @@
       <seedValues>[{ "key": "Provide 'wan3APNDLTE' per device", "value": "${far.wan3APNDLTE}" }]</seedValues>
     </propertyType>
 
+     <propertyType>
+      <name>wan3SIMPinDLTE</name>
+      <displayName>Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3SIMPinDLTE' per device", "value": "${far.wan3SIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan3APNUsernameDLTE</name>
+      <displayName>Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3APNUsernameDLTE' per device", "value": "${far.wan3APNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan3APNPasswordDLTE</name>
+      <displayName>Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3APNPasswordDLTE' per device", "value": "${far.wan3APNPasswordDLTE}" }]</seedValues>
+    </propertyType>
+
     <propertyType>
       <name>wan3SecondSimEnabledDLTE</name>
       <displayName>Enable Second SIM (If Applicable)</displayName>
@@ -5507,7 +6284,63 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink3:wan3SecondAPNDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink3:wan3JitterDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink3:wan3RTTDLTE","value":"false"},
-                        {"field":"wanuplink:wanuplink_wanuplink3:wan3TimeDLTE","value":"false"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3TimeDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondSIMPinDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondAPNUsernameDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink3:wan3SecondAPNPasswordDLTE","value":"false"}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wan3SecondSIMPinDLTE</name>
+      <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3SecondSIMPinDLTE' per device", "value": "${far.wan3SecondSIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan3SecondAPNUsernameDLTE</name>
+      <displayName>Second SIM Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3SecondAPNUsernameDLTE' per device", "value": "${far.wan3SecondAPNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan3SecondAPNPasswordDLTE</name>
+      <displayName>Second SIM Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 3</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan3SecondAPNPasswordDLTE' per device", "value": "${far.wan3SecondAPNPasswordDLTE}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -5617,7 +6450,11 @@
         { "key": "Cellular 2", "value": "cellular2" }
         ]</seedValues>
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink4:wan4APNDLTE","value":"ethernet"},
-                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondSimEnabledDLTE","value":"ethernet"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondSimEnabledDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondSimEnabledDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondSimEnabledDLTE","value":"ethernet"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondSimEnabledDLTE","value":"ethernet"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -5662,6 +6499,58 @@
     </propertyType>
 
     <propertyType>
+      <name>wan4SIMPinDLTE</name>
+      <displayName>Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4SIMPinDLTE' per device", "value": "${far.wan4SIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan4APNUsernameDLTE</name>
+      <displayName>Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4APNUsernameDLTE' per device", "value": "${far.wan4APNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan4APNPasswordDLTE</name>
+      <displayName>Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4APNPasswordDLTE' per device", "value": "${far.wan4APNPasswordDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
       <name>wan4SecondSimEnabledDLTE</name>
       <displayName>Enable Second SIM (If Applicable)</displayName>
       <description>Enable or Disable Second SIM</description>
@@ -5691,7 +6580,63 @@
       <hiddenCondition>[{"field":"wanuplink:wanuplink_wanuplink4:wan4SecondAPNDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink4:wan4JitterDLTE","value":"false"},
                         {"field":"wanuplink:wanuplink_wanuplink4:wan4RTTDLTE","value":"false"},
-                        {"field":"wanuplink:wanuplink_wanuplink4:wan4TimeDLTE","value":"false"}]</hiddenCondition>
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4TimeDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondSIMPinDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondAPNUsernameDLTE","value":"false"},
+                        {"field":"wanuplink:wanuplink_wanuplink4:wan4SecondAPNPasswordDLTE","value":"false"}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wan4SecondSIMPinDLTE</name>
+      <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
+      <description>Enter the Cellular PIN if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>integer</dataType>
+      <maxLength>99999999</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4SecondSIMPinDLTE' per device", "value": "${far.wan4SecondSIMPinDLTE}" }]</seedValues>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "PIN can only be used to Unlock SIM (if applicable), if an incorrect PIN is used to unlock a locked SIM 3 times the SIM card will be locked by the Carrier",
+          "placement": "right-start"
+        }
+      ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wan4SecondAPNUsernameDLTE</name>
+      <displayName>Second SIM Cellular APN Username (If Applicable)</displayName>
+      <description>Enter the Cellular APN Username if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4SecondAPNUsernameDLTE' per device", "value": "${far.wan4SecondAPNUsernameDLTE}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wan4SecondAPNPasswordDLTE</name>
+      <displayName>Second SIM Cellular APN Password (If Applicable)</displayName>
+      <description>Enter the Cellular APN Password if Applicable</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>WAN Uplink>WAN Uplink 4</section>
+      <required>0</required>
+      <issecure>1</issecure>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'wan4SecondAPNPasswordDLTE' per device", "value": "${far.wan4SecondAPNPasswordDLTE}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -9861,7 +10806,7 @@
       <displayName>Enable Cyber Vision</displayName>
       <description>Enable Cyber Vision</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Application Management>Cyber Vision</section>
+      <section>Services>Cisco Cyber Vision</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>false</defaultValue>
       <required>0</required>
@@ -9884,6 +10829,25 @@
         { "key": "True", "value": true },
         { "key": "False", "value": false }]
       </seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>services_ciscocybervision</name>
+      <propertyKind>1</propertyKind>
+      <info>
+        [
+        {
+        "type": "banner",
+        "iconType": "information",
+        "filled": true,
+        "flavor": null,
+        "text": "Cisco Cyber Vision requires prerequisite configuration settings before it can be deployed on network devices. The option below prepares the network devices for deployement, but does not automatically deploy Cyber Vision on the group network devices.",
+        "border": true,
+        "closeButton": true,
+        "placement": null
+        }
+        ]
+      </info>
     </propertyType>
 
   </propertyTypes>
