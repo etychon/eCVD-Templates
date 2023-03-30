@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.33        -->
+<!-- Version 1.34        -->
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -3437,7 +3437,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Wi-Fi>Wi-Fi Mode Settings</section>
       <required>1</required>
-      <minLength>3</minLength>
+      <minLength>1</minLength>
       <maxLength>32</maxLength>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>

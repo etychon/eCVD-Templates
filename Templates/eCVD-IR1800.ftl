@@ -1,8 +1,8 @@
 <#--
      ---- Begin eCVD template for IR1800 -----
-     ---- Version 2.3 TEMPLATE ---------------
+     ---- Version 2.4 TEMPLATE ---------------
      -----------------------------------------
-     -- February 2023 Release               --
+     -- March 2023 Release                  --
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
      -- QoS, Port Forwarding, Static Route  --
@@ -1205,7 +1205,6 @@
     <#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + (nwk_suffix + 5)>
     ip access-list extended NAT_ACL
     permit ip ${lanNtwk} ${lanWild} any
-    permit ip ${nwk_addr} 0.0.0.31 any
     !
     <#if isPrimaryHeadEndEnable == "true">
         route-map RM_Tu2 permit 10
@@ -1695,17 +1694,58 @@
   <#if far.wifiDeploymentMode?has_content>
     <#assign wifidepmode = far.wifiDeploymentMode>
     <#if wifidepmode == "wgb">
-      <#assign depMode = section.wifi_wifimodesettings>
       <#if far.wgbSSID1800?has_content>
         <#assign wgbSSID1800 = far.wgbSSID1800>
       </#if>
       <#if far.wgbPSK1800?has_content>
         <#assign wgbPSK1800 = far.wgbPSK1800>
       </#if>
+    <#elseif wifidepmode == "controller">
+      <#if far.primaryControllerIP?has_content>
+        <#assign primary_controller = far.primaryControllerIP>
+        <#if far.secondaryControllerIP?has_content>
+          <#assign secondary_controller = far.secondaryControllerIP>
+        </#if>
+      </#if>
     </#if>
   </#if>
 </#if>
 
+<#function ipv4_to_hex ipaddr>
+  <#assign hexTable = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f']>
+  <#assign hex = "">
+  <#list ipaddr?split(".")?reverse as x>
+    <#assign thisx = x?number>
+    <#list 1..2 as y>
+      <#assign xremainder = thisx?number % 16>
+      <#assign thisx = thisx / 16>
+      <#assign hex = hexTable[xremainder] + hex>
+    </#list>
+  </#list>
+  <#return hex>
+</#function>
+<#if primary_controller?has_content>
+  <#assign wifiLengthHex = "04">
+  <#assign wifiCtlrHex = ipv4_to_hex(primary_controller)>
+  <#if secondary_controller?has_content>
+    <#assign wifiLengthHex = "08">
+    <#assign wifiCtlrHex = wifiCtlrHex + ipv4_to_hex(secondary_controller)>
+  </#if>
+  ip dhcp pool subtended
+    option 43 hex f1${wifiLengthHex}${wifiCtlrHex}
+
+  <#-- Configuring NAT over the Tunnel for Controller Mode on the Wi-Fi Module -->
+  <#if isPrimaryHeadEndEnable == "true">
+      route-map RM_Tu2 permit 10
+        match ip address NAT_ACL
+        match interface ${vpnTunnelIntf}
+
+      interface ${vpnTunnelIntf}
+        ip nat outside
+
+      ip nat inside source route-map RM_Tu2 interface ${vpnTunnelIntf} overload
+  </#if>
+</#if>
 
 </#compress>
 

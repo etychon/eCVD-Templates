@@ -1,8 +1,9 @@
 <#--
      ---- Begin eCVD template for IR1101 -----
-     ---- Version 2.02 -----------------------
+     ---- Version 2.021 ----------------------
      -----------------------------------------
-     -- December 2022 Release               --
+     -- March 2023 Release                  --
+     -- Fixed support for a subnet of .224  --
      -- REQUIRES Latest Bootstrap           --
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -1035,7 +1036,6 @@ interface FastEthernet0/0/4
 <#assign nwk_addr = gwips[0] + "." + gwips[1] + "." + gwips[2] + "." + (nwk_suffix + 5)>
 ip access-list extended NAT_ACL
   permit ip ${lanNtwk} ${lanWild} any
-  permit ip ${nwk_addr} 0.0.0.31 any
 !
 <#if isPrimaryHeadEndEnable == "true">
 route-map RM_Tu2 permit 10
