@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.34        -->
+<!-- Version 1.36        -->
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -3375,11 +3375,7 @@
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <hiddenCondition>[{"field":"wifi:wifiDeploymentMode","value":false},
-        {"field":"wifi:wifi_wifimodesettings:primaryControllerIP","value":false},
-        {"field":"wifi:wifi_wifimodesettings:secondaryControllerIP","value":false},
-        {"field":"wifi:wifi_wifimodesettings:wgbSSID1800","value":false},
-        {"field":"wifi:wifi_wifimodesettings:wgbPSK1800","value":false}]
+      <hiddenCondition>[{"field":"wifi:wifiDeploymentMode","value":false}]
       </hiddenCondition>
     </propertyType>
 
@@ -3421,12 +3417,38 @@
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "WGB", "value":"wgb" },
-      { "key": "Controller", "value":"controller" }]
+        { "key": "Controller", "value":"controller" },
+        { "key": "Work Group Bridge with Hotspot", "value":"dualwgb" }]
       </seedValues>
       <hiddenCondition>[{"field":"wifi:wifi_wifimodesettings:primaryControllerIP","value":"wgb"},
         {"field":"wifi:wifi_wifimodesettings:secondaryControllerIP","value":"wgb"},
+        {"field":"wifi:wifi_wifiuplinksettings","value":"wgb"},
+        {"field":"wifi:wifi_wifihotspotsettings","value":"wgb"},
+        {"field":"wifi:configurationLevel","value":"wgb"},
+        {"field":"wifi:wifi_ssidprofilesforwifihotspot","value":"wgb"},
         {"field":"wifi:wifi_wifimodesettings:wgbSSID1800","value":"controller"},
-        {"field":"wifi:wifi_wifimodesettings:wgbPSK1800","value":"controller"}]
+        {"field":"wifi:wifi_wifimodesettings:wgbPSK1800","value":"controller"},
+        {"field":"wifi:wifi_wifiuplinksettings","value":"controller"},
+        {"field":"wifi:wifi_wifihotspotsettings","value":"controller"},
+        {"field":"wifi:wifi_ssidprofilesforwifihotspot","value":"controller"},
+        {"field":"wifi:configurationLevel","value":"controller"},
+        {"field":"wifi:wifi_wifimodesettings","value":"dualwgb"}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>configurationLevel</name>
+      <displayName>Configuration Level</displayName>
+      <description>Configuration Level</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi</section>
+      <required>1</required>
+      <validationType>non-empty</validationType>
+      <dataType>array</dataType>
+      <configScope>0</configScope>
+      <seedValues>[{ "key": "Group", "value": "group" },{ "key": "Device", "value": "device" } ]</seedValues>
+      <hiddenCondition>[{"field": "wifi:wifi_wifiuplinksettings","value":"device"},
+        {"field": "wifi:wifi_wifihotspotsettings","value":"device"}]
       </hiddenCondition>
     </propertyType>
 
@@ -3443,15 +3465,15 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <info>
-      [
+        [
         {
-          "type": "tooltip",
-          "iconType": "information",
-          "filled": false,
-          "text": "Please ensure WGB is also enabled in the WAN Uplink section",
-          "placement": null
+        "type": "tooltip",
+        "iconType": "information",
+        "filled": false,
+        "text": "Please ensure WGB is also enabled in the WAN Uplink section",
+        "placement": null
         }
-      ]
+        ]
       </info>
       <seedValues>[{ "key": "Provide 'wgbSSID1800' per device", "value": "${far.wgbSSID1800}" }]</seedValues>
     </propertyType>
@@ -3485,15 +3507,15 @@
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'primaryControllerIP' per device", "value": "${far.primaryControllerIP}" }]</seedValues>
       <info>
-      [
+        [
         {
-          "type": "tooltip",
-          "iconType": "information",
-          "filled": false,
-          "text": "The Controller IP's will be added in Option 43 in the DHCP Pool",
-          "placement": null
+        "type": "tooltip",
+        "iconType": "information",
+        "filled": false,
+        "text": "The Controller IP's will be added in Option 43 in the DHCP Pool",
+        "placement": null
         }
-      ]
+        ]
       </info>
     </propertyType>
 
@@ -3509,6 +3531,234 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'secondaryControllerIP' per device", "value": "${far.secondaryControllerIP}" }]</seedValues>
+    </propertyType>
+
+    <!-- #### For Dual Radio Uplink #####     -->
+    <propertyType>
+      <name>wifiUplink</name>
+      <displayName>Wi-Fi Uplink</displayName>
+      <description>Enable Wi-Fi Uplink</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>Wi-Fi Uplink Settings</section>
+      <defaultValue>false</defaultValue>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <hiddenCondition>[{"field":"wifi:wifi_wifiuplinksettings:wifiUplinkRadioFrequency","value":false},
+        {"field":"wifi:wifi_wifiuplinksettings:wifiUplinkWgbSubModeConfig","value":false},
+        {"field":"wifi:wifi_ssidprofileforwifiuplink","value":false}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wifiUplinkRadioFrequency</name>
+      <displayName>Frequency for WGB (Wi-Fi Uplink)</displayName>
+      <description>Frequency for WGB (Wi-Fi Uplink)</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>Wi-Fi Uplink Settings</section>
+      <required>1</required>
+      <validationType>non-empty</validationType>
+      <dataType>array</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "2.4GHz", "value": "2.4" },{ "key": "5GHz", "value": "5" } ]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wifiUplinkWgbSubModeConfig</name>
+      <displayName>WGB Sub-Mode Configuration</displayName>
+      <description>WGB Sub-Mode Configuration</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>Wi-Fi Uplink Settings</section>
+      <required>1</required>
+      <validationType>non-empty</validationType>
+      <dataType>array</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Work Group Bridge (WGB)", "value": "wgb" },{ "key": "Universal WGB", "value": "uwgb" } ]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wgbUplinkSsidName</name>
+      <displayName>SSID Name</displayName>
+      <description>SSID Name</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>SSID Profile for Wi-Fi Uplink</section>
+      <required>1</required>
+      <minLength>1</minLength>
+      <maxLength>32</maxLength>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+    </propertyType>
+
+    <propertyType>
+      <name>wgbUplinkAuthType</name>
+      <displayName>Security (Authentication Type)</displayName>
+      <description>Security (Authentication Type)</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>SSID Profile for Wi-Fi Uplink</section>
+      <required>1</required>
+      <validationType>non-empty</validationType>
+      <dataType>array</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "WPA2-PSK", "value": "psk" },{ "key": "Open", "value": "open" }]</seedValues>
+      <hiddenCondition>[{"field":"wifi:wifi_ssidprofileforwifiuplink:wgbUplinkPsk","value":"open"}]</hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wgbUplinkPsk</name>
+      <displayName>WPA2-PSK Key</displayName>
+      <description>WPA2-PSK Key</description>
+      <issecure>1</issecure>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>SSID Profile for Wi-Fi Uplink</section>
+      <required>1</required>
+      <minLength>8</minLength>
+      <maxLength>63</maxLength>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <info>
+        [
+        {
+        "type": "tooltip",
+        "iconType": "information",
+        "filled": false,
+        "text": "Please ensure the PSK length is between 8 and 63 characters",
+        "placement": "right-start"
+        }
+        ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wgbUplinkQos</name>
+      <displayName>Quality of Service Profile</displayName>
+      <description>Quality of Service Profile</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>SSID Profile for Wi-Fi Uplink</section>
+      <required>1</required>
+      <max>32</max>
+      <validationType>non-empty</validationType>
+      <dataType>array</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Bronze", "value": "bronze" },{ "key": "Gold", "value": "gold" },{ "key": "Platinum", "value": "platinum" },{ "key": "Silver", "value": "silver" }]</seedValues>
+    </propertyType>
+
+    <!-- #### For Dual Radio Hotspot #####     -->
+    <propertyType>
+      <name>wifiHotspot</name>
+      <displayName>Wi-Fi Hotspot</displayName>
+      <description>Enable Wi-Fi Hotspot</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>Wi-Fi Hotspot Settings</section>
+      <defaultValue>false</defaultValue>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>boolean</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <hiddenCondition>[{"field":"wifi:wifi_wifihotspotsettings:wifiHotspotRadioFrequency","value":false},
+        {"field":"wifi:wifi_ssidprofilesforwifihotspot","value":false}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wifiHotspotRadioFrequency</name>
+      <displayName>Frequency for Wi-Fi Hotspot</displayName>
+      <description>Frequency for Wi-Fi Hotspot</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>Wi-Fi Hotspot Settings</section>
+      <required>1</required>
+      <validationType>non-empty</validationType>
+      <dataType>array</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "2.4GHz", "value": "2.4" },{ "key": "5GHz", "value": "5" } ]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>ssidProfilesForWifiHotspot</name>
+      <displayName>SSID Profiles for Wi-Fi Hotspot</displayName>
+      <description>Add SSID Profiles</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>SSID Profiles for Wi-Fi Hotspot</section>
+      <required>0</required>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <validationType>non-empty</validationType>
+      <dataType>table</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <tableColumns>[ {"colKey": "wgbHotspotSsidName", "colLabel": "SSID Name"},
+        {"colKey": "wgbHotspotAuthType", "colLabel": "Security (Authentication Type)"},
+        {"colKey": "wgbHotspotPsk", "colLabel": "WPA2-PSK Key"},
+        {"colKey": "wgbHotspotQos", "colLabel": "Quality of Service Profile"}]
+      </tableColumns>
+      <tableNumRows>10</tableNumRows>
+    </propertyType>
+
+    <propertyType>
+      <name>wgbHotspotSsidName</name>
+      <displayName>SSID Name</displayName>
+      <description>SSID Name</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>SSID Profiles for Wi-Fi Hotspot</section>
+      <required>1</required>
+      <minLength>1</minLength>
+      <maxLength>32</maxLength>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+    </propertyType>
+
+    <propertyType>
+      <name>wgbHotspotAuthType</name>
+      <displayName>Security (Authentication Type)</displayName>
+      <description>Security (Authentication Type)</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>SSID Profiles for Wi-Fi Hotspot</section>
+      <required>1</required>
+      <validationType>non-empty</validationType>
+      <dataType>array</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "WPA2-PSK", "value": "psk" },{ "key": "Open", "value": "open" }]</seedValues>
+      <hiddenCondition>[{"field":"wifi:wifi_ssidprofilesforwifihotspot:wgbHotspotPsk","value":"open"}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>wgbHotspotPsk</name>
+      <displayName>WPA2-PSK Key</displayName>
+      <description>WPA2-PSK Key</description>
+      <issecure>1</issecure>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>SSID Profiles for Wi-Fi Hotspot</section>
+      <minLength>8</minLength>
+      <maxLength>63</maxLength>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <info>
+        [
+        {
+        "type": "tooltip",
+        "iconType": "information",
+        "filled": false,
+        "text": "Please ensure the PSK length is between 8 and 32 characters",
+        "placement": "right-start"
+        }
+        ]
+      </info>
+    </propertyType>
+
+    <propertyType>
+      <name>wgbHotspotQos</name>
+      <displayName>Quality of Service Settings</displayName>
+      <description>Quality of Service Settings</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Wi-Fi>SSID Profiles for Wi-Fi Hotspot</section>
+      <required>1</required>
+      <validationType>non-empty</validationType>
+      <dataType>array</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Bronze", "value": "bronze" },{ "key": "Gold", "value": "gold" },{ "key": "Platinum", "value": "platinum" },{ "key": "Silver", "value": "silver" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -3678,6 +3928,7 @@
       <name>wan1SIMPinDLTE</name>
       <displayName>Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
       <required>0</required>
@@ -3767,6 +4018,7 @@
       <name>wan1SecondSIMPinDLTE</name>
       <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
       <required>0</required>
@@ -3980,6 +4232,7 @@
       <name>wan2SIMPinDLTE</name>
       <displayName>Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
       <required>0</required>
@@ -4069,6 +4322,7 @@
       <name>wan2SecondSIMPinDLTE</name>
       <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
       <required>0</required>
@@ -4282,6 +4536,7 @@
       <name>wan3SIMPinDLTE</name>
       <displayName>Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
       <required>0</required>
@@ -4371,6 +4626,7 @@
       <name>wan3SecondSIMPinDLTE</name>
       <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
       <required>0</required>
@@ -4584,6 +4840,7 @@
       <name>wan4SIMPinDLTE</name>
       <displayName>Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 4</section>
       <required>0</required>
@@ -4672,6 +4929,7 @@
       <name>wan4SecondSIMPinDLTE</name>
       <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+       <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 4</section>
       <required>0</required>
@@ -5614,6 +5872,7 @@
       <name>wan1SIMPinDLTE</name>
       <displayName>Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
       <required>0</required>
@@ -5703,6 +5962,7 @@
       <name>wan1SecondSIMPinDLTE</name>
       <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
       <required>0</required>
@@ -5910,6 +6170,7 @@
       <name>wan2SIMPinDLTE</name>
       <displayName>Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
       <required>0</required>
@@ -5999,6 +6260,7 @@
       <name>wan2SecondSIMPinDLTE</name>
       <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
       <required>0</required>
@@ -6206,6 +6468,7 @@
       <name>wan3SIMPinDLTE</name>
       <displayName>Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+       <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
       <required>0</required>
@@ -6295,6 +6558,7 @@
       <name>wan3SecondSIMPinDLTE</name>
       <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
       <required>0</required>
@@ -6502,6 +6766,7 @@
       <name>wan4SIMPinDLTE</name>
       <displayName>Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 4</section>
       <required>0</required>
@@ -6591,6 +6856,7 @@
       <name>wan4SecondSIMPinDLTE</name>
       <displayName>Second SIM Cellular SIM PIN (If Applicable)</displayName>
       <description>Enter the Cellular PIN if Applicable</description>
+      <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 4</section>
       <required>0</required>

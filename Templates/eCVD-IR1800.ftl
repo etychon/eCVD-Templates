@@ -136,13 +136,13 @@
           <#assign cell1_sim1_apn = far.wan1SecondAPNDLTE!"">
           <#assign cell1_sim1_jitter = far.wan1JitterDLTE!"30">
           <#assign cell1_sim1_rtt = far.wan1RTTDLTE!"500">
-          <#assign cell1_sim1_time = far.wan1TimeDLTE!"960">
+          <#assign cell1_sim1_time = far.wan1TimeDLTE!"900">
         <#elseif wan_link1_interface == "cellular2">
           <#assign cell2_sim1_installed = "true">
           <#assign cell2_sim1_apn = far.wan1SecondAPNDLTE!"">
           <#assign cell2_sim1_jitter = far.wan1JitterDLTE!"30">
           <#assign cell2_sim1_rtt = far.wan1RTTDLTE!"500">
-          <#assign cell2_sim1_time = far.wan1TimeDLTE!"960">
+          <#assign cell2_sim1_time = far.wan1TimeDLTE!"900">
         </#if>
       </#if>
     </#if>
@@ -169,13 +169,13 @@
             <#assign cell1_sim1_apn = far.wan2SecondAPNDLTE!"">
             <#assign cell1_sim1_jitter = far.wan2JitterDLTE!"30">
             <#assign cell1_sim1_rtt = far.wan2RTTDLTE!"500">
-            <#assign cell1_sim1_time = far.wan2TimeDLTE!"960">
+            <#assign cell1_sim1_time = far.wan2TimeDLTE!"900">
           <#elseif wan_link2_interface == "cellular2">
             <#assign cell2_sim1_installed = "true">
             <#assign cell2_sim1_apn = far.wan2SecondAPNDLTE!"">
             <#assign cell2_sim1_jitter = far.wan2JitterDLTE!"30">
             <#assign cell2_sim1_rtt = far.wan2RTTDLTE!"500">
-            <#assign cell2_sim1_time = far.wan2TimeDLTE!"960">
+            <#assign cell2_sim1_time = far.wan2TimeDLTE!"900">
           </#if>
         </#if>
       </#if>
@@ -204,13 +204,13 @@
             <#assign cell1_sim1_apn = far.wan3SecondAPNDLTE!"">
             <#assign cell1_sim1_jitter = far.wan3JitterDLTE!"30">
             <#assign cell1_sim1_rtt = far.wan3RTTDLTE!"500">
-            <#assign cell1_sim1_time = far.wan3TimeDLTE!"960">
+            <#assign cell1_sim1_time = far.wan3TimeDLTE!"900">
           <#elseif wan_link3_interface == "cellular2">
             <#assign cell2_sim1_installed = "true">
             <#assign cell2_sim1_apn = far.wan3SecondAPNDLTE!"">
             <#assign cell2_sim1_jitter = far.wan3JitterDLTE!"30">
             <#assign cell2_sim1_rtt = far.wan3RTTDLTE!"500">
-            <#assign cell2_sim1_time = far.wan3TimeDLTE!"960">
+            <#assign cell2_sim1_time = far.wan3TimeDLTE!"900">
           </#if>
         </#if>
       </#if>
@@ -547,6 +547,7 @@
     clock timezone ${clockTZ} ${offset}
     <#if far.ntpOrLocal == "1" && far.ntpPrimaryIP?has_content>
         ntp server ip ${ntpIP1}
+        ntp master 10
     </#if>
     <#if far.ntpOrLocal == "1" && far.ntpSecondaryIP?has_content>
         ntp server ip ${ntpIP2}
@@ -1479,7 +1480,7 @@
         action 010 syslog msg "Verifying APN Profile"
         action 020 cli command "enable"
         action 030 cli command "show ${cell_if1} profile 1 | i Access Point Name"
-        action 040 regexp "^.* = ([A-Za-z0-9\.]+)" $_cli_result _match _match1
+        action 040 regexp "^.* = ([A-Za-z0-9\.\-]+)" "$_cli_result" _match _match1
         action 050 if $_regexp_result eq 1
         action 060 syslog msg  "Current APN in ${cell_if1} is $_match1"
         action 070 end
@@ -1504,7 +1505,7 @@
         action 010 syslog msg "Verifying APN Profile"
         action 020 cli command "enable"
         action 030 cli command "show ${cell_if2} profile 1 | i Access Point Name"
-        action 040 regexp "^.* = ([A-Za-z0-9\.]+)" $_cli_result _match _match1
+        action 040 regexp "^.* = ([A-Za-z0-9\.\-]+)" "$_cli_result" _match _match1
         action 050 if $_regexp_result eq 1
         action 060 syslog msg  "Current APN in ${cell_if2} is $_match1"
         action 070 end
@@ -1531,6 +1532,7 @@
     <#assign dlte_interfaces = [cell_if1, cell_if2]>
     <#assign dlte_jitter = [cell1_sim1_jitter, cell2_sim1_jitter]>
     <#assign dlte_rtt = [cell1_sim1_rtt, cell2_sim1_rtt]>
+    <#assign dlte_time = [cell1_sim1_time, cell2_sim1_time]>
 
     <#-- Configure APN for second SIM card on modem -->
     <#if cell1_sim1_installed == "true" || cell2_sim1_installed == "true">
@@ -1569,6 +1571,8 @@
       <#if dlte_int_enable[x] == "true">
         ip route ${dlte_ips[x]} 255.255.255.255 ${dlte_interfaces[x]}
         ip route ${dlte_ips[x]} 255.255.255.255 Null0 3
+        controller ${dlte_interfaces[x]}
+          lte modem link-recovery disable
         ip sla ${x+20}
           path-jitter ${dlte_ips[x]} interval 15 num-packets 15 targetOnly
             owner admin
@@ -1609,7 +1613,7 @@
         !
         !
         event manager applet LTE_SWITCH_SIM_${x}
-          event tag 1 timer watchdog time 900 maxrun 99
+          event tag 1 timer watchdog time ${dlte_time[x]?number*60} maxrun 99
           event tag 2 track ${x+20} state down
           event tag 3 counter name RTT_violations_${x} entry-val 3 entry-op eq exit-val 0 exit-op eq
           event tag 4 counter name Jitter_violations_${x} entry-val 3 entry-op eq exit-val 0 exit-op eq
