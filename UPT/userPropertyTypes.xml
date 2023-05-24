@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.36        -->
+<!-- Version 1.37        -->
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -13,6 +13,32 @@
                   Additional Settings, Site to Site VPN (Customer specific)
                   Security>Firewall, Security>Netflow, DEBUG
     -->
+
+    <propertyType>
+      <name>dummyValueForBaseConfigMgmtConfigSection</name>
+      <displayName>Dummy Value For Base Config Mgmt Config Section</displayName>
+      <description>dummy variable to display banner for the section.</description>
+      <section>Base Configuration>Management Configuration</section>
+    </propertyType>
+
+    <propertyType>
+      <name>baseconfiguration_managementconfiguration</name>
+      <propertyKind>1</propertyKind>
+      <info>
+        [
+        {
+        "type": "banner",
+        "iconType": "information",
+        "filled": true,
+        "flavor": null,
+        "text": "&lt;p&gt;To update the Base Configuration (Bootstrap), ensure to remove devices from group, make the changes and re-onboard them. Note: Once devices are associated with the group, this section cannot be modified.&lt;/p&gt;",
+        "border": true,
+        "closeButton": true,
+        "placement": null
+        }
+        ]
+      </info>
+    </propertyType>
 
     <propertyType>
       <name>organization</name>
@@ -3416,7 +3442,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "WGB", "value":"wgb" },
+      <seedValues>[{ "key": "Work Group Bridge", "value":"wgb" },
         { "key": "Controller", "value":"controller" },
         { "key": "Work Group Bridge with Hotspot", "value":"dualwgb" }]
       </seedValues>
@@ -3535,6 +3561,22 @@
 
     <!-- #### For Dual Radio Uplink #####     -->
     <propertyType>
+      <name>wifi_wifiuplinksettings</name>
+      <propertyKind>1</propertyKind>
+      <info>
+        [
+        {
+        "type": "tooltip",
+        "iconType": "information",
+        "filled": false,
+        "text": "&lt;p&gt; Configuration required to connect to Uplink AP. &amp;nbsp;&lt;br&gt; QoS setting only applies to uplink traffic. &lt;/p&gt;",
+        "placement": "right-start"
+        }
+        ]
+      </info>
+    </propertyType>
+
+    <propertyType>
       <name>wifiUplink</name>
       <displayName>Wi-Fi Uplink</displayName>
       <description>Enable Wi-Fi Uplink</description>
@@ -3574,7 +3616,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Work Group Bridge (WGB)", "value": "wgb" },{ "key": "Universal WGB", "value": "uwgb" } ]</seedValues>
+      <seedValues>[{ "key": "Work Group Bridge (Cisco AP)", "value": "wgb" },{ "key": "Universal WGB (Third party AP)", "value": "uwgb" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -3603,6 +3645,17 @@
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "WPA2-PSK", "value": "psk" },{ "key": "Open", "value": "open" }]</seedValues>
       <hiddenCondition>[{"field":"wifi:wifi_ssidprofileforwifiuplink:wgbUplinkPsk","value":"open"}]</hiddenCondition>
+      <info>
+        [
+        {
+        "type": "tooltip",
+        "iconType": "information",
+        "filled": false,
+        "text": "Please ensure PSK length is between 8 and 63 characters if Authentication Type is WPA2-PSK.",
+        "placement": null
+        }
+        ]
+      </info>
     </propertyType>
 
     <propertyType>
@@ -3618,17 +3671,6 @@
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <info>
-        [
-        {
-        "type": "tooltip",
-        "iconType": "information",
-        "filled": false,
-        "text": "Please ensure the PSK length is between 8 and 63 characters",
-        "placement": "right-start"
-        }
-        ]
-      </info>
     </propertyType>
 
     <propertyType>
@@ -3640,12 +3682,29 @@
       <required>1</required>
       <max>32</max>
       <validationType>non-empty</validationType>
+      <defaultValue>platinum</defaultValue>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Bronze", "value": "bronze" },{ "key": "Gold", "value": "gold" },{ "key": "Platinum", "value": "platinum" },{ "key": "Silver", "value": "silver" }]</seedValues>
+      <seedValues>[{ "key": "Bronze", "value": "bronze" },{ "key": "Silver", "value": "silver" },{ "key": "Gold", "value": "gold" },{ "key": "Platinum", "value": "platinum" }]</seedValues>
     </propertyType>
 
     <!-- #### For Dual Radio Hotspot #####     -->
+    <propertyType>
+      <name>wifi_wifihotspotsettings</name>
+      <propertyKind>1</propertyKind>
+      <info>
+        [
+        {
+        "type": "tooltip",
+        "iconType": "information",
+        "filled": false,
+        "text": "&lt;p&gt; Configuration required to connect wireless clients to AP on IR1800. &amp;nbsp;&lt;br&gt; QoS setting only applies to hotspot traffic. &lt;/p&gt;",
+        "placement": "right-start"
+        }
+        ]
+      </info>
+    </propertyType>
+
     <propertyType>
       <name>wifiHotspot</name>
       <displayName>Wi-Fi Hotspot</displayName>
@@ -3673,6 +3732,22 @@
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "2.4GHz", "value": "2.4" },{ "key": "5GHz", "value": "5" } ]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>wifi_ssidprofilesforwifihotspot</name>
+      <propertyKind>1</propertyKind>
+      <info>
+        [
+        {
+        "type": "tooltip",
+        "iconType": "information",
+        "filled": false,
+        "text": "Please ensure PSK length is between 8 and 63 characters if Authentication Type is WPA2-PSK.",
+        "placement": "right-start"
+        }
+        ]
+      </info>
     </propertyType>
 
     <propertyType>
@@ -3719,8 +3794,6 @@
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "WPA2-PSK", "value": "psk" },{ "key": "Open", "value": "open" }]</seedValues>
-      <hiddenCondition>[{"field":"wifi:wifi_ssidprofilesforwifihotspot:wgbHotspotPsk","value":"open"}]
-      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -3735,17 +3808,6 @@
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <info>
-        [
-        {
-        "type": "tooltip",
-        "iconType": "information",
-        "filled": false,
-        "text": "Please ensure the PSK length is between 8 and 32 characters",
-        "placement": "right-start"
-        }
-        ]
-      </info>
     </propertyType>
 
     <propertyType>
@@ -3756,9 +3818,10 @@
       <section>Wi-Fi>SSID Profiles for Wi-Fi Hotspot</section>
       <required>1</required>
       <validationType>non-empty</validationType>
+      <defaultValue>platinum</defaultValue>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Bronze", "value": "bronze" },{ "key": "Gold", "value": "gold" },{ "key": "Platinum", "value": "platinum" },{ "key": "Silver", "value": "silver" }]</seedValues>
+      <seedValues>[{ "key": "Bronze", "value": "bronze" },{ "key": "Silver", "value": "silver" },{ "key": "Gold", "value": "gold" },{ "key": "Platinum", "value": "platinum" }]</seedValues>
     </propertyType>
 
     <propertyType>

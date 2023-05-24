@@ -1,5 +1,7 @@
 Attribute Name                        ir1100  ir1800  ir800   
 ------------------------------------------------------------------------------
+dummyValueForBaseConfigMgmtConfigSectionyes     yes     yes     
+baseconfiguration_managementconfigurationyes     yes     yes     
 organization                          yes     yes     yes     
 fndRegistrationIp                     yes     yes     yes     
 fndRegistrationPort                   yes     yes     yes     
@@ -223,6 +225,7 @@ wgbSSID1800                           no      yes     no
 wgbPSK1800                            no      yes     no      
 primaryControllerIP                   no      yes     no      
 secondaryControllerIP                 no      yes     no      
+wifi_wifiuplinksettings               no      yes     no      
 wifiUplink                            no      yes     no      
 wifiUplinkRadioFrequency              no      yes     no      
 wifiUplinkWgbSubModeConfig            no      yes     no      
@@ -230,8 +233,10 @@ wgbUplinkSsidName                     no      yes     no
 wgbUplinkAuthType                     no      yes     no      
 wgbUplinkPsk                          no      yes     no      
 wgbUplinkQos                          no      yes     no      
+wifi_wifihotspotsettings              no      yes     no      
 wifiHotspot                           no      yes     no      
 wifiHotspotRadioFrequency             no      yes     no      
+wifi_ssidprofilesforwifihotspot       no      yes     no      
 ssidProfilesForWifiHotspot            no      yes     no      
 wgbHotspotSsidName                    no      yes     no      
 wgbHotspotAuthType                    no      yes     no      

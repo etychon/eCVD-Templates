@@ -1,8 +1,8 @@
 <#--
      ---- Begin eCVD template for IR1800 -----
-     ---- Version 2.4 TEMPLATE ---------------
+     ---- Version 2.5 TEMPLATE ---------------
      -----------------------------------------
-     -- March 2023 Release                  --
+     -- April 2023 Release                  --
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
      -- QoS, Port Forwarding, Static Route  --
@@ -790,14 +790,6 @@
         ip nat outside
         ip dhcp client client-id vlan ${wgb_vlan}
       !
-      route-map RM_WGB_ACL permit 10
-        match ip address NAT_ACL
-        match interface ${wgb_if}
-      !
-      interface Wl0/1/4
-        switchport mode trunk
-        switchport trunk native vlan ${wgb_vlan}
-        switchport trunk allowed vlan ${wgb_vlan}
       ip nat inside source route-map RM_WGB_ACL interface ${wgb_if} overload
       !
       vlan ${wgb_vlan}
@@ -1698,18 +1690,30 @@
   <#if far.wifiDeploymentMode?has_content>
     <#assign wifidepmode = far.wifiDeploymentMode>
     <#if wifidepmode == "wgb">
-      <#if far.wgbSSID1800?has_content>
-        <#assign wgbSSID1800 = far.wgbSSID1800>
-      </#if>
-      <#if far.wgbPSK1800?has_content>
-        <#assign wgbPSK1800 = far.wgbPSK1800>
-      </#if>
+      <#assign wgbSSID1800 = far.wgbSSID1800?has_content>
+      <#assign wgbPSK1800 = far.wgbPSK1800?has_content>
     <#elseif wifidepmode == "controller">
       <#if far.primaryControllerIP?has_content>
         <#assign primary_controller = far.primaryControllerIP>
         <#if far.secondaryControllerIP?has_content>
           <#assign secondary_controller = far.secondaryControllerIP>
         </#if>
+      </#if>
+    <#elseif wifidepmode == "dualwgb">
+      <#assign configurationLevel = far.configurationLevel?has_content>
+      <#assign wifiUplink = far.wifiUplink>
+      <#if wifiUplink == "true">
+        <#assign wifiUplinkRadioFrequency = far.wifiUplinkRadioFrequency?has_content>
+        <#assign wifiUplinkWgbSubModeConfig = far.wifiUplinkWgbSubModeConfig?has_content>
+        <#assign wgbUplinkSsidName = far.wgbUplinkSsidName?has_content>
+        <#assign wgbUplinkAuthType = far.wgbUplinkAuthType?has_content>
+        <#assign wgbUplinkPsk = far.wgbUplinkPsk?has_content>
+        <#assign wgbUplinkQos = far.wgbUplinkQos?has_content>
+      </#if>
+      <#assign wifiHotspot = far.wifiHotspot>
+      <#if wifiHotspot == "true">
+        <#assign wifiHotspotRadioFrequency = far.wifiHotspotRadioFrequency?has_content>
+        <#assign ssidProfilesForWifiHotspot = far.ssidProfilesForWifiHotspot?has_content>
       </#if>
     </#if>
   </#if>
@@ -1750,6 +1754,7 @@
       ip nat inside source route-map RM_Tu2 interface ${vpnTunnelIntf} overload
   </#if>
 </#if>
+
 
 </#compress>
 
