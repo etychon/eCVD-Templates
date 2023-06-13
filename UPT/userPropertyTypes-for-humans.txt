@@ -106,6 +106,13 @@ fwProtocol                            yes     yes     yes
 fwPort                                yes     yes     yes     
 isNetflow                             yes     yes     yes     
 netflowCollectorIP                    yes     yes     yes     
+pnpResetTime                          yes     yes     yes     
+isPnPReset                            yes     yes     yes     
+isRouterReload                        yes     yes     yes     
+primaryRecoverySLAIP                  yes     yes     yes     
+secondaryRecoverySLAIP                yes     yes     yes     
+isAutoRecovery                        yes     yes     yes     
+devicemanagement_autorecovery         yes     yes     yes     
 wanUplink1InterfaceNew                yes     yes     no      
 wanUplink1DescriptionNew              yes     yes     no      
 wanUplink1SLANew                      yes     yes     no      
@@ -329,6 +336,15 @@ successRedirectURL                    no      no      yes
 splashPageBanner                      no      no      yes     
 wgbSSID                               no      no      yes     
 wgbPSK                                no      no      yes     
+wgbSsid2                              no      no      yes     
+wgbPsk2                               no      no      yes     
+wifiSsid2                             no      no      yes     
+wifiPsk2                              no      no      yes     
+isWifiHotspot                         no      no      yes     
+isWGB                                 no      no      yes     
+wifi2_wifi                            no      no      yes     
+wifi2_wifihotspot                     no      no      yes     
+wifi2_wgb                             no      no      yes     
 wifiOperationalMode                   no      no      yes     
 ignition                              no      no      yes     
 dnsIP                                 no      no      yes     
@@ -354,9 +370,7 @@ intFastEthernet3                      yes     no      no
 fastEthernet3Description              yes     no      no      
 intFastEthernet4                      yes     no      no      
 fastEthernet4Description              yes     no      no      
-isTopModule1101                       yes     no      no      
 topModule1101                         yes     no      no      
-isBottomModule1101                    yes     no      no      
 bottomModule1101                      yes     no      no      
 isBaseSerial1                         yes     no      no      
 baseSerialAdvancedSettings            yes     no      no      
@@ -364,6 +378,8 @@ baseSerial1Parity                     yes     no      no
 baseSerial1Speed                      yes     no      no      
 baseSerial1Stop                       yes     no      no      
 baseSerial1Data                       yes     no      no      
+baseSerial1Media                      yes     no      no      
+baseSerial1Duplex                     yes     no      no      
 baseAsync1Encap                       yes     no      no      
 baseAsync1DestIP                      yes     no      no      
 baseAsync1DestPort                    yes     no      no      
@@ -372,6 +388,8 @@ baseAsync1LocalPort                   yes     no      no
 baseAsync1TCPTimeout                  yes     no      no      
 baseAsync1PacketTimer                 yes     no      no      
 baseAsync1PacketMax                   yes     no      no      
+baseAsync1SpecialCharacter            yes     no      no      
+baseAsync1PacketLength                yes     no      no      
 isTopExpModSerial1                    yes     no      no      
 topExpModSerial1AdvancedSettings      yes     no      no      
 topExpModSerial1Parity                yes     no      no      
@@ -389,6 +407,8 @@ topExpModAsync1LocalPort              yes     no      no
 topExpModAsync1TCPTimeout             yes     no      no      
 topExpModAsync1PacketTimer            yes     no      no      
 topExpModAsync1PacketMax              yes     no      no      
+topExpModAsync1SpecialCharacter       yes     no      no      
+topExpModAsync1PacketLength           yes     no      no      
 isTopExpModSerial2                    yes     no      no      
 topExpModSerial2AdvancedSettings      yes     no      no      
 topExpModSerial2Parity                yes     no      no      
@@ -406,6 +426,8 @@ topExpModAsync2LocalPort              yes     no      no
 topExpModAsync2TCPTimeout             yes     no      no      
 topExpModAsync2PacketTimer            yes     no      no      
 topExpModAsync2PacketMax              yes     no      no      
+topExpModAsync2SpecialCharacter       yes     no      no      
+topExpModAsync2PacketLength           yes     no      no      
 isTopExpModSerial3                    yes     no      no      
 topExpModSerial3AdvancedSettings      yes     no      no      
 topExpModSerial3Parity                yes     no      no      
@@ -423,6 +445,8 @@ topExpModAsync3LocalPort              yes     no      no
 topExpModAsync3TCPTimeout             yes     no      no      
 topExpModAsync3PacketTimer            yes     no      no      
 topExpModAsync3PacketMax              yes     no      no      
+topExpModAsync3SpecialCharacter       yes     no      no      
+topExpModAsync3PacketLength           yes     no      no      
 isTopExpModSerial4                    yes     no      no      
 topExpModSerial4AdvancedSettings      yes     no      no      
 topExpModSerial4Parity                yes     no      no      
@@ -440,6 +464,8 @@ topExpModAsync4LocalPort              yes     no      no
 topExpModAsync4TCPTimeout             yes     no      no      
 topExpModAsync4PacketTimer            yes     no      no      
 topExpModAsync4PacketMax              yes     no      no      
+topExpModAsync4SpecialCharacter       yes     no      no      
+topExpModAsync4PacketLength           yes     no      no      
 isBottomExpModSerial1                 yes     no      no      
 bottomExpModSerial1AdvancedSettings   yes     no      no      
 bottomExpModSerial1Parity             yes     no      no      
@@ -457,6 +483,8 @@ bottomExpModAsync1LocalPort           yes     no      no
 bottomExpModAsync1TCPTimeout          yes     no      no      
 bottomExpModAsync1PacketTimer         yes     no      no      
 bottomExpModAsync1PacketMax           yes     no      no      
+bottomExpModAsync1SpecialCharacter    yes     no      no      
+bottomExpModAsync1PacketLength        yes     no      no      
 isBottomExpModSerial2                 yes     no      no      
 bottomExpModSerial2AdvancedSettings   yes     no      no      
 bottomExpModSerial2Parity             yes     no      no      
@@ -474,6 +502,8 @@ bottomExpModAsync2LocalPort           yes     no      no
 bottomExpModAsync2TCPTimeout          yes     no      no      
 bottomExpModAsync2PacketTimer         yes     no      no      
 bottomExpModAsync2PacketMax           yes     no      no      
+bottomExpModAsync2SpecialCharacter    yes     no      no      
+bottomExpModAsync2PacketLength        yes     no      no      
 isBottomExpModSerial3                 yes     no      no      
 bottomExpModSerial3AdvancedSettings   yes     no      no      
 bottomExpModSerial3Parity             yes     no      no      
@@ -491,6 +521,8 @@ bottomExpModAsync3LocalPort           yes     no      no
 bottomExpModAsync3TCPTimeout          yes     no      no      
 bottomExpModAsync3PacketTimer         yes     no      no      
 bottomExpModAsync3PacketMax           yes     no      no      
+bottomExpModAsync3SpecialCharacter    yes     no      no      
+bottomExpModAsync3PacketLength        yes     no      no      
 isBottomExpModSerial4                 yes     no      no      
 bottomExpModSerial4AdvancedSettings   yes     no      no      
 bottomExpModSerial4Parity             yes     no      no      
@@ -508,8 +540,11 @@ bottomExpModAsync4LocalPort           yes     no      no
 bottomExpModAsync4TCPTimeout          yes     no      no      
 bottomExpModAsync4PacketTimer         yes     no      no      
 bottomExpModAsync4PacketMax           yes     no      no      
+bottomExpModAsync4SpecialCharacter    yes     no      no      
+bottomExpModAsync4PacketLength        yes     no      no      
 isGPIO1                               yes     no      no      
 gpio1Output                           yes     no      no      
+gpio1Status                           yes     no      no      
 gpio1Termination                      yes     no      no      
 gpio1Description                      yes     no      no      
 gpio1Severity                         yes     no      no      
@@ -517,6 +552,7 @@ gpio1Threshold                        yes     no      no
 gpio1Trigger                          yes     no      no      
 isGPIO2                               yes     no      no      
 gpio2Output                           yes     no      no      
+gpio2Status                           yes     no      no      
 gpio2Termination                      yes     no      no      
 gpio2Description                      yes     no      no      
 gpio2Severity                         yes     no      no      
@@ -524,6 +560,7 @@ gpio2Threshold                        yes     no      no
 gpio2Trigger                          yes     no      no      
 isGPIO3                               yes     no      no      
 gpio3Output                           yes     no      no      
+gpio3Status                           yes     no      no      
 gpio3Termination                      yes     no      no      
 gpio3Description                      yes     no      no      
 gpio3Severity                         yes     no      no      
@@ -531,6 +568,7 @@ gpio3Threshold                        yes     no      no
 gpio3Trigger                          yes     no      no      
 isGPIO4                               yes     no      no      
 gpio4Output                           yes     no      no      
+gpio4Status                           yes     no      no      
 gpio4Termination                      yes     no      no      
 gpio4Description                      yes     no      no      
 gpio4Severity                         yes     no      no      

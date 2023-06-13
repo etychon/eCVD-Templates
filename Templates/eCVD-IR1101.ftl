@@ -1,9 +1,8 @@
 <#--
      ---- Begin eCVD template for IR1101 -----
-     ---- Version 2.022 ----------------------
+     ---- Version 2.03 -----------------------
      -----------------------------------------
-     -- March 2022 Release                  --
-     -- Include Dual SIM Fixes              --
+     -- May 2023 Release               --
      -- REQUIRES Latest Bootstrap           --
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -108,6 +107,18 @@
 <#assign cell2_sim1_jitter = "">
 <#assign cell2_sim1_rtt = "">
 <#assign cell2_sim1_time = "">
+<#assign cell1_sim1_pin = "">
+<#assign cell1_sim1_username = "">
+<#assign cell1_sim1_password = "">
+<#assign cell1_sim2_pin = "">
+<#assign cell1_sim2_username = "">
+<#assign cell1_sim2_password = "">
+<#assign cell2_sim1_pin = "">
+<#assign cell2_sim1_username = "">
+<#assign cell2_sim1_password = "">
+<#assign cell2_sim2_pin = "">
+<#assign cell2_sim2_username = "">
+<#assign cell2_sim2_password = "">
 
 
 
@@ -125,21 +136,27 @@
 <#elseif wan_link1_interface == "cellular2" && far.wan1APNDLTE?has_content && far.wan1APNDLTE != "null">
   <#assign APN2 = far.wan1APNDLTE>
 </#if>
+<#assign placeholder = far.wan1APNUsernameDLTE!"">
+<#assign placeholder = far.wan1APNPasswordDLTE!"">
+<#assign placeholder = far.wan1SIMPinDLTE!"">
 <#-- Dual SIM Variables for WAN Uplink 1 -->
 <#if wan_link1_interface == "cellular1" || wan_link1_interface == "cellular2">
   <#if far.wan1SecondSimEnabledDLTE == "true">
+  <#assign placeholder = far.wan1SecondAPNUsernameDLTE!"">
+  <#assign placeholder = far.wan1SecondAPNPasswordDLTE!"">
+  <#assign placeholder = far.wan1SecondSIMPinDLTE!"">
     <#if wan_link1_interface == "cellular1">
       <#assign cell1_sim1_installed = "true">
       <#assign cell1_sim1_apn = far.wan1SecondAPNDLTE!"">
       <#assign cell1_sim1_jitter = far.wan1JitterDLTE!"30">
       <#assign cell1_sim1_rtt = far.wan1RTTDLTE!"500">
-      <#assign cell1_sim1_time = far.wan1TimeDLTE!"900">
+      <#assign cell1_sim1_time = far.wan1TimeDLTE!"660">
     <#elseif wan_link1_interface == "cellular2">
       <#assign cell2_sim1_installed = "true">
       <#assign cell2_sim1_apn = far.wan1SecondAPNDLTE!"">
       <#assign cell2_sim1_jitter = far.wan1JitterDLTE!"30">
       <#assign cell2_sim1_rtt = far.wan1RTTDLTE!"500">
-      <#assign cell2_sim1_time = far.wan1TimeDLTE!"900">
+      <#assign cell2_sim1_time = far.wan1TimeDLTE!"660">
     </#if>
   </#if>
 </#if>
@@ -158,21 +175,27 @@
   <#elseif wan_link2_interface == "cellular2" && far.wan2APNDLTE?has_content && far.wan2APNDLTE != "null">
     <#assign APN2 = far.wan2APNDLTE>
   </#if>
+  <#assign placeholder = far.wan2APNUsernameDLTE!"">
+  <#assign placeholder = far.wan2APNPasswordDLTE!"">
+  <#assign placeholder = far.wan2SIMPinDLTE!"">
   <#-- Dual SIM Variables for WAN Uplink 2-->
   <#if wan_link2_interface == "cellular1" || wan_link2_interface == "cellular2">
     <#if far.wan2SecondSimEnabledDLTE == "true">
+    <#assign placeholder = far.wan2SecondAPNUsernameDLTE!"">
+    <#assign placeholder = far.wan2SecondAPNPasswordDLTE!"">
+    <#assign placeholder = far.wan2SecondSIMPinDLTE!"">
       <#if wan_link2_interface == "cellular1">
         <#assign cell1_sim1_installed = "true">
         <#assign cell1_sim1_apn = far.wan2SecondAPNDLTE!"">
         <#assign cell1_sim1_jitter = far.wan2JitterDLTE!"30">
         <#assign cell1_sim1_rtt = far.wan2RTTDLTE!"500">
-        <#assign cell1_sim1_time = far.wan2TimeDLTE!"900">
+        <#assign cell1_sim1_time = far.wan2TimeDLTE!"660">
       <#elseif wan_link2_interface == "cellular2">
         <#assign cell2_sim1_installed = "true">
         <#assign cell2_sim1_apn = far.wan2SecondAPNDLTE!"">
         <#assign cell2_sim1_jitter = far.wan2JitterDLTE!"30">
         <#assign cell2_sim1_rtt = far.wan2RTTDLTE!"500">
-        <#assign cell2_sim1_time = far.wan2TimeDLTE!"900">
+        <#assign cell2_sim1_time = far.wan2TimeDLTE!"660">
       </#if>
     </#if>
   </#if>
@@ -193,21 +216,27 @@
   <#elseif wan_link3_interface == "cellular2" && far.wan3APNDLTE?has_content && far.wan3APNDLTE != "null">
     <#assign APN2 = far.wan3APNDLTE>
   </#if>
+  <#assign placeholder = far.wan3APNUsernameDLTE!"">
+  <#assign placeholder = far.wan3APNPasswordDLTE!"">
+  <#assign placeholder = far.wan3SIMPinDLTE!"">
   <#-- Dual SIM Variables for WAN Uplink 3-->
   <#if wan_link3_interface == "cellular1" || wan_link3_interface == "cellular2">
     <#if far.wan3SecondSimEnabledDLTE == "true">
+    <#assign placeholder = far.wan3SecondAPNUsernameDLTE!"">
+    <#assign placeholder = far.wan3SecondAPNPasswordDLTE!"">
+    <#assign placeholder = far.wan3SecondSIMPinDLTE!"">
       <#if wan_link2_interface == "cellular1">
         <#assign cell1_sim1_installed = "true">
         <#assign cell1_sim1_apn = far.wan3SecondAPNDLTE!"">
         <#assign cell1_sim1_jitter = far.wan3JitterDLTE!"30">
         <#assign cell1_sim1_rtt = far.wan3RTTDLTE!"500">
-        <#assign cell1_sim1_time = far.wan3TimeDLTE!"900">
+        <#assign cell1_sim1_time = far.wan3TimeDLTE!"660">
       <#elseif wan_link3_interface == "cellular2">
         <#assign cell2_sim1_installed = "true">
         <#assign cell2_sim1_apn = far.wan3SecondAPNDLTE!"">
         <#assign cell2_sim1_jitter = far.wan3JitterDLTE!"30">
         <#assign cell2_sim1_rtt = far.wan3RTTDLTE!"500">
-        <#assign cell2_sim1_time = far.wan3TimeDLTE!"900">
+        <#assign cell2_sim1_time = far.wan3TimeDLTE!"660">
       </#if>
     </#if>
   </#if>
@@ -459,8 +488,11 @@ no platform punt-keepalive disable-kernel-core
 
 clock timezone ${clockTZ} ${offset}
 ntp server ip ${ntpIP}
-! allow GW to act as ntp server to subtended
 ntp master 10
+<#if ntpIP2?has_content>
+  ntp server ip ${ntpIP2}
+</#if>
+!
 <#-- Adding DNS server through EEM since IOS has limitation of 6 DNS Servers-->
 event manager applet addDNS
   event timer watchdog time 500
@@ -660,7 +692,7 @@ class-map type inspect match-any bypass-cm
       <#-- This will enable the client route track via EEM, since config causes Registration failure-->
       <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
       event manager applet client_route_track_${eventAppName}
-        event timer watchdog time 60
+        event timer watchdog time 120
         action 1 cli command "en"
         action 2 cli command "show cgna profile name cg-nms-register | i disabled"
         action 3 string match "*Profile disabled*" "$_cli_result"
@@ -1292,59 +1324,123 @@ event manager applet ssh_crypto_key authorization bypass
   action 5.2 cli command "config t"
   action 5.3 cli command "no event manager applet ssh_crypto_key"
 
-<#-- Set APN -->
 
+<#-- Set APN, Pin, Username, and Password -->
 
-<#if isFirstCell == "true" && APN1?has_content>
-  <#-- if fist cell is enabled and there is an APN set -->
-  <#-- get the current APN set for first cell interface -->
-  event manager applet change_apn_cell1
-  event timer countdown time 120
-  action 005 set _match1 ""
-  action 010 syslog msg "Verifying APN Profile"
-  action 020 cli command "enable"
-  action 030 cli command "show ${cell_if1} profile 1 | i Access Point Name"
-  action 040 regexp "^.* = ([A-Za-z0-9\.\-]+)" "$_cli_result" _match _match1
-  action 050 if $_regexp_result eq 1
-  action 060 syslog msg  "Current APN in ${cell_if1} is $_match1"
-  action 070 end
-  <#-- compare APN of first cell int with APN configured in IoT OD -->
-  action 080 if $_match1 eq "${APN1}"
-  <#-- already set, no change -->
-  action 090 syslog msg  "APN is already set to $_match1"
-  action 100 else
-  action 110 syslog msg  "changing APN to ${APN1}"
-  <#-- configure new APN, interface will be down 10-20 seconds -->
-  action 120 cli command "${cell_if1} lte profile create 1 ${APN1}" pattern "confirm"
-  action 130 cli command "y"
-  action 140 end
-</#if>
-!
-<#if isSecondCell == "true" && APN2?has_content>
-  <#-- if second cell is enabled and there is an APN set -->
-  <#-- get the current APN set for second cell interface -->
-  event manager applet change_apn_cell2
-  event timer countdown time 120
-  action 005 set _match1 ""
-  action 010 syslog msg "Verifying APN Profile"
-  action 020 cli command "enable"
-  action 030 cli command "show ${cell_if2} profile 1 | i Access Point Name"
-  action 040 regexp "^.* = ([A-Za-z0-9\.\-]+)" "$_cli_result" _match _match1
-  action 050 if $_regexp_result eq 1
-  action 060 syslog msg  "Current APN in ${cell_if2} is $_match1"
-  action 070 end
-  <#-- compare APN of first cell int with APN configured in IoT OD -->
-  action 080 if $_match1 eq "${APN2}"
-  <#-- already set, no change -->
-  action 090 syslog msg  "APN is already set to $_match1"
-  action 100 else
-  action 110 syslog msg  "changing APN to ${APN2}"
-  <#-- configure new APN, interface will be down 10-20 seconds -->
-  action 120 cli command "${cell_if2} lte profile create 1 ${APN2}" pattern "confirm"
-  action 130 cli command "y"
-  action 140 end
+<#assign wan_uplinks = { "Uplink1" : {
+                                      "type" : wan_link1_interface!"",
+                                      "second_sim" : far.wan1SecondSimEnabledDLTE!"false",
+                                      "sim0_apn" : far.wan1APNDLTE!"",
+                                      "sim0_pin" : far.wan1SIMPinDLTE!"",
+                                      "sim0_username" : far.wan1APNUsernameDLTE!"",
+                                      "sim0_password" : far.wan1APNPasswordDLTE!"",
+                                      "sim1_apn" : far.wan1SecondAPNDLTE!"",
+                                      "sim1_pin" : far.wan1SecondSIMPinDLTE!"",
+                                      "sim1_username" : far.wan1SecondAPNUsernameDLTE!"",
+                                      "sim1_password" : far.wan1SecondAPNPasswordDLTE!""
+                                    },
+                         "Uplink2" : {
+                                       "type" : wan_link2_interface!"",
+                                       "second_sim" : far.wan2SecondSimEnabledDLTE!"false",
+                                       "sim0_apn" : far.wan2APNDLTE!"",
+                                       "sim0_pin" : far.wan2SIMPinDLTE!"",
+                                       "sim0_username" : far.wan2APNUsernameDLTE!"",
+                                       "sim0_password" : far.wan2APNPasswordDLTE!"",
+                                       "sim1_apn" : far.wan2SecondAPNDLTE!"",
+                                       "sim1_pin" : far.wan2SecondSIMPinDLTE!"",
+                                       "sim1_username" : far.wan2SecondAPNUsernameDLTE!"",
+                                       "sim1_password" : far.wan2SecondAPNPasswordDLTE!""
+                                     },
+                         "Uplink3" : {
+                                       "type" : wan_link3_interface!"",
+                                       "second_sim" : far.wan3SecondSimEnabledDLTE!"false",
+                                       "sim0_apn" : far.wan3APNDLTE!"",
+                                       "sim0_pin" : far.wan3SIMPinDLTE!"",
+                                       "sim0_username" : far.wan3APNUsernameDLTE!"",
+                                       "sim0_password" : far.wan3APNPasswordDLTE!"",
+                                       "sim1_apn" : far.wan3SecondAPNDLTE!"",
+                                       "sim1_pin" : far.wan3SecondSIMPinDLTE!"",
+                                       "sim1_username" : far.wan3SecondAPNUsernameDLTE!"",
+                                       "sim1_password" : far.wan3SecondAPNPasswordDLTE!""
+                                     }
+                                    }>
+<#-- Figure out if SIM PIN or APN is used -->
+<#if wan_uplinks["Uplink1"]["sim0_apn"]?has_content || wan_uplinks["Uplink2"]["sim0_apn"]?has_content || wan_uplinks["Uplink3"]["sim0_apn"]?has_content || wan_uplinks["Uplink1"]["sim1_apn"]?has_content || wan_uplinks["Uplink2"]["sim1_apn"]?has_content || wan_uplinks["Uplink3"]["sim1_apn"]?has_content || wan_uplinks["Uplink1"]["sim0_pin"]?has_content || wan_uplinks["Uplink2"]["sim0_pin"]?has_content || wan_uplinks["Uplink3"]["sim0_pin"]?has_content || wan_uplinks["Uplink1"]["sim1_pin"]?has_content || wan_uplinks["Uplink2"]["sim1_pin"]?has_content || wan_uplinks["Uplink3"]["sim1_pin"]?has_content>
+  <#assign using_cell_features = true>
+<#else>
+  <#assign using_cell_features = false>
 </#if>
 
+
+<#if using_cell_features == true>
+  <#assign x = 1>
+  <#assign y = 60>
+  <#assign sim0_apn_text = "">
+  <#assign sim1_apn_text = "">
+  <#assign sim0_pin_text = "">
+  <#assign sim1_pin_text = "">
+  <#assign cell_prefix = "">
+
+  event manager applet Configure_APN_PIN
+  event timer countdown time 240
+  action 0.1 cli command "enable"
+  action 0.2 cli command "conf t"
+  <#list wan_uplinks as uplinks,values>
+    <#if values["type"] = "cellular1" || values["type"] = "cellular2">
+      <#-- Section to set the suffix of APN with username and password -->
+      <#if values["sim0_username"]?has_content && values["sim0_password"]?has_content>
+        <#assign sim0_apn_text = "authentication pap_chap username " + values["sim0_username"] + " password " + values["sim0_password"]>
+      </#if>
+      <#if values["sim1_username"]?has_content && values["sim1_password"]?has_content>
+        <#assign sim1_apn_text = "authentication pap_chap username " + values["sim1_username"] + " password " + values["sim1_password"]>
+      </#if>
+      <#-- Setting the proper controller interface -->
+      <#if values["type"] = "cellular1">
+        action ${x}.2 cli command "controller ${cell_if1}"
+        <#assign cell_prefix = cell_if1>
+      <#elseif values["type"] = "cellular2">
+        action ${x}.3 cli command "controller ${cell_if2}"
+        <#assign cell_prefix = cell_if2>
+      </#if>
+      <#-- Section to set the suffix of the SIM PIN-->
+      <#if values["sim0_pin"]?has_content>
+        <#assign sim0_pin_text = cell_prefix + " lte sim unlock " + values["sim0_pin"]>
+        action ${y}.1 cli command "${sim0_pin_text}" pattern "confirm|#"
+        action ${y}.2   regexp "confirm" "$_cli_result"
+        action ${y}.3   if $_regexp_result eq "1"
+        action ${y}.4     cli command "y"
+        action ${y}.5   end
+        action 50 cli command "exit"
+      </#if>
+      <#if values["sim1_pin"]?has_content && values["second_sim"] == "true">
+        <#assign sim1_pin_text = cell_prefix + " lte sim unlock " + values["sim1_pin"]>
+        action ${y}.2 cli command "${sim1_pin_text}" pattern "confirm|#"
+        action ${y}.2   regexp "confirm" "$_cli_result"
+        action ${y}.3   if $_regexp_result eq "1"
+        action ${y}.4     cli command "y"
+        action ${y}.5   end
+        action 50 cli command "exit"
+      </#if>
+      <#if values["sim0_apn"]?has_content>
+        action ${x}.4 cli command "profile id 1 apn ${values["sim0_apn"]} ${sim0_apn_text}"
+      </#if>
+      <#if values["second_sim"] == "true" && values["sim1_apn"]?has_content>
+        action ${x}.5 cli command "profile id 2 apn ${values["sim1_apn"]} ${sim1_apn_text}"
+        action ${x}.6 cli command "lte sim data-profile 2 attach-profile 2 slot 1"
+        action ${x}.7 cli command "lte sim primary slot 0"
+        action ${x}.8 cli command "lte firmware auto-sim"
+      </#if>
+        action ${x}.9 cli command "exit"
+        action 50 cli command "exit"
+    </#if>
+    <#-- Clearing and Incrementing relevant values for next interface -->
+    <#assign x = x + 1>
+    <#assign y = y + 1>
+    <#assign sim0_apn_text = "">
+    <#assign sim1_apn_text = "">
+    <#assign cell_prefix = "">
+  </#list>
+</#if>
 
 <#-- Dual SIM Config -->
 <#assign dlte_interfaces = []>
@@ -1358,34 +1454,6 @@ event manager applet ssh_crypto_key authorization bypass
 <#assign dlte_rtt = [cell1_sim1_rtt, cell2_sim1_rtt]>
 <#assign dlte_time = [cell1_sim1_time, cell2_sim1_time]>
 
-<#-- Configure APN for second SIM card on modem -->
-<#if cell1_sim1_installed == "true" || cell2_sim1_installed == "true">
-  <#if cell1_sim1_apn?has_content || cell2_sim1_apn?has_content>
-    event manager applet change_apns_dlte
-      event timer countdown time 400
-      action 0.1 syslog msg "Changing APN's for Dual LTE"
-      action 0.2 cli command "enable"
-      action 0.3 cli command "conf t"
-      <#if cell1_sim1_installed == "true" && cell1_sim1_apn?has_content>
-         action 1.0 cli command "controller ${cell_if1}"
-         action 1.1 cli command "lte sim data-profile 2 attach-profile 2 slot 1"
-         action 1.2 cli command "profile id 2 apn ${cell1_sim1_apn}"
-         action 1.3 cli command "lte sim primary slot 0"
-         action 1.4 cli command "lte firmware auto-sim"
-         action 1.5 cli command "exit"
-      </#if>
-      <#if cell2_sim1_installed == "true" && cell2_sim1_apn?has_content>
-         action 2.0 cli command "controller ${cell_if2}"
-         action 2.1 cli command "lte sim data-profile 2 attach-profile 2 slot 1"
-         action 2.2 cli command "profile id 2 apn ${cell2_sim1_apn}"
-         action 2.3 cli command "lte sim primary slot 0"
-         action 2.4 cli command "lte firmware auto-sim"
-         action 2.5 cli command "exit"
-      </#if>
-      action 3.0 cli command "no event manager applet change_apns_dlte"
-  </#if>
-</#if>
-
 
 
 <#assign dlte_ips = ["1.0.0.1","9.9.9.9"]>
@@ -1393,94 +1461,156 @@ event manager applet ssh_crypto_key authorization bypass
 
 <#list 0 .. (dlte_interfaces?size - 1) as x>
   <#if dlte_int_enable[x] == "true">
-    ip route ${dlte_ips[x]} 255.255.255.255 ${dlte_interfaces[x]}
-    ip route ${dlte_ips[x]} 255.255.255.255 Null0 3
+    track ${x+80} interface ${dlte_interfaces[x]} line-protocol
+    ip route ${dlte_ips[x]} 255.255.255.255 ${dlte_interfaces[x]} track ${x+80}
+    ip route ${dlte_ips[x]} 255.255.255.255 Null0 3 
     controller ${dlte_interfaces[x]}
       lte modem link-recovery disable
     ip sla ${x+20}
       path-jitter ${dlte_ips[x]} interval 15 num-packets 15 targetOnly
-        owner admin
+        owner IoTOD
         timeout 2000
         threshold 1000
-        frequency 180
+        frequency 120
     ip sla schedule ${x+20} life forever start-time now
     track ${x+20} ip sla ${x+20} reachability
     event manager environment LTE_RTT_THRESH_${x} ${dlte_rtt[x]}
     event manager environment LTE_RTT_VIOLATIONS_${x} 0
     event manager environment LTE_JITTER_THRESH_${x} ${dlte_jitter[x]}
     event manager environment LTE_JITTER_VIOLATIONS_${x} 0
+    event manager environment LTE_SLA_VIOLATIONS_${x} 0
+    event manager environment LTE_SIM_FAILOVER_COUNT_${x} 0
+    event manager environment LTE_PRIMARY_PREEMPT_TIME_${x} 0
+    event manager environment LTE_SECONDARY_ACTIVE_TIME_${x} 0
+    !
+    no event manager applet LTE_SLA_MEASURE_${x}
     event manager applet LTE_SLA_MEASURE_${x}
-      event timer watchdog time 180 maxrun 99
-      action 1.0 cli command "enable"
-      action 1.2 cli command "sh ip sla stat ${x+20} | i RTT Min"
-      action 1.4 regexp "([0-9]+\/[0-9]+ ms)" "$_cli_result" RTT3
-      action 1.6 regexp "([0-9]+\/)" "$RTT3" RTT2
-      action 1.8 string trimright "$RTT2" "\/"
-      action 2.0 set RTT "$_string_result"
-      action 2.2 if $RTT gt "$LTE_RTT_THRESH_${x}"
-      action 2.4   counter name "RTT_violations_${x}" op inc value 1
-      action 2.6   cli command "config t"
-      action 2.8   cli command "event manager environment LTE_RTT_VIOLATIONS_${x} $_counter_value_remain"
-      action 3.0   cli command "end"
-      action 3.2 end
-      action 3.4 cli command "sh ip sla stat ${x+20} | i Jitter Min"
-      action 3.6 regexp "([0-9]+\/[0-9]+ ms)" "$_cli_result" Jitter3
-      action 3.8 regexp "([0-9]+\/)" "$Jitter3" Jitter2
-      action 4.0 string trimright "$Jitter2" "\/"
-      action 4.2 set Jitter "$_string_result"
-      action 4.4 if $Jitter gt "$LTE_JITTER_THRESH_${x}"
-      action 4.6   counter name "Jitter_violations" op inc value 1
-      action 4.8   cli command "config t"
-      action 5.0   cli command "event manager environment LTE_JITTER_VIOLATIONS_${x} $_counter_value_remain"
-      action 5.2   cli command "end"
-      action 5.4 end
+      event timer watchdog time 120 maxrun 99
+      action 1.10 cli command "enable"    
+      action 1.12 track read ${x+20}
+      action 1.14 if $_track_state eq "down"    
+      action 1.16  cli command "config t"
+      action 1.18  counter name "SLA_violations_${x}" op inc value 1
+      action 1.20  cli command "event manager environment LTE_SLA_VIOLATIONS_${x} $_counter_value_remain"
+      action 1.22  cli command "end"
+      action 1.24  syslog msg "SLA violation ocurred. Current total violations: $LTE_SLA_VIOLATIONS_${x}"
+      action 1.26 end
+      action 1.28 cli command "sh ip sla stat ${x+20} | i RTT Min"
+      action 1.30 regexp "([0-9]+\/[0-9]+ ms)" "$_cli_result" RTT3
+      action 1.32 regexp "([0-9]+\/)" "$RTT3" RTT2
+      action 1.34 string trimright "$RTT2" "\/"
+      action 1.36 set RTT "$_string_result"
+      action 1.38 if $RTT gt "$LTE_RTT_THRESH_${x}" 
+      action 1.40  cli command "config t"
+      action 1.42  counter name "RTT_violations_${x}" op inc value 1
+      action 1.44  cli command "event manager environment LTE_RTT_VIOLATIONS_${x} $_counter_value_remain"
+      action 1.46  cli command "end"
+      action 1.48  syslog msg "RTT violation ocurred. Current total violations: $LTE_RTT_VIOLATIONS_${x}"
+      action 1.50 end
+      action 1.52 cli command "sh ip sla stat ${x+20} | i Jitter Min"
+      action 2.10 regexp "([0-9]+\/[0-9]+ ms)" "$_cli_result" Jitter3
+      action 2.12 regexp "([0-9]+\/)" "$Jitter3" Jitter2
+      action 2.14 string trimright "$Jitter2" "\/"
+      action 2.16 set Jitter "$_string_result"
+      action 2.18 if $Jitter gt "$LTE_JITTER_THRESH_${x}" 
+      action 2.20  cli command "config t"
+      action 2.22  counter name "Jitter_violations_${x}" op inc value 1
+      action 2.24  cli command "event manager environment LTE_JITTER_VIOLATIONS_${x} $_counter_value_remain"
+      action 2.26  cli command "end"
+      action 2.28  syslog msg "Jitter violation ocurred. Current total violations: $LTE_JITTER_VIOLATIONS_${x}"
+      action 2.30 end 
+      action 2.32 if $LTE_PRIMARY_PREEMPT_TIME_${x} ne "0"
+      action 2.34  cli command "sh controller ${dlte_interfaces[x]} | i active SIM"
+      action 2.36  string index "$_cli_result" 4
+      action 2.38  if $_string_result eq "1"
+      action 2.40   increment LTE_SECONDARY_ACTIVE_TIME_${x}
+      action 2.42   increment LTE_SECONDARY_ACTIVE_TIME_${x}
+      action 2.44   cli command "enable"
+      action 2.46   cli command "config t"
+      action 2.48   cli command "event manager environment LTE_SECONDARY_ACTIVE_TIME_${x} $LTE_SECONDARY_ACTIVE_TIME_${x}"
+      action 2.50   cli command "end"
+      action 3.10   if $LTE_SECONDARY_ACTIVE_TIME_${x} ge "$LTE_PRIMARY_PREEMPT_TIME_${x}"
+      action 3.12    syslog msg "SIM failover. Activating SIM in slot 0 due to primary SIM preemption timer expiry"
+      action 3.14    counter name "SLA_violations_${x}" op set value 0
+      action 3.16    counter name "RTT_violations_${x}" op set value 0
+      action 3.18    counter name "Jitter_violations_${x}" op set value 0
+      action 3.20    cli command "config t"
+      action 3.22    increment LTE_SIM_FAILOVER_COUNT_${x}
+      action 3.24    cli command "event manager environment LTE_SIM_FAILOVER_COUNT_${x} $LTE_SIM_FAILOVER_COUNT_${x}"
+      action 3.26    cli command "event manager environment LTE_SECONDARY_ACTIVE_TIME_${x} 0"
+      action 3.28    cli command "event manager environment LTE_SLA_VIOLATIONS_${x} 0"
+      action 3.30    cli command "event manager environment LTE_RTT_VIOLATIONS_${x} 0"
+      action 3.32    cli command "event manager environment LTE_JITTER_VIOLATIONS_${x} 0"
+      action 3.34    cli command "end"
+      action 3.36    cli command "clear interface ${dlte_interfaces[x]}"
+      action 3.38    cli command "${dlte_interfaces[x]} lte sim activate slot 0" 
+      action 3.40    cli command "clear ip route *"
+      action 3.42   end
+      action 3.44  end
+      action 3.46 end
     !
     !
+    no event manager applet LTE_SWITCH_SIM_${x}
     event manager applet LTE_SWITCH_SIM_${x}
       event tag 1 timer watchdog time ${dlte_time[x]?number*60} maxrun 99
-      event tag 2 track ${x+20} state down
-      event tag 3 counter name RTT_violations_${x} entry-val 3 entry-op eq exit-val 0 exit-op eq
-      event tag 4 counter name Jitter_violations_${x} entry-val 3 entry-op eq exit-val 0 exit-op eq
+      event tag 2 counter name SLA_violations_${x} entry-val 3 entry-op eq exit-val 0 exit-op eq
+      event tag 3 counter name RTT_violations_${x} entry-val 4 entry-op eq exit-val 0 exit-op eq
+      event tag 4 counter name Jitter_violations_${x} entry-val 4 entry-op eq exit-val 0 exit-op eq
       trigger
         correlate event 1 or event 2 or event 3 or event 4
-      action 1.0 cli command "enable"
-      action 1.2 cli command "sh controller ${dlte_interfaces[x]} | i active SIM"
-      action 1.4 string index "$_cli_result" 4
-      action 1.6 if $_string_result eq "0"
-      action 1.8   set activate "1"
-      action 2.0 else
-      action 2.2   set activate "0"
-      action 2.4 end
-      action 2.6 track read ${x+20}
-      action 2.8 if $_track_state eq "down"
-      action 3.0   cli command "clear interface ${dlte_interfaces[x]}"
-      action 3.2   cli command "${dlte_interfaces[x]} lte sim activate slot $activate"
-      action 3.4   cli command "clear ip route *"
-      action 3.6   counter name "RTT_violations_${x}" op set value 0
-      action 3.8   counter name "Jitter_violations_${x}" op set value 0
-      action 4.0   syslog msg "SIM failover activating SIM in slot $activate due to track ${x+20} down"
-      action 4.2   exit
-      action 4.4 end
-      action 4.6 counter name "RTT_violations_${x}" op nop
-      action 4.8 if $_counter_value_remain eq "3"
-      action 4.9   cli command "clear interface ${dlte_interfaces[x]}"
-      action 5.0   cli command "${dlte_interfaces[x]} lte sim activate slot $activate"
-      action 5.2   cli command "clear ip route *"
-      action 5.4   counter name "RTT_violations_${x}" op set value 0
-      action 5.6   syslog msg "SIM failover activating SIM in slot $activate due to RTT violations"
-      action 5.8   exit
-      action 6.0 end
-      action 6.2 counter name "Jitter_violations_${x}" op nop
-      action 6.4 if $_counter_value_remain eq "3"
-      action 6.5   cli command "clear interface ${dlte_interfaces[x]}"
-      action 6.6   cli command "${dlte_interfaces[x]} lte sim activate slot $activate"
-      action 6.8   cli command "clear ip route *"
-      action 7.0   counter name "Jitter_violations_${x}" op set value 0
-      action 7.2   syslog msg "SIM failover activating SIM in slot $activate due to Jitter violations"
-      action 7.4   exit
-      action 7.6 end
-      action 7.8 counter name "RTT_violations_${x}" op set value 0
-      action 8.0 counter name "Jitter_violations_${x}" op set value 0
+      action 1.10 cli command "enable"
+      action 1.12 cli command "sh controller ${dlte_interfaces[x]} | i active SIM"
+      action 1.14 string index "$_cli_result" 4
+      action 1.16 if $_string_result eq "0"
+      action 1.18  set activate "1"
+      action 1.20 else 
+      action 1.22  set activate "0"
+      action 1.24 end
+      action 1.26 counter name "SLA_violations_${x}" op nop
+      action 1.28 if $_counter_value_remain eq "3" 
+      action 1.30  increment LTE_SIM_FAILOVER_COUNT_${x}
+      action 1.32  cli command "config t"
+      action 1.34  cli command "event manager environment LTE_SIM_FAILOVER_COUNT_${x} $LTE_SIM_FAILOVER_COUNT_${x}"
+      action 1.36  cli command "event manager environment LTE_SECONDARY_ACTIVE_TIME_${x} 0"
+      action 1.38  cli command "end"
+      action 1.40  cli command "clear interface ${dlte_interfaces[x]}"
+      action 1.42  cli command "${dlte_interfaces[x]} lte sim activate slot $activate" 
+      action 1.44  cli command "clear ip route *"
+      action 1.46  syslog msg "SIM failover. Activating SIM in slot $activate due to SLA down"
+      action 1.48 end
+      action 2.10 counter name "RTT_violations_${x}" op nop
+      action 2.12 if $_counter_value_remain eq "4"
+      action 2.14  increment LTE_SIM_FAILOVER_COUNT_${x} 
+      action 2.16  cli command "config t"
+      action 2.18  cli command "event manager environment LTE_SIM_FAILOVER_COUNT_${x} $LTE_SIM_FAILOVER_COUNT_${x}"
+      action 2.20  cli command "event manager environment LTE_SECONDARY_ACTIVE_TIME_${x} 0"
+      action 2.22  cli command "end"
+      action 2.24  cli command "clear interface ${dlte_interfaces[x]}"
+      action 2.26  cli command "${dlte_interfaces[x]} lte sim activate slot $activate" 
+      action 2.28  cli command "clear ip route *"
+      action 2.30  syslog msg "SIM failover. Activating SIM in slot $activate due to RTT violations"
+      action 2.32 end
+      action 3.10 counter name "Jitter_violations_${x}" op nop
+      action 3.12 if $_counter_value_remain eq "4"
+      action 3.14  increment LTE_SIM_FAILOVER_COUNT_${x}
+      action 3.16  cli command "config t"
+      action 3.18  cli command "event manager environment LTE_SIM_FAILOVER_COUNT_${x} $LTE_SIM_FAILOVER_COUNT_${x}"
+      action 3.20  cli command "event manager environment LTE_SECONDARY_ACTIVE_TIME_${x} 0"  
+      action 3.22  cli command "end"
+      action 3.24  cli command "clear interface ${dlte_interfaces[x]}"
+      action 3.26  cli command "${dlte_interfaces[x]} lte sim activate slot $activate" 
+      action 3.28  cli command "clear ip route *"
+      action 3.30  syslog msg "SIM failover. Activating SIM in slot $activate due to Jitter violations"
+      action 3.32 end
+      action 4.10 counter name "SLA_violations_${x}" op set value 0
+      action 4.12 counter name "RTT_violations_${x}" op set value 0
+      action 4.14 counter name "Jitter_violations_${x}" op set value 0
+      action 4.16 cli command "config t"
+      action 4.18 cli command "event manager environment LTE_SLA_VIOLATIONS_${x} 0"
+      action 4.20 cli command "event manager environment LTE_RTT_VIOLATIONS_${x} 0"
+      action 4.22 cli command "event manager environment LTE_JITTER_VIOLATIONS_${x} 0"
+      action 4.24 cli command "end"
+    !
   </#if>
 </#list>
 
