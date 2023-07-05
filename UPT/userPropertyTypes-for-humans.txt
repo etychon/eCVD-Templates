@@ -343,8 +343,6 @@ wifiPsk2                              no      no      yes
 isWifiHotspot                         no      no      yes     
 isWGB                                 no      no      yes     
 wifi2_wifi                            no      no      yes     
-wifi2_wifihotspot                     no      no      yes     
-wifi2_wgb                             no      no      yes     
 wifiOperationalMode                   no      no      yes     
 ignition                              no      no      yes     
 dnsIP                                 no      no      yes     
@@ -378,9 +376,8 @@ baseSerial1Parity                     yes     no      no
 baseSerial1Speed                      yes     no      no      
 baseSerial1Stop                       yes     no      no      
 baseSerial1Data                       yes     no      no      
-baseSerial1Media                      yes     no      no      
-baseSerial1Duplex                     yes     no      no      
 baseAsync1Encap                       yes     no      no      
+baseAsync1RelayMode                   yes     no      no      
 baseAsync1DestIP                      yes     no      no      
 baseAsync1DestPort                    yes     no      no      
 baseAsync1LocalIP                     yes     no      no      

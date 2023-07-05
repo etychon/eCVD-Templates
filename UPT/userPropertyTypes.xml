@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.39        -->
+<!-- Version 1.40        -->
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -1592,7 +1592,7 @@
           "type": "tooltip",
           "iconType": "information",
           "filled": false,
-          "text": "If an outage to IOTOD occurs and the router has no internet connectivity for the duration of this timer value, then a hardware reset will be performed.",
+          "text": "If an outage to IoT OD occurs and the router has no internet connectivity for the duration of this timer value, then a hardware reset will be performed.",
           "placement": "right-start"
         }
       ]
@@ -1726,7 +1726,7 @@
         { "key": "True", "value": true },
         { "key": "False", "value": false }]
       </seedValues>
-      <hiddenCondition>[{"field":"devicemanagement:devicemanagement_autorecovery:PnPResetTime","value":"false"},
+      <hiddenCondition>[{"field":"devicemanagement:devicemanagement_autorecovery:pnpResetTime","value":"false"},
         {"field":"devicemanagement:devicemanagement_autorecovery:isPnPReset","value":"false"},
         {"field":"devicemanagement:devicemanagement_autorecovery:isRouterReload","value":"false"},
         {"field":"devicemanagement:devicemanagement_autorecovery:primaryRecoverySLAIP","value":"false"},
@@ -2168,7 +2168,7 @@
 
     <propertyType>
       <name>dhcpIPAddress</name>
-      <displayName>DHCP IP Address for VLAN1</displayName>
+      <displayName>DHCP IP Address for Local VLAN</displayName>
       <description>LAN IPv4 Address</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>DHCP>Dynamic Host Configuration Protocol</section>
@@ -2182,7 +2182,7 @@
 
     <propertyType>
       <name>dhcpNetmask</name>
-      <displayName>VLAN1 IP Address for Netmask</displayName>
+      <displayName>Local VLAN Netmask</displayName>
       <description>LAN IPv4 Subnet mask</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>DHCP>Dynamic Host Configuration Protocol</section>
@@ -5704,7 +5704,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WiFi>Captive Portal</section>
       <required>0</required>
-      <defaultValue>Welcome to Cisco IOT WiFi!</defaultValue>
+      <defaultValue>Welcome to Cisco IoT OD Wi-Fi!</defaultValue>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -5749,7 +5749,7 @@
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'wgbSsid2' per device", "value": "${far.wgbSsid2}" }]</seedValues>
+      <seedValues>[{ "key": "Provide 'wgbSsid' per device", "value": "${far.wgbSsid2}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -5764,7 +5764,7 @@
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'wgbPsk2' per device", "value": "${far.wgbPsk2}" }]</seedValues>
+      <seedValues>[{ "key": "Provide 'wgbPsk' per device", "value": "${far.wgbPsk2}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -5774,11 +5774,11 @@
       </description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Wi-Fi#KEY#wifi2>Wi-Fi Hotspot</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <configScope>1</configScope>
-      <seedValues>[{ "key": "Provide 'wifiSsid2' per device", "value": "${far.wifiSsid2}" }]</seedValues>
+      <seedValues>[{ "key": "Provide 'wifiSsid' per device", "value": "${far.wifiSsid2}" }]</seedValues>
     </propertyType>
     <propertyType>
       <name>wifiPsk2</name>
@@ -5788,11 +5788,11 @@
       <issecure>1</issecure>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Wi-Fi#KEY#wifi2>Wi-Fi Hotspot</section>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>string</dataType>
       <configScope>1</configScope>
-      <seedValues>[{ "key": "Provide 'wifiPsk2' per device", "value": "${far.wifiPsk2}" }]</seedValues>
+      <seedValues>[{ "key": "Provide 'wifiPsk' per device", "value": "${far.wifiPsk2}" }]</seedValues>
     </propertyType>
 
     <propertyType>
@@ -5803,7 +5803,7 @@
       <section>Wi-Fi#KEY#wifi2>Wi-Fi</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <required>0</required>
-      <defaultValue>false</defaultValue>
+      <defaultValue>true</defaultValue>
       <validationType>non-empty</validationType>
       <dataType>boolean</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -5859,70 +5859,11 @@
       <info>
         [
         {
-        "type": "tooltip",
-        "iconType": "information",
-        "filled": false,
-        "text": "[TOOLTIP PLACEHOLDER]Dummy content for tooltip for Wi-Fi Section for ir800",
-        "placement": "right-start"
-        },
-        {
         "type": "banner",
         "iconType": "information",
         "filled": true,
         "flavor": null,
-        "text": "[BANNER PLACEHOLDER]Dummy content for banner for Wi-Fi Section for ir800",
-        "border": true,
-        "closeButton": true,
-        "placement": null
-        }
-        ]
-      </info>
-    </propertyType>
-
-    <propertyType>
-      <name>wifi2_wifihotspot</name>
-      <propertyKind>1</propertyKind>
-      <info>
-        [
-        {
-        "type": "tooltip",
-        "iconType": "information",
-        "filled": false,
-        "text": "[TOOLTIP PLACEHOLDER]Dummy content for tooltip for Wi-Fi Hotspot Section for ir800",
-        "placement": "right-start"
-        },
-        {
-        "type": "banner",
-        "iconType": "information",
-        "filled": true,
-        "flavor": null,
-        "text": "[BANNER PLACEHOLDER]Dummy content for banner for Wi-Fi Hotspot Section for ir800",
-        "border": true,
-        "closeButton": true,
-        "placement": null
-        }
-        ]
-      </info>
-    </propertyType>
-
-    <propertyType>
-      <name>wifi2_wgb</name>
-      <propertyKind>1</propertyKind>
-      <info>
-        [
-        {
-        "type": "tooltip",
-        "iconType": "information",
-        "filled": false,
-        "text": "[TOOLTIP PLACEHOLDER]Dummy content for tooltip for WGB Section for ir800",
-        "placement": "right-start"
-        },
-        {
-        "type": "banner",
-        "iconType": "information",
-        "filled": true,
-        "flavor": null,
-        "text": "[BANNER PLACEHOLDER]Dummy content for banner for WGB Section for ir800",
+        "text": "Wi-Fi Configuration is mandatory for IR829 devices with embedded access points to be successfully onboarded on IoT OD. To update the Wi-Fi Configuration, ensure to remove devices from group, make the changes and re-onboard them.",
         "border": true,
         "closeButton": true,
         "placement": null
@@ -7825,7 +7766,9 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_base:baseAsync1LocalIP","value":"false"},
-      {"field":"serial:serial_base:baseAsync1LocalPort","value":"false"},
+      {"field":"serial:serial_base:baseAsync1TCPTimeout","value":"false"},
+      {"field":"serial:serial_base:baseAsync1PacketTimer","value":"false"},
+      {"field":"serial:serial_base:baseAsync1PacketLength","value":"false"},
       {"field":"serial:serial_base:baseAsync1PacketMax","value":"false"},
       {"field":"serial:serial_base:baseAsync1SpecialCharacter","value":"false"}]
       </hiddenCondition>
@@ -7911,43 +7854,6 @@
       </seedValues>
     </propertyType>
 
-    <propertyType>
-      <name>baseSerial1Media</name>
-      <displayName>Media Type</displayName>
-      <description>Base Serial 1 Media Type</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Serial>Base</section>
-      <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>rs232</defaultValue>
-      <required>0</required>
-      <validationType>non-empty</validationType>
-      <dataType>array</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'baseSerial1Media' per device", "value": "${far.baseSerial1Media}" },
-        { "key": "RS232", "value":"rs232" },
-        { "key": "RS485", "value":"rs485" }]
-      </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_base:baseSerial1Duplex","value":"rs232"}]</hiddenCondition>
-    </propertyType>
-
-    <propertyType>
-      <name>baseSerial1Duplex</name>
-      <displayName>Duplex</displayName>
-      <description>Base Serial 1 Duplex</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Serial>Base</section>
-      <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>half-duplex</defaultValue>
-      <required>0</required>
-      <validationType>non-empty</validationType>
-      <dataType>array</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'baseSerial1Duplex' per device", "value": "${far.baseSerial1Duplex}" },
-        { "key": "Full Duplex", "value":"full-duplex" },
-        { "key": "Half Duplex", "value":"half-duplex" }]
-      </seedValues>
-    </propertyType>
-
     <!-- Base Slot Serial Interface Async Variables -->
 
     <propertyType>
@@ -7966,6 +7872,38 @@
         { "key": "Raw Socket Connection (TCP)", "value":"raw-tcp" },
         { "key": "Raw Socket Connection (UDP)", "value":"raw-udp" },
         { "key": "Relay-Line", "value":"relay-line" }]
+      </seedValues>
+      <hiddenCondition>[{"field":"serial:serial_base:baseAsync1RelayMode","value":"raw-tcp"},
+        {"field":"serial:serial_base:baseAsync1RelayMode","value":"raw-udp"},
+        {"field":"serial:serial_base:baseAsync1TCPTimeout","value":"raw-udp"},
+        {"field":"serial:serial_base:baseAsync1DestIP","value":"relay-line"},
+        {"field":"serial:serial_base:baseAsync1DestPort","value":"relay-line"},
+        {"field":"serial:serial_base:baseAsync1TCPTimeout","value":"relay-line"},
+        {"field":"serial:serial_base:baseAsync1PacketTimer","value":"relay-line"},
+        {"field":"serial:serial_base:baseAsync1PacketLength","value":"relay-line"},
+        {"field":"serial:serial_base:baseSerialAdvancedSettings","value":"relay-line"},
+        {"field":"serial:serial_base:baseAsync1LocalIP","value":"relay-line"},
+        {"field":"serial:serial_base:baseAsync1LocalPort","value":"relay-line"},
+        {"field":"serial:serial_base:baseAsync1PacketMax","value":"relay-line"},
+        {"field":"serial:serial_base:baseAsync1SpecialCharacter","value":"relay-line"}]
+      </hiddenCondition>
+    </propertyType>
+
+    <propertyType>
+      <name>baseAsync1RelayMode</name>
+      <displayName>Relay Mode</displayName>
+      <description>Select the relay mode</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Serial>Base</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <defaultValue>iox</defaultValue>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'baseAsync1RelayMode' per device", "value": "${far.baseAsync1RelayMode}" },
+        { "key": "IOx", "value":"iox" },
+        { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
     </propertyType>
 
@@ -8020,7 +7958,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Base</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
+      <required>1</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>1</minLength>
@@ -8037,7 +7975,7 @@
       <section>Serial>Base</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>5</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -8068,7 +8006,7 @@
       <section>Serial>Base</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>15</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>3</minLength>
@@ -8115,7 +8053,7 @@
       <section>Serial>Base</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>10</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>10</minLength>
@@ -8149,6 +8087,7 @@
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModSerial1Stop","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModSerial1Data","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1Encap","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModuleSerial1RelayMode","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1DestIP","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1DestPort","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1TCPTimeout","value":"false"},
@@ -8183,12 +8122,11 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1LocalIP","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1LocalPort","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1TCPTimeout","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketTimer","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketLength","value":"false"},
       {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketMax","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1SpecialCharacter","value":"false"},
-      {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
-      {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1SpecialCharacter","value":"false"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8291,16 +8229,19 @@
         { "key": "Raw Socket Connection (UDP)", "value":"raw-udp" },
         { "key": "Relay-Line", "value":"relay-line" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial1:topExpModSerial1Parity","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial1:topExpModSerial1Speed","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial1:topExpModSerial1Stop","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial1:topExpModSerial1Data","value":"relay-line"},
+      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial1:topExpModuleSerial1RelayMode","value":"raw-tcp"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModuleSerial1RelayMode","value":"raw-udp"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1TCPTimeout","value":"raw-udp"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1DestIP","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1DestPort","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1TCPTimeout","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketTimer","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial1:topExpModuleSerial1Media","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketLength","value":"relay-line"}]
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketLength","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModSerial1AdvancedSettings","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1LocalIP","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1LocalPort","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketMax","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1SpecialCharacter","value":"relay-line"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8311,7 +8252,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Top Expansion Module Serial 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>IOx</defaultValue>
+      <defaultValue>iox</defaultValue>
       <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
@@ -8410,7 +8351,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Top Expansion Module Serial 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
+      <required>1</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>1</minLength>
@@ -8427,7 +8368,7 @@
       <section>Serial>Top Expansion Module Serial 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>5</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -8458,7 +8399,7 @@
       <section>Serial>Top Expansion Module Serial 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>15</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>3</minLength>
@@ -8505,7 +8446,7 @@
       <section>Serial>Top Expansion Module Serial 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>10</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>10</minLength>
@@ -8537,6 +8478,7 @@
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModSerial2Stop","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModSerial2Data","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2Encap","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModuleSerial2RelayMode","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2DestIP","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2DestPort","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2TCPTimeout","value":"false"},
@@ -8571,12 +8513,11 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2LocalIP","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2LocalPort","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2TCPTimeout","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketTimer","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketLength","value":"false"},
       {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketMax","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2SpecialCharacter","value":"false"},
-      {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
-      {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2SpecialCharacter","value":"false"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8681,16 +8622,19 @@
         { "key": "Raw Socket Connection (UDP)", "value":"raw-udp" },
         { "key": "Relay-Line", "value":"relay-line" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial2:topExpModSerial2Parity","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial2:topExpModSerial2Speed","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial2:topExpModSerial2Stop","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial2:topExpModSerial2Data","value":"relay-line"},
+      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial2:topExpModuleSerial2RelayMode","value":"raw-tcp"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModuleSerial2RelayMode","value":"raw-udp"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2TCPTimeout","value":"raw-udp"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2DestIP","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2DestPort","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2TCPTimeout","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketTimer","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketLength","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial2:topExpModuleSerial2Media","value":"relay-line"}]
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModSerial2AdvancedSettings","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2LocalIP","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2LocalPort","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketMax","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2SpecialCharacter","value":"relay-line"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8701,7 +8645,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Top Expansion Module Serial 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>IOx</defaultValue>
+      <defaultValue>iox</defaultValue>
       <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
@@ -8800,7 +8744,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Top Expansion Module Serial 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
+      <required>1</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>1</minLength>
@@ -8817,7 +8761,7 @@
       <section>Serial>Top Expansion Module Serial 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>5</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -8848,7 +8792,7 @@
       <section>Serial>Top Expansion Module Serial 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>15</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>3</minLength>
@@ -8895,7 +8839,7 @@
       <section>Serial>Top Expansion Module Serial 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>10</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>10</minLength>
@@ -8928,6 +8872,7 @@
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModSerial3Stop","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModSerial3Data","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3Encap","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModuleSerial3RelayMode","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3DestIP","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3DestPort","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3TCPTimeout","value":"false"},
@@ -8962,12 +8907,11 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3LocalIP","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3LocalPort","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3TCPTimeout","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketTimer","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketLength","value":"false"},
       {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketMax","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3SpecialCharacter","value":"false"},
-      {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
-      {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3SpecialCharacter","value":"false"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9070,16 +9014,19 @@
         { "key": "Raw Socket Connection (UDP)", "value":"raw-udp" },
         { "key": "Relay-Line", "value":"relay-line" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial3:topExpModSerial3Parity","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial3:topExpModSerial3Speed","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial3:topExpModSerial3Stop","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial3:topExpModSerial3Data","value":"relay-line"},
+      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial3:topExpModuleSerial3RelayMode","value":"raw-tcp"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModuleSerial3RelayMode","value":"raw-udp"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3TCPTimeout","value":"raw-udp"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3DestIP","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3DestPort","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3TCPTimeout","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketTimer","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketLength","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial3:topExpModuleSerial3Media","value":"relay-line"}]
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModSerial3AdvancedSettings","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3LocalIP","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3LocalPort","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketMax","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3SpecialCharacter","value":"relay-line"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9090,7 +9037,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Top Expansion Module Serial 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>IOx</defaultValue>
+      <defaultValue>iox</defaultValue>
       <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
@@ -9189,7 +9136,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Top Expansion Module Serial 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
+      <required>1</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>1</minLength>
@@ -9206,7 +9153,7 @@
       <section>Serial>Top Expansion Module Serial 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>5</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -9237,7 +9184,7 @@
       <section>Serial>Top Expansion Module Serial 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>15</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>3</minLength>
@@ -9284,7 +9231,7 @@
       <section>Serial>Top Expansion Module Serial 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>10</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>10</minLength>
@@ -9318,6 +9265,7 @@
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModSerial4Stop","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModSerial4Data","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4Encap","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModuleSerial4RelayMode","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4DestIP","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4DestPort","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4TCPTimeout","value":"false"},
@@ -9352,12 +9300,11 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4LocalIP","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4LocalPort","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4TCPTimeout","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketTimer","value":"false"},
+      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketLength","value":"false"},
       {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketMax","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4SpecialCharacter","value":"false"},
-      {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
-      {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4SpecialCharacter","value":"false"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9460,16 +9407,19 @@
         { "key": "Raw Socket Connection (UDP)", "value":"raw-udp" },
         { "key": "Relay-Line", "value":"relay-line" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial4:topExpModSerial4Parity","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial4:topExpModSerial4Speed","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial4:topExpModSerial4Stop","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial4:topExpModSerial4Data","value":"relay-line"},
+      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial4:topExpModuleSerial4RelayMode","value":"raw-tcp"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModuleSerial4RelayMode","value":"raw-udp"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4TCPTimeout","value":"raw-udp"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4DestIP","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4DestPort","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4TCPTimeout","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketTimer","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketLength","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial4:topExpModuleSerial4Media","value":"relay-line"}]
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModSerial4AdvancedSettings","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4LocalIP","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4LocalPort","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketMax","value":"relay-line"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4SpecialCharacter","value":"relay-line"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9480,7 +9430,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Top Expansion Module Serial 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>IOx</defaultValue>
+      <defaultValue>iox</defaultValue>
       <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
@@ -9579,7 +9529,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Top Expansion Module Serial 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
+      <required>1</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>1</minLength>
@@ -9596,7 +9546,7 @@
       <section>Serial>Top Expansion Module Serial 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>5</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -9627,7 +9577,7 @@
       <section>Serial>Top Expansion Module Serial 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>15</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>3</minLength>
@@ -9674,7 +9624,7 @@
       <section>Serial>Top Expansion Module Serial 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>10</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>10</minLength>
@@ -9707,6 +9657,7 @@
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModSerial1Stop","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModSerial1Data","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1Encap","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModuleSerial1RelayMode","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1DestIP","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1DestPort","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1TCPTimeout","value":"false"},
@@ -9741,12 +9692,11 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1LocalIP","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1LocalPort","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1TCPTimeout","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketTimer","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketLength","value":"false"},
       {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketMax","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1SpecialCharacter","value":"false"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1SpecialCharacter","value":"false"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9849,16 +9799,19 @@
         { "key": "Raw Socket Connection (UDP)", "value":"raw-udp" },
         { "key": "Relay-Line", "value":"relay-line" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModSerial1Parity","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModSerial1Speed","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModSerial1Stop","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModSerial1Data","value":"relay-line"},
+      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModuleSerial1RelayMode","value":"raw-tcp"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModuleSerial1RelayMode","value":"raw-udp"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1TCPTimeout","value":"raw-udp"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1DestIP","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1DestPort","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1TCPTimeout","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketTimer","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketLength","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModuleSerial1Media","value":"relay-line"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModSerial1AdvancedSettings","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1LocalIP","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1LocalPort","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketMax","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1SpecialCharacter","value":"relay-line"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9869,7 +9822,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Bottom Expansion Module Serial 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>IOx</defaultValue>
+      <defaultValue>iox</defaultValue>
       <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
@@ -9968,7 +9921,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Bottom Expansion Module Serial 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
+      <required>1</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>1</minLength>
@@ -9985,7 +9938,7 @@
       <section>Serial>Bottom Expansion Module Serial 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>5</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -10016,7 +9969,7 @@
       <section>Serial>Bottom Expansion Module Serial 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>15</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>3</minLength>
@@ -10063,7 +10016,7 @@
       <section>Serial>Bottom Expansion Module Serial 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>10</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>10</minLength>
@@ -10095,6 +10048,7 @@
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModSerial2Stop","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModSerial2Data","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2Encap","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModuleSerial2RelayMode","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2DestIP","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2DestPort","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2TCPTimeout","value":"false"},
@@ -10129,12 +10083,11 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2LocalIP","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2LocalPort","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2TCPTimeout","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketTimer","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketLength","value":"false"},
       {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketMax","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2SpecialCharacter","value":"false"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2SpecialCharacter","value":"false"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10239,16 +10192,19 @@
         { "key": "Raw Socket Connection (UDP)", "value":"raw-udp" },
         { "key": "Relay-Line", "value":"relay-line" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModSerial2Parity","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModSerial2Speed","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModSerial2Stop","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModSerial2Data","value":"relay-line"},
+      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModuleSerial2RelayMode","value":"raw-tcp"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModuleSerial2RelayMode","value":"raw-udp"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2TCPTimeout","value":"raw-udp"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2DestIP","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2DestPort","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2TCPTimeout","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketTimer","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketLength","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModuleSerial2Media","value":"relay-line"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModSerial2AdvancedSettings","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2LocalIP","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2LocalPort","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketMax","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2SpecialCharacter","value":"relay-line"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10259,7 +10215,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Bottom Expansion Module Serial 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>IOx</defaultValue>
+      <defaultValue>iox</defaultValue>
       <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
@@ -10358,7 +10314,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Bottom Expansion Module Serial 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
+      <required>1</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>1</minLength>
@@ -10375,7 +10331,7 @@
       <section>Serial>Bottom Expansion Module Serial 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>5</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -10406,7 +10362,7 @@
       <section>Serial>Bottom Expansion Module Serial 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>15</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>3</minLength>
@@ -10454,7 +10410,7 @@
       <section>Serial>Bottom Expansion Module Serial 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>10</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>10</minLength>
@@ -10487,6 +10443,7 @@
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModSerial3Stop","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModSerial3Data","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3Encap","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModuleSerial3RelayMode","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3DestIP","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3DestPort","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3TCPTimeout","value":"false"},
@@ -10521,12 +10478,11 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3LocalIP","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3LocalPort","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3TCPTimeout","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketTimer","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketLength","value":"false"},
       {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketMax","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3SpecialCharacter","value":"false"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3SpecialCharacter","value":"false"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10629,16 +10585,19 @@
         { "key": "Raw Socket Connection (UDP)", "value":"raw-udp" },
         { "key": "Relay-Line", "value":"relay-line" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModSerial3Parity","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModSerial3Speed","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModSerial3Stop","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModSerial3Data","value":"relay-line"},
+      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModuleSerial3RelayMode","value":"raw-tcp"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModuleSerial3RelayMode","value":"raw-udp"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3TCPTimeout","value":"raw-udp"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3DestIP","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3DestPort","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3TCPTimeout","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketTimer","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketLength","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModuleSerial3Media","value":"relay-line"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModSerial3AdvancedSettings","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3LocalIP","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3LocalPort","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketMax","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3SpecialCharacter","value":"relay-line"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10649,7 +10608,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Bottom Expansion Module Serial 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>IOx</defaultValue>
+      <defaultValue>iox</defaultValue>
       <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
@@ -10748,7 +10707,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Bottom Expansion Module Serial 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
+      <required>1</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>1</minLength>
@@ -10765,7 +10724,7 @@
       <section>Serial>Bottom Expansion Module Serial 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>5</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -10796,7 +10755,7 @@
       <section>Serial>Bottom Expansion Module Serial 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>15</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>3</minLength>
@@ -10843,7 +10802,7 @@
       <section>Serial>Bottom Expansion Module Serial 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>10</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>10</minLength>
@@ -10876,6 +10835,7 @@
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModSerial4Stop","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModSerial4Data","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4Encap","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModuleSerial4RelayMode","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4DestIP","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4DestPort","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4TCPTimeout","value":"false"},
@@ -10910,12 +10870,11 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4LocalIP","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4LocalPort","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4TCPTimeout","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketTimer","value":"false"},
+      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketLength","value":"false"},
       {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketMax","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4SpecialCharacter","value":"false"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
-      {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4SpecialCharacter","value":"false"}]
       </hiddenCondition>
     </propertyType>
 
@@ -11018,16 +10977,19 @@
         { "key": "Raw Socket Connection (UDP)", "value":"raw-udp" },
         { "key": "Relay-Line", "value":"relay-line" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModSerial4Parity","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModSerial4Speed","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModSerial4Stop","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModSerial4Data","value":"relay-line"},
+      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModuleSerial4RelayMode","value":"raw-tcp"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModuleSerial4RelayMode","value":"raw-udp"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4TCPTimeout","value":"raw-udp"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4DestIP","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4DestPort","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4TCPTimeout","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketTimer","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketLength","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModuleSerial4Media","value":"relay-line"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModSerial4AdvancedSettings","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4LocalIP","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4LocalPort","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketMax","value":"relay-line"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4SpecialCharacter","value":"relay-line"}]
       </hiddenCondition>
     </propertyType>
 
@@ -11038,7 +11000,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Bottom Expansion Module Serial 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <defaultValue>IOx</defaultValue>
+      <defaultValue>iox</defaultValue>
       <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
@@ -11137,7 +11099,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Serial>Bottom Expansion Module Serial 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
+      <required>1</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>1</minLength>
@@ -11154,7 +11116,7 @@
       <section>Serial>Bottom Expansion Module Serial 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>5</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -11185,7 +11147,7 @@
       <section>Serial>Bottom Expansion Module Serial 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>15</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>3</minLength>
@@ -11232,7 +11194,7 @@
       <section>Serial>Bottom Expansion Module Serial 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>10</defaultValue>
-      <required>1</required>
+      <required>0</required>
       <validationType>non-empty</validationType>
       <dataType>integer</dataType>
       <minLength>10</minLength>
@@ -11277,13 +11239,24 @@
 
     <propertyType>
       <name>gpio1Output</name>
-      <displayName>Output</displayName>
-      <description>Output on GPIO 1 of IR1101</description>
+      <displayName>Output Value</displayName>
+      <description>Output Value on GPIO 1 of IR1101</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>GPIO>GPIO 1</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>0</defaultValue>
       <required>0</required>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "Output Value 1 for High, 0 for Low",
+          "placement": "right-start"
+        }
+      ]
+      </info>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -11464,13 +11437,24 @@
 
     <propertyType>
       <name>gpio2Output</name>
-      <displayName>Output</displayName>
-      <description>Output on GPIO 2 of IR1101</description>
+      <displayName>Output Value</displayName>
+      <description>Output Value on GPIO 2 of IR1101</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>GPIO>GPIO 2</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>0</defaultValue>
       <required>0</required>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "Output Value 1 for High, 0 for Low",
+          "placement": "right-start"
+        }
+      ]
+      </info>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -11651,13 +11635,24 @@
 
     <propertyType>
       <name>gpio3Output</name>
-      <displayName>Output</displayName>
-      <description>Output on GPIO 3 of IR1101</description>
+      <displayName>Output Value</displayName>
+      <description>Output Value on GPIO 3 of IR1101</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>GPIO>GPIO 3</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>0</defaultValue>
       <required>0</required>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "Output Value 1 for High, 0 for Low",
+          "placement": "right-start"
+        }
+      ]
+      </info>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -11838,13 +11833,24 @@
 
     <propertyType>
       <name>gpio4Output</name>
-      <displayName>Output</displayName>
-      <description>Output on GPIO 4 of IR1101</description>
+      <displayName>Output Value</displayName>
+      <description>Output Value on GPIO 4 of IR1101</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>GPIO>GPIO 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>0</defaultValue>
       <required>0</required>
+      <info>
+      [
+        {
+          "type": "tooltip",
+          "iconType": "information",
+          "filled": false,
+          "text": "Output Value 1 for High, 0 for Low",
+          "placement": "right-start"
+        }
+      ]
+      </info>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
