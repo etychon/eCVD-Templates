@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.40        -->
+<!-- Version 1.41        -->
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -12,6 +12,7 @@
                   Network>Port Forwarding, Network>Static Routes, Network>Qos
                   Additional Settings, Site to Site VPN (Customer specific)
                   Security>Firewall, Security>Netflow, DEBUG
+
     -->
 
     <propertyType>
@@ -1666,7 +1667,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Device Management>Auto Recovery</section>
       <required>1</required>
-      <defaultValue>1.0.0.1</defaultValue>
+      <defaultValue>208.67.222.222</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -1691,7 +1692,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>Device Management>Auto Recovery</section>
       <required>1</required>
-      <defaultValue>8.8.4.4</defaultValue>
+      <defaultValue>208.67.220.220</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -2801,7 +2802,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN>ICMP</section>
       <required>1</required>
-      <defaultValue>4.2.2.1</defaultValue>
+      <defaultValue>208.67.220.222</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -2815,7 +2816,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN>ICMP</section>
       <required>1</required>
-      <defaultValue>4.2.2.2</defaultValue>
+      <defaultValue>208.67.222.220</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -2829,7 +2830,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN>ICMP</section>
       <required>1</required>
-      <defaultValue>9.9.9.10</defaultValue>
+      <defaultValue>8.8.4.4</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -4171,7 +4172,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
       <required>1</required>
-      <defaultValue>4.2.2.1</defaultValue>
+      <defaultValue>208.67.220.222</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -4349,7 +4350,7 @@
 
     <propertyType>
       <name>wan1JitterDLTE</name>
-      <displayName>Jitter</displayName>
+      <displayName>Jitter (ms)</displayName>
       <description>Jitter Value for WAN 1</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
@@ -4374,8 +4375,8 @@
 
     <propertyType>
       <name>wan1RTTDLTE</name>
-      <displayName>RTT</displayName>
-      <description>RTT Threshold Value for WAN 1</description>
+      <displayName>Round Trip Time (ms)</displayName>
+      <description>Round Trip Time Threshold Value for WAN 1</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
       <required>0</required>
@@ -4399,7 +4400,7 @@
 
     <propertyType>
       <name>wan1TimeDLTE</name>
-      <displayName>Time Duration</displayName>
+      <displayName>Time Duration (minutes)</displayName>
       <description>Time until Dual SIM failover for WAN 1</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
@@ -4475,7 +4476,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
       <required>1</required>
-      <defaultValue>4.2.2.2</defaultValue>
+      <defaultValue>208.67.222.220</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -4653,7 +4654,7 @@
 
     <propertyType>
       <name>wan2JitterDLTE</name>
-      <displayName>Jitter</displayName>
+      <displayName>Jitter (ms)</displayName>
       <description>Jitter Value for WAN 2</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
@@ -4678,8 +4679,8 @@
 
     <propertyType>
       <name>wan2RTTDLTE</name>
-      <displayName>RTT</displayName>
-      <description>RTT Threshold Value for WAN 2</description>
+      <displayName>Round Trip Time (ms)</displayName>
+      <description>Round Trip Time Threshold Value for WAN 2</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
       <required>0</required>
@@ -4703,7 +4704,7 @@
 
     <propertyType>
       <name>wan2TimeDLTE</name>
-      <displayName>Time Duration</displayName>
+      <displayName>Time Duration (minutes)</displayName>
       <description>Time until Dual SIM failover for WAN 2</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
@@ -4779,7 +4780,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
       <required>1</required>
-      <defaultValue>9.9.9.10</defaultValue>
+      <defaultValue>8.8.4.4</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -4957,7 +4958,7 @@
 
     <propertyType>
       <name>wan3JitterDLTE</name>
-      <displayName>Jitter</displayName>
+      <displayName>Jitter (ms)</displayName>
       <description>Jitter Value for WAN 3</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
@@ -4982,8 +4983,8 @@
 
     <propertyType>
       <name>wan3RTTDLTE</name>
-      <displayName>RTT</displayName>
-      <description>RTT Threshold Value for WAN 3</description>
+      <displayName>Round Trip Time (ms)</displayName>
+      <description>Round Trip Time Threshold Value for WAN 3</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
       <required>0</required>
@@ -5007,7 +5008,7 @@
 
     <propertyType>
       <name>wan3TimeDLTE</name>
-      <displayName>Time Duration</displayName>
+      <displayName>Time Duration (minutes)</displayName>
       <description>Time until Dual SIM failover for WAN 3</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
@@ -5260,7 +5261,7 @@
 
     <propertyType>
       <name>wan4JitterDLTE</name>
-      <displayName>Jitter</displayName>
+      <displayName>Jitter (ms)</displayName>
       <description>Jitter Value for WAN 4</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 4</section>
@@ -5285,8 +5286,8 @@
 
     <propertyType>
       <name>wan4RTTDLTE</name>
-      <displayName>RTT</displayName>
-      <description>RTT Threshold Value for WAN 4</description>
+      <displayName>Round Trip Time (ms)</displayName>
+      <description>Round Trip Time Threshold Value for WAN 4</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 4</section>
       <required>0</required>
@@ -5310,7 +5311,7 @@
 
     <propertyType>
       <name>wan4TimeDLTE</name>
-      <displayName>Time Duration</displayName>
+      <displayName>Time Duration (minutes)</displayName>
       <description>Time until Dual SIM failover for WAN 4</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 4</section>
@@ -5863,7 +5864,7 @@
         "iconType": "information",
         "filled": true,
         "flavor": null,
-        "text": "Wi-Fi Configuration is mandatory for IR829 devices with embedded access points to be successfully onboarded on IoT OD. To update the Wi-Fi Configuration, ensure to remove devices from group, make the changes and re-onboard them.",
+        "text": "Wi-Fi Settings cannot be configured using Extended Form",
         "border": true,
         "closeButton": true,
         "placement": null
@@ -6229,7 +6230,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
       <required>1</required>
-      <defaultValue>4.2.2.1</defaultValue>
+      <defaultValue>208.67.220.222</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -6407,7 +6408,7 @@
 
     <propertyType>
       <name>wan1JitterDLTE</name>
-      <displayName>Jitter</displayName>
+      <displayName>Jitter (ms)</displayName>
       <description>Jitter Value for WAN 1</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
@@ -6432,8 +6433,8 @@
 
     <propertyType>
       <name>wan1RTTDLTE</name>
-      <displayName>RTT</displayName>
-      <description>RTT Threshold Value for WAN 1</description>
+      <displayName>Round Trip Time (ms)</displayName>
+      <description>Round Trip Time Threshold Value for WAN 1</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
       <required>0</required>
@@ -6457,7 +6458,7 @@
 
     <propertyType>
       <name>wan1TimeDLTE</name>
-      <displayName>Time Duration</displayName>
+      <displayName>Time Duration (minutes)</displayName>
       <description>Time until Dual SIM failover for WAN 1</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 1</section>
@@ -6527,7 +6528,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
       <required>1</required>
-      <defaultValue>4.2.2.2</defaultValue>
+      <defaultValue>208.67.222.220</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -6705,7 +6706,7 @@
 
     <propertyType>
       <name>wan2JitterDLTE</name>
-      <displayName>Jitter</displayName>
+      <displayName>Jitter (ms)</displayName>
       <description>Jitter Value for WAN 2</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
@@ -6730,8 +6731,8 @@
 
     <propertyType>
       <name>wan2RTTDLTE</name>
-      <displayName>RTT</displayName>
-      <description>RTT Threshold Value for WAN 2</description>
+      <displayName>Round Trip Time (ms)</displayName>
+      <description>Round Trip Time Threshold Value for WAN 2</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
       <required>0</required>
@@ -6755,7 +6756,7 @@
 
     <propertyType>
       <name>wan2TimeDLTE</name>
-      <displayName>Time Duration</displayName>
+      <displayName>Time Duration (minutes)</displayName>
       <description>Time until Dual SIM failover for WAN 2</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 2</section>
@@ -6825,7 +6826,7 @@
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
       <required>1</required>
-      <defaultValue>9.9.9.10</defaultValue>
+      <defaultValue>8.8.4.4</defaultValue>
       <validationType>ipv4</validationType>
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -7003,7 +7004,7 @@
 
     <propertyType>
       <name>wan3JitterDLTE</name>
-      <displayName>Jitter</displayName>
+      <displayName>Jitter (ms)</displayName>
       <description>Jitter Value for WAN 3</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
@@ -7028,8 +7029,8 @@
 
     <propertyType>
       <name>wan3RTTDLTE</name>
-      <displayName>RTT</displayName>
-      <description>RTT Threshold Value for WAN 3</description>
+      <displayName>Round Trip Time (ms)</displayName>
+      <description>Round Trip Time Threshold Value for WAN 3</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
       <required>0</required>
@@ -7053,7 +7054,7 @@
 
     <propertyType>
       <name>wan3TimeDLTE</name>
-      <displayName>Time Duration</displayName>
+      <displayName>Time Duration (minutes)</displayName>
       <description>Time until Dual SIM failover for WAN 3</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 3</section>
@@ -7301,7 +7302,7 @@
 
     <propertyType>
       <name>wan4JitterDLTE</name>
-      <displayName>Jitter</displayName>
+      <displayName>Jitter (ms)</displayName>
       <description>Jitter Value for WAN 4</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 4</section>
@@ -7326,8 +7327,8 @@
 
     <propertyType>
       <name>wan4RTTDLTE</name>
-      <displayName>RTT</displayName>
-      <description>RTT Threshold Value for WAN 4</description>
+      <displayName>Round Trip Time (ms)</displayName>
+      <description>Round Trip Time Threshold Value for WAN 4</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 4</section>
       <required>0</required>
@@ -7351,7 +7352,7 @@
 
     <propertyType>
       <name>wan4TimeDLTE</name>
-      <displayName>Time Duration</displayName>
+      <displayName>Time Duration (minutes)</displayName>
       <description>Time until Dual SIM failover for WAN 4</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <section>WAN Uplink>WAN Uplink 4</section>
@@ -7645,8 +7646,6 @@
 
     <!-- Variables for Top Expansion Module Support -->
 
-
-
     <propertyType>
       <name>topModule1101</name>
       <displayName>Select a Module Name</displayName>
@@ -7745,7 +7744,9 @@
         {"field":"serial:serial_base:baseAsync1LocalIP","value":"false"},
         {"field":"serial:serial_base:baseAsync1LocalPort","value":"false"},
         {"field":"serial:serial_base:baseAsync1PacketMax","value":"false"},
-        {"field":"serial:serial_base:baseAsync1SpecialCharacter","value":"false"}]
+        {"field":"serial:serial_base:baseAsync1SpecialCharacter","value":"false"},
+        {"field":"serial:serial_base:baseAsync1SpecialCharacter","value":"true"},
+        {"field":"serial:serial_base:baseAsync1LocalIP","value":"true"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8087,7 +8088,6 @@
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModSerial1Stop","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModSerial1Data","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1Encap","value":"false"},
-        {"field":"serial:serial_topexpansionmoduleserial1:topExpModuleSerial1RelayMode","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1DestIP","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1DestPort","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1TCPTimeout","value":"false"},
@@ -8101,7 +8101,9 @@
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1SpecialCharacter","value":"false"},
         {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
         {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1SpecialCharacter","value":"true"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1LocalIP","value":"true"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8122,11 +8124,14 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1LocalIP","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1TCPTimeout","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketTimer","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketLength","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketMax","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1SpecialCharacter","value":"false"}]
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1TCPTimeout","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketTimer","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketLength","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketMax","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1SpecialCharacter","value":"false"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8148,6 +8153,10 @@
         { "key": "Even", "value":"even" },
         { "key": "Odd", "value":"odd" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8171,6 +8180,10 @@
         { "key": "57600", "value":"57600" },
         { "key": "115200", "value":"115200" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8190,6 +8203,10 @@
         { "key": "1.5", "value":"1.5" },
         { "key": "2", "value":"2" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8208,6 +8225,10 @@
         { "key": "7", "value":"7" },
         { "key": "8", "value":"8" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- topExpMod Slot Serial Interface Async Variables -->
@@ -8241,7 +8262,10 @@
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1LocalIP","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1LocalPort","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1PacketMax","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1SpecialCharacter","value":"relay-line"}]
+        {"field":"serial:serial_topexpansionmoduleserial1:topExpModAsync1SpecialCharacter","value":"relay-line"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8261,6 +8285,10 @@
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8279,7 +8307,11 @@
         { "key": "RS232", "value":"rs232" },
         { "key": "RS485", "value":"rs485" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial1:topExpModuleSerial1Duplex","value":"rs232"}]</hiddenCondition>
+      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial1:topExpModuleSerial1Duplex","value":"rs232"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8298,6 +8330,10 @@
         { "key": "Full Duplex", "value":"full-duplex" },
         { "key": "Half Duplex", "value":"half-duplex" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8312,6 +8348,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync1DestIP' per device", "value": "${far.topExpModAsync1DestIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8328,6 +8368,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync1DestPort' per device", "value": "${far.topExpModAsync1DestPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8342,6 +8386,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync1LocalIP' per device", "value": "${far.topExpModAsync1LocalIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8358,6 +8406,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync1LocalPort' per device", "value": "${far.topExpModAsync1LocalPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8389,6 +8441,10 @@
         { "key": "14", "value":"14" },
         { "key": "15", "value":"15" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8406,6 +8462,10 @@
       <maxLength>1000</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync1PacketTimer' per device", "value": "${far.topExpModAsync1PacketTimer}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8420,6 +8480,10 @@
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync1PacketMax' per device", "value": "${far.topExpModAsync1PacketMax}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8436,6 +8500,10 @@
       <maxLength>255</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync1SpecialCharacter' per device", "value": "${far.topExpModAsync1SpecialCharacter}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8453,6 +8521,10 @@
       <maxLength>1400</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync1PacketLength' per device", "value": "${far.topExpModAsync1PacketLength}"}]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- topExpMod Slot Serial 2 Interface Variables !!!!!!!! -->
@@ -8478,7 +8550,6 @@
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModSerial2Stop","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModSerial2Data","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2Encap","value":"false"},
-        {"field":"serial:serial_topexpansionmoduleserial2:topExpModuleSerial2RelayMode","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2DestIP","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2DestPort","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2TCPTimeout","value":"false"},
@@ -8492,7 +8563,9 @@
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2SpecialCharacter","value":"false"},
         {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
         {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2SpecialCharacter","value":"true"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2LocalIP","value":"true"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8513,11 +8586,14 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2LocalIP","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2TCPTimeout","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketTimer","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketLength","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketMax","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2SpecialCharacter","value":"false"}]
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2TCPTimeout","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketTimer","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketLength","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketMax","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2SpecialCharacter","value":"false"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8541,6 +8617,10 @@
         { "key": "Even", "value":"even" },
         { "key": "Odd", "value":"odd" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8564,6 +8644,10 @@
         { "key": "57600", "value":"57600" },
         { "key": "115200", "value":"115200" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8583,6 +8667,10 @@
         { "key": "1.5", "value":"1.5" },
         { "key": "2", "value":"2" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8601,6 +8689,10 @@
         { "key": "7", "value":"7" },
         { "key": "8", "value":"8" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- topExpMod Slot Serial Interface Async Variables -->
@@ -8634,7 +8726,10 @@
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2LocalIP","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2LocalPort","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2PacketMax","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2SpecialCharacter","value":"relay-line"}]
+        {"field":"serial:serial_topexpansionmoduleserial2:topExpModAsync2SpecialCharacter","value":"relay-line"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8654,6 +8749,10 @@
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8672,7 +8771,11 @@
         { "key": "RS232", "value":"rs232" },
         { "key": "RS485", "value":"rs485" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial2:topExpModuleSerial2Duplex","value":"rs232"}]</hiddenCondition>
+      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial2:topExpModuleSerial2Duplex","value":"rs232"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8691,6 +8794,10 @@
         { "key": "Full Duplex", "value":"full-duplex" },
         { "key": "Half Duplex", "value":"half-duplex" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8705,6 +8812,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync2DestIP' per device", "value": "${far.topExpModAsync2DestIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8721,6 +8832,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync2DestPort' per device", "value": "${far.topExpModAsync2DestPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8735,6 +8850,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync2LocalIP' per device", "value": "${far.topExpModAsync2LocalIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8751,6 +8870,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync2LocalPort' per device", "value": "${far.topExpModAsync2LocalPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8782,6 +8905,10 @@
         { "key": "14", "value":"14" },
         { "key": "15", "value":"15" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8799,6 +8926,10 @@
       <maxLength>1000</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync2PacketTimer' per device", "value": "${far.topExpModAsync2PacketTimer}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8813,6 +8944,10 @@
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync2PacketMax' per device", "value": "${far.topExpModAsync2PacketMax}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8829,6 +8964,10 @@
       <maxLength>255</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync2SpecialCharacter' per device", "value": "${far.topExpModAsync2SpecialCharacter}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8846,6 +8985,10 @@
       <maxLength>1400</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync2PacketLength' per device", "value": "${far.topExpModAsync2PacketLength}"}]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
 <!-- ########## TOP EXPANSION MODULE SERIAL INTERFACE 3 VARIABLES ############# -->
@@ -8872,7 +9015,6 @@
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModSerial3Stop","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModSerial3Data","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3Encap","value":"false"},
-        {"field":"serial:serial_topexpansionmoduleserial3:topExpModuleSerial3RelayMode","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3DestIP","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3DestPort","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3TCPTimeout","value":"false"},
@@ -8886,7 +9028,9 @@
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3SpecialCharacter","value":"false"},
         {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
         {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3SpecialCharacter","value":"true"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3LocalIP","value":"true"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8907,11 +9051,14 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3LocalIP","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3TCPTimeout","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketTimer","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketLength","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketMax","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3SpecialCharacter","value":"false"}]
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3TCPTimeout","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketTimer","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketLength","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketMax","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3SpecialCharacter","value":"false"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -8933,6 +9080,10 @@
         { "key": "Even", "value":"even" },
         { "key": "Odd", "value":"odd" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8956,6 +9107,10 @@
         { "key": "57600", "value":"57600" },
         { "key": "115200", "value":"115200" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8975,6 +9130,10 @@
         { "key": "1.5", "value":"1.5" },
         { "key": "2", "value":"2" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -8993,6 +9152,10 @@
         { "key": "7", "value":"7" },
         { "key": "8", "value":"8" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- topExpMod Slot Serial Interface Async Variables -->
@@ -9026,7 +9189,10 @@
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3LocalIP","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3LocalPort","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3PacketMax","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3SpecialCharacter","value":"relay-line"}]
+        {"field":"serial:serial_topexpansionmoduleserial3:topExpModAsync3SpecialCharacter","value":"relay-line"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9046,6 +9212,10 @@
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9064,7 +9234,11 @@
         { "key": "RS232", "value":"rs232" },
         { "key": "RS485", "value":"rs485" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial3:topExpModuleSerial3Duplex","value":"rs232"}]</hiddenCondition>
+      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial3:topExpModuleSerial3Duplex","value":"rs232"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9083,6 +9257,10 @@
         { "key": "Full Duplex", "value":"full-duplex" },
         { "key": "Half Duplex", "value":"half-duplex" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9097,6 +9275,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync3DestIP' per device", "value": "${far.topExpModAsync3DestIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9113,6 +9295,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync3DestPort' per device", "value": "${far.topExpModAsync3DestPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9127,6 +9313,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync3LocalIP' per device", "value": "${far.topExpModAsync3LocalIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9143,6 +9333,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync3LocalPort' per device", "value": "${far.topExpModAsync3LocalPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9174,6 +9368,10 @@
         { "key": "14", "value":"14" },
         { "key": "15", "value":"15" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9191,6 +9389,10 @@
       <maxLength>1000</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync3PacketTimer' per device", "value": "${far.topExpModAsync3PacketTimer}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9205,6 +9407,10 @@
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync3PacketMax' per device", "value": "${far.topExpModAsync3PacketMax}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9221,6 +9427,10 @@
       <maxLength>255</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync3SpecialCharacter' per device", "value": "${far.topExpModAsync3SpecialCharacter}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9238,6 +9448,10 @@
       <maxLength>1400</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync3PacketLength' per device", "value": "${far.topExpModAsync3PacketLength}"}]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
 
@@ -9265,7 +9479,6 @@
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModSerial4Stop","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModSerial4Data","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4Encap","value":"false"},
-        {"field":"serial:serial_topexpansionmoduleserial4:topExpModuleSerial4RelayMode","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4DestIP","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4DestPort","value":"false"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4TCPTimeout","value":"false"},
@@ -9279,7 +9492,9 @@
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4SpecialCharacter","value":"false"},
         {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
         {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4SpecialCharacter","value":"true"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4LocalIP","value":"true"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9300,11 +9515,14 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4LocalIP","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4TCPTimeout","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketTimer","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketLength","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketMax","value":"false"},
-      {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4SpecialCharacter","value":"false"}]
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4TCPTimeout","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketTimer","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketLength","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketMax","value":"false"},
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4SpecialCharacter","value":"false"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9326,6 +9544,10 @@
         { "key": "Even", "value":"even" },
         { "key": "Odd", "value":"odd" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9349,6 +9571,10 @@
         { "key": "57600", "value":"57600" },
         { "key": "115200", "value":"115200" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9368,6 +9594,10 @@
         { "key": "1.5", "value":"1.5" },
         { "key": "2", "value":"2" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9386,6 +9616,10 @@
         { "key": "7", "value":"7" },
         { "key": "8", "value":"8" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- topExpMod Slot Serial Interface Async Variables -->
@@ -9419,7 +9653,10 @@
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4LocalIP","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4LocalPort","value":"relay-line"},
         {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4PacketMax","value":"relay-line"},
-        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4SpecialCharacter","value":"relay-line"}]
+        {"field":"serial:serial_topexpansionmoduleserial4:topExpModAsync4SpecialCharacter","value":"relay-line"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9439,6 +9676,10 @@
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9457,7 +9698,11 @@
         { "key": "RS232", "value":"rs232" },
         { "key": "RS485", "value":"rs485" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial4:topExpModuleSerial4Duplex","value":"rs232"}]</hiddenCondition>
+      <hiddenCondition>[{"field":"serial:serial_topexpansionmoduleserial4:topExpModuleSerial4Duplex","value":"rs232"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9476,6 +9721,10 @@
         { "key": "Full Duplex", "value":"full-duplex" },
         { "key": "Half Duplex", "value":"half-duplex" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9490,6 +9739,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync4DestIP' per device", "value": "${far.topExpModAsync4DestIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9506,6 +9759,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync4DestPort' per device", "value": "${far.topExpModAsync4DestPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9520,6 +9777,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync4LocalIP' per device", "value": "${far.topExpModAsync4LocalIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9536,6 +9797,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync4LocalPort' per device", "value": "${far.topExpModAsync4LocalPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9567,6 +9832,10 @@
         { "key": "14", "value":"14" },
         { "key": "15", "value":"15" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9584,6 +9853,10 @@
       <maxLength>1000</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync4PacketTimer' per device", "value": "${far.topExpModAsync4PacketTimer}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9598,6 +9871,10 @@
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync4PacketMax' per device", "value": "${far.topExpModAsync4PacketMax}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9614,6 +9891,10 @@
       <maxLength>255</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync4SpecialCharacter' per device", "value": "${far.topExpModAsync4SpecialCharacter}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9631,6 +9912,10 @@
       <maxLength>1400</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'topExpModAsync4PacketLength' per device", "value": "${far.topExpModAsync4PacketLength}"}]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- ########## BOTTOM EXPANSION MODULE SERIAL INTERFACE 1 VARIABLES ############# -->
@@ -9657,7 +9942,6 @@
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModSerial1Stop","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModSerial1Data","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1Encap","value":"false"},
-        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModuleSerial1RelayMode","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1DestIP","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1DestPort","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1TCPTimeout","value":"false"},
@@ -9671,7 +9955,9 @@
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1SpecialCharacter","value":"false"},
         {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
         {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1SpecialCharacter","value":"true"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1LocalIP","value":"true"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9692,11 +9978,14 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1LocalIP","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1TCPTimeout","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketTimer","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketLength","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketMax","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1SpecialCharacter","value":"false"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1TCPTimeout","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketTimer","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketLength","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketMax","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1SpecialCharacter","value":"false"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9718,6 +10007,10 @@
         { "key": "Even", "value":"even" },
         { "key": "Odd", "value":"odd" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9741,6 +10034,10 @@
         { "key": "57600", "value":"57600" },
         { "key": "115200", "value":"115200" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9760,6 +10057,10 @@
         { "key": "1.5", "value":"1.5" },
         { "key": "2", "value":"2" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9778,6 +10079,10 @@
         { "key": "7", "value":"7" },
         { "key": "8", "value":"8" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- bottomExpMod Slot Serial Interface Async Variables -->
@@ -9811,7 +10116,10 @@
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1LocalIP","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1LocalPort","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1PacketMax","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1SpecialCharacter","value":"relay-line"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModAsync1SpecialCharacter","value":"relay-line"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -9831,6 +10139,10 @@
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9849,7 +10161,11 @@
         { "key": "RS232", "value":"rs232" },
         { "key": "RS485", "value":"rs485" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModuleSerial1Duplex","value":"rs232"}]</hiddenCondition>
+      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial1:bottomExpModuleSerial1Duplex","value":"rs232"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9868,6 +10184,10 @@
         { "key": "Full Duplex", "value":"full-duplex" },
         { "key": "Half Duplex", "value":"half-duplex" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9882,6 +10202,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync1DestIP' per device", "value": "${far.bottomExpModAsync1DestIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9898,6 +10222,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync1DestPort' per device", "value": "${far.bottomExpModAsync1DestPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9912,6 +10240,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync1LocalIP' per device", "value": "${far.bottomExpModAsync1LocalIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9928,6 +10260,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync1LocalPort' per device", "value": "${far.bottomExpModAsync1LocalPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9959,6 +10295,10 @@
         { "key": "14", "value":"14" },
         { "key": "15", "value":"15" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9976,6 +10316,10 @@
       <maxLength>1000</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync1PacketTimer' per device", "value": "${far.bottomExpModAsync1PacketTimer}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -9990,6 +10334,10 @@
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync1PacketMax' per device", "value": "${far.bottomExpModAsync1PacketMax}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10006,6 +10354,10 @@
       <maxLength>255</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync1SpecialCharacter' per device", "value": "${far.bottomExpModAsync1SpecialCharacter}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10023,6 +10375,10 @@
       <maxLength>1400</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync1PacketLength' per device", "value": "${far.bottomExpModAsync1PacketLength}"}]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- bottomExpMod Slot Serial 2 Interface Variables !!!!!!!! -->
@@ -10048,7 +10404,6 @@
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModSerial2Stop","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModSerial2Data","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2Encap","value":"false"},
-        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModuleSerial2RelayMode","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2DestIP","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2DestPort","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2TCPTimeout","value":"false"},
@@ -10062,7 +10417,9 @@
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2SpecialCharacter","value":"false"},
         {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
         {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2SpecialCharacter","value":"true"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2LocalIP","value":"true"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10083,11 +10440,14 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2LocalIP","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2TCPTimeout","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketTimer","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketLength","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketMax","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2SpecialCharacter","value":"false"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2TCPTimeout","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketTimer","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketLength","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketMax","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2SpecialCharacter","value":"false"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10111,6 +10471,10 @@
         { "key": "Even", "value":"even" },
         { "key": "Odd", "value":"odd" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10134,6 +10498,10 @@
         { "key": "57600", "value":"57600" },
         { "key": "115200", "value":"115200" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10153,6 +10521,10 @@
         { "key": "1.5", "value":"1.5" },
         { "key": "2", "value":"2" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10171,6 +10543,10 @@
         { "key": "7", "value":"7" },
         { "key": "8", "value":"8" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- bottomExpMod Slot Serial Interface Async Variables -->
@@ -10204,7 +10580,10 @@
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2LocalIP","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2LocalPort","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2PacketMax","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2SpecialCharacter","value":"relay-line"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModAsync2SpecialCharacter","value":"relay-line"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10224,6 +10603,10 @@
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10242,7 +10625,11 @@
         { "key": "RS232", "value":"rs232" },
         { "key": "RS485", "value":"rs485" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModuleSerial2Duplex","value":"rs232"}]</hiddenCondition>
+      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial2:bottomExpModuleSerial2Duplex","value":"rs232"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10261,6 +10648,10 @@
         { "key": "Full Duplex", "value":"full-duplex" },
         { "key": "Half Duplex", "value":"half-duplex" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10275,6 +10666,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync2DestIP' per device", "value": "${far.bottomExpModAsync2DestIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10291,6 +10686,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync2DestPort' per device", "value": "${far.bottomExpModAsync2DestPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10305,6 +10704,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync2LocalIP' per device", "value": "${far.bottomExpModAsync2LocalIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10321,6 +10724,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync2LocalPort' per device", "value": "${far.bottomExpModAsync2LocalPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10352,6 +10759,10 @@
         { "key": "14", "value":"14" },
         { "key": "15", "value":"15" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10369,6 +10780,10 @@
       <maxLength>1000</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync2PacketTimer' per device", "value": "${far.bottomExpModAsync2PacketTimer}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10384,6 +10799,10 @@
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync2PacketMax' per device", "value": "${far.bottomExpModAsync2PacketMax}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10400,6 +10819,10 @@
       <maxLength>255</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync2SpecialCharacter' per device", "value": "${far.bottomExpModAsync2SpecialCharacter}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10417,6 +10840,10 @@
       <maxLength>1400</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync2PacketLength' per device", "value": "${far.bottomExpModAsync2PacketLength}"}]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
 <!-- ########## TOP EXPANSION MODULE SERIAL INTERFACE 3 VARIABLES ############# -->
@@ -10443,7 +10870,6 @@
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModSerial3Stop","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModSerial3Data","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3Encap","value":"false"},
-        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModuleSerial3RelayMode","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3DestIP","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3DestPort","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3TCPTimeout","value":"false"},
@@ -10457,7 +10883,9 @@
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3SpecialCharacter","value":"false"},
         {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
         {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3SpecialCharacter","value":"true"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3LocalIP","value":"true"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10478,11 +10906,14 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3LocalIP","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3TCPTimeout","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketTimer","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketLength","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketMax","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3SpecialCharacter","value":"false"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3TCPTimeout","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketTimer","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketLength","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketMax","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3SpecialCharacter","value":"false"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10504,6 +10935,10 @@
         { "key": "Even", "value":"even" },
         { "key": "Odd", "value":"odd" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10527,6 +10962,10 @@
         { "key": "57600", "value":"57600" },
         { "key": "115200", "value":"115200" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10546,6 +10985,10 @@
         { "key": "1.5", "value":"1.5" },
         { "key": "2", "value":"2" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10564,6 +11007,10 @@
         { "key": "7", "value":"7" },
         { "key": "8", "value":"8" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- bottomExpMod Slot Serial Interface Async Variables -->
@@ -10597,7 +11044,10 @@
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3LocalIP","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3LocalPort","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3PacketMax","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3SpecialCharacter","value":"relay-line"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModAsync3SpecialCharacter","value":"relay-line"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10617,6 +11067,10 @@
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10635,7 +11089,11 @@
         { "key": "RS232", "value":"rs232" },
         { "key": "RS485", "value":"rs485" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModuleSerial3Duplex","value":"rs232"}]</hiddenCondition>
+      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial3:bottomExpModuleSerial3Duplex","value":"rs232"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10654,6 +11112,10 @@
         { "key": "Full Duplex", "value":"full-duplex" },
         { "key": "Half Duplex", "value":"half-duplex" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10668,6 +11130,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync3DestIP' per device", "value": "${far.bottomExpModAsync3DestIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10684,6 +11150,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync3DestPort' per device", "value": "${far.bottomExpModAsync3DestPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10698,6 +11168,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync3LocalIP' per device", "value": "${far.bottomExpModAsync3LocalIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10714,6 +11188,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync3LocalPort' per device", "value": "${far.bottomExpModAsync3LocalPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10745,6 +11223,10 @@
         { "key": "14", "value":"14" },
         { "key": "15", "value":"15" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10762,6 +11244,10 @@
       <maxLength>1000</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync3PacketTimer' per device", "value": "${far.bottomExpModAsync3PacketTimer}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10776,6 +11262,10 @@
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync3PacketMax' per device", "value": "${far.bottomExpModAsync3PacketMax}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10792,6 +11282,10 @@
       <maxLength>255</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync3SpecialCharacter' per device", "value": "${far.bottomExpModAsync3SpecialCharacter}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10809,6 +11303,10 @@
       <maxLength>1400</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync3PacketLength' per device", "value": "${far.bottomExpModAsync3PacketLength}"}]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
 <!-- ########## TOP EXPANSION MODULE SERIAL INTERFACE 4 VARIABLES ############# -->
@@ -10835,7 +11333,6 @@
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModSerial4Stop","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModSerial4Data","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4Encap","value":"false"},
-        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModuleSerial4RelayMode","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4DestIP","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4DestPort","value":"false"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4TCPTimeout","value":"false"},
@@ -10849,7 +11346,9 @@
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4SpecialCharacter","value":"false"},
         {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
         {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
-        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4SpecialCharacter","value":"true"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4LocalIP","value":"true"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10870,11 +11369,14 @@
         { "key": "Disable", "value": false }]
       </seedValues>
       <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4LocalIP","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4TCPTimeout","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketTimer","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketLength","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketMax","value":"false"},
-      {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4SpecialCharacter","value":"false"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4TCPTimeout","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketTimer","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketLength","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketMax","value":"false"},
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4SpecialCharacter","value":"false"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -10896,6 +11398,10 @@
         { "key": "Even", "value":"even" },
         { "key": "Odd", "value":"odd" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10919,6 +11425,10 @@
         { "key": "57600", "value":"57600" },
         { "key": "115200", "value":"115200" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10938,6 +11448,10 @@
         { "key": "1.5", "value":"1.5" },
         { "key": "2", "value":"2" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -10956,6 +11470,10 @@
         { "key": "7", "value":"7" },
         { "key": "8", "value":"8" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- bottomExpMod Slot Serial Interface Async Variables -->
@@ -10989,7 +11507,10 @@
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4LocalIP","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4LocalPort","value":"relay-line"},
         {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4PacketMax","value":"relay-line"},
-        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4SpecialCharacter","value":"relay-line"}]
+        {"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModAsync4SpecialCharacter","value":"relay-line"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
       </hiddenCondition>
     </propertyType>
 
@@ -11009,6 +11530,10 @@
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11027,7 +11552,11 @@
         { "key": "RS232", "value":"rs232" },
         { "key": "RS485", "value":"rs485" }]
       </seedValues>
-      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModuleSerial4Duplex","value":"rs232"}]</hiddenCondition>
+      <hiddenCondition>[{"field":"serial:serial_bottomexpansionmoduleserial4:bottomExpModuleSerial4Duplex","value":"rs232"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11046,6 +11575,10 @@
         { "key": "Full Duplex", "value":"full-duplex" },
         { "key": "Half Duplex", "value":"half-duplex" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11060,6 +11593,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync4DestIP' per device", "value": "${far.bottomExpModAsync4DestIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11076,6 +11613,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync4DestPort' per device", "value": "${far.bottomExpModAsync4DestPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11090,6 +11631,10 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync4LocalIP' per device", "value": "${far.bottomExpModAsync4LocalIP}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11106,6 +11651,10 @@
       <maxLength>65535</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync4LocalPort' per device", "value": "${far.bottomExpModAsync4LocalPort}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11137,6 +11686,10 @@
         { "key": "14", "value":"14" },
         { "key": "15", "value":"15" }]
       </seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11154,6 +11707,10 @@
       <maxLength>1000</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync4PacketTimer' per device", "value": "${far.bottomExpModAsync4PacketTimer}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11168,6 +11725,10 @@
       <dataType>integer</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync4PacketMax' per device", "value": "${far.bottomExpModAsync4PacketMax}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11184,6 +11745,10 @@
       <maxLength>255</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync4SpecialCharacter' per device", "value": "${far.bottomExpModAsync4SpecialCharacter}" }]</seedValues>
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11201,7 +11766,11 @@
       <maxLength>1400</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'bottomExpModAsync4PacketLength' per device", "value": "${far.bottomExpModAsync4PacketLength}"}]</seedValues>
-    </propertyType>  
+      <hiddenCondition>[{"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"spmi"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
+    </propertyType>
 
     <!-- IR1101 GPIO 1 Variables -->
     <propertyType>
@@ -11265,6 +11834,14 @@
         { "key": "0", "value": "0" },
         { "key": "1", "value": "1" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11288,7 +11865,13 @@
         {"field":"gpio:gpio_gpio1:gpio1Termination","value":"1"},
         {"field":"gpio:gpio_gpio1:gpio1Severity","value":"1"},
         {"field":"gpio:gpio_gpio1:gpio1Threshold","value":"1"},
-        {"field":"gpio:gpio_gpio1:gpio1Trigger","value":"1"}]
+        {"field":"gpio:gpio_gpio1:gpio1Trigger","value":"1"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
        </hiddenCondition> 
     </propertyType>
 
@@ -11309,6 +11892,14 @@
         { "key": "Wet Contact", "value": "wet" },
         { "key": "Dry Contact", "value": "dry" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11327,6 +11918,14 @@
       <seedValues>
         [{ "key": "Provide 'gpio1Description' per device", "value": "${far.gpio1Description}" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11348,6 +11947,14 @@
         { "key": "Minor", "value": "minor" },
         { "key": "None", "value": "none" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11378,6 +11985,14 @@
       <seedValues>
         [{ "key": "Provide 'gpio1Threshold' per device", "value": "${far.gpio1Threshold}" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11397,6 +12012,14 @@
         { "key": "Open", "value": "open" },
         { "key": "Closed", "value": "closed" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
 
@@ -11463,6 +12086,14 @@
         { "key": "0", "value": "0" },
         { "key": "1", "value": "1" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11486,7 +12117,13 @@
         {"field":"gpio:gpio_gpio2:gpio2Termination","value":"1"},
         {"field":"gpio:gpio_gpio2:gpio2Severity","value":"1"},
         {"field":"gpio:gpio_gpio2:gpio2Threshold","value":"1"},
-        {"field":"gpio:gpio_gpio2:gpio2Trigger","value":"1"}]
+        {"field":"gpio:gpio_gpio2:gpio2Trigger","value":"1"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
        </hiddenCondition>
     </propertyType>
 
@@ -11507,6 +12144,14 @@
         { "key": "Wet Contact", "value": "wet" },
         { "key": "Dry Contact", "value": "dry" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11525,6 +12170,14 @@
       <seedValues>
         [{ "key": "Provide 'gpio2Description' per device", "value": "${far.gpio2Description}" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11546,6 +12199,14 @@
         { "key": "Minor", "value": "minor" },
         { "key": "None", "value": "none" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11576,6 +12237,14 @@
       <seedValues>
         [{ "key": "Provide 'gpio2Threshold' per device", "value": "${far.gpio2Threshold}" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11595,6 +12264,14 @@
         { "key": "Open", "value": "open" },
         { "key": "Closed", "value": "closed" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
 
@@ -11661,6 +12338,14 @@
         { "key": "0", "value": "0" },
         { "key": "1", "value": "1" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11684,7 +12369,13 @@
         {"field":"gpio:gpio_gpio3:gpio3Termination","value":"1"},
         {"field":"gpio:gpio_gpio3:gpio3Severity","value":"1"},
         {"field":"gpio:gpio_gpio3:gpio3Threshold","value":"1"},
-        {"field":"gpio:gpio_gpio3:gpio3Trigger","value":"1"}]
+        {"field":"gpio:gpio_gpio3:gpio3Trigger","value":"1"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
        </hiddenCondition>
     </propertyType>
 
@@ -11705,6 +12396,14 @@
         { "key": "Wet Contact", "value": "wet" },
         { "key": "Dry Contact", "value": "dry" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11723,6 +12422,14 @@
       <seedValues>
         [{ "key": "Provide 'gpio3Description' per device", "value": "${far.gpio3Description}" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11744,6 +12451,14 @@
         { "key": "Minor", "value": "minor" },
         { "key": "None", "value": "none" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11774,6 +12489,14 @@
       <seedValues>
         [{ "key": "Provide 'gpio3Threshold' per device", "value": "${far.gpio3Threshold}" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11793,6 +12516,14 @@
         { "key": "Open", "value": "open" },
         { "key": "Closed", "value": "closed" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
 
@@ -11859,6 +12590,14 @@
         { "key": "0", "value": "0" },
         { "key": "1", "value": "1" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11869,7 +12608,7 @@
       <section>GPIO>GPIO 4</section>
       <sectionLevelInTree>1</sectionLevelInTree>
       <defaultValue>0</defaultValue>
-      <required>0</required>
+      <required>1</required>
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
@@ -11882,7 +12621,13 @@
         {"field":"gpio:gpio_gpio4:gpio4Termination","value":"1"},
         {"field":"gpio:gpio_gpio4:gpio4Severity","value":"1"},
         {"field":"gpio:gpio_gpio4:gpio4Threshold","value":"1"},
-        {"field":"gpio:gpio_gpio4:gpio4Trigger","value":"1"}]
+        {"field":"gpio:gpio_gpio4:gpio4Trigger","value":"1"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
        </hiddenCondition>
     </propertyType>
 
@@ -11903,6 +12648,14 @@
         { "key": "Wet Contact", "value": "wet" },
         { "key": "Dry Contact", "value": "dry" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11921,6 +12674,14 @@
       <seedValues>
         [{ "key": "Provide 'gpio4Description' per device", "value": "${far.gpio4Description}" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11942,6 +12703,14 @@
         { "key": "Minor", "value": "minor" },
         { "key": "None", "value": "none" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11972,6 +12741,14 @@
       <seedValues>
         [{ "key": "Provide 'gpio4Threshold' per device", "value": "${far.gpio4Threshold}" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <propertyType>
@@ -11991,6 +12768,14 @@
         { "key": "Open", "value": "open" },
         { "key": "Closed", "value": "closed" }]
       </seedValues>
+      <hiddenCondition>
+        [{"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_topexpansionmodule:topModule1101","value":"none"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"sp"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"4a2t"},
+        {"field":"hardwaremodule:hardwaremodule_bottomexpansionmodule:bottomModule1101","value":"none"}]
+      </hiddenCondition>
     </propertyType>
 
     <!-- IR1101 4A2T Ethernet Interfaces -->

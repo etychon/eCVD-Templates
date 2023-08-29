@@ -64,7 +64,7 @@
       mbssid
       station-role root
     !
-    int dot11 0.50
+    interface Dot11Radio0.50
       encap dot1Q 50 native
       shutdown
       bridge-group 1

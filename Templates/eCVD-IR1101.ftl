@@ -1,8 +1,8 @@
 <#--
      ---- Begin eCVD template for IR1101 -----
-     ---- Version 2.03 -----------------------
+     ---- Version 2.05 -----------------------
      -----------------------------------------
-     -- May 2023 Release               --
+     -- August 2023 Release                 --
      -- REQUIRES Latest Bootstrap           --
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
@@ -245,9 +245,9 @@
 
 <#-- IP SLA destination IP addresses -->
 
-<#assign ipslaDestIPaddress = [far.wanUplink1SLADLTE!"4.2.2.1",
-    far.wanUplink2SLADLTE!"4.2.2.2",
-    far.wanUplink3SLADLTE!"9.9.9.10"]>
+<#assign ipslaDestIPaddress = [far.wanUplink1SLADLTE!"208.67.220.222",
+    far.wanUplink2SLADLTE!"208.67.222.220",
+    far.wanUplink3SLADLTE!"8.8.4.4"]>
 
 <#-- Device Settings Menu -->
 <#if far.localDomainName?has_content>
@@ -659,6 +659,8 @@ class-map type inspect match-any bypass-cm
       track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${70+p} track ${p+40}
       ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
+      <#-- This route is for backup purposes over cellular not tracking any routes -->
+      ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${80+p}
     <#else>
       ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}
       ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
@@ -668,20 +670,19 @@ class-map type inspect match-any bypass-cm
       <#-- Cell interface do not require the source for the SLA -->
       <#if isCellIntTable[p] == "true">
       	icmp-echo ${ipslaDestIPaddress[p]}
-        frequency 50
+        frequency 30
+        ip sla schedule ${p+40} life forever start-time now
+    	track ${p+40} ip sla ${p+40} reachability
+     	  delay down 65
       <#else>
         icmp-echo ${ipslaDestIPaddress[p]} source-interface ${priorityIfNameTable[p]}
         frequency 10
+	ip sla schedule ${p+40} life forever start-time now
+    	track ${p+40} ip sla ${p+40} reachability
+     	  delay down 25
       </#if>
     !
     !
-    ip sla schedule ${p+40} life forever start-time now
-      track ${p+40} ip sla ${p+40} reachability
-    event manager applet failover_${p+40}
-      event track ${p+40} state any
-      action 0.1 syslog msg "${priorityIfNameTable[p]} connectivity change, clearing NAT translations"
-      action 0.2 cli command "enable"
-      action 1.0 cli command "clear ip nat translation *"
     <#if isCellIntTable[p] != "true">
       <#-- this is not cellular, use DHCP -->
       <#-- config below is disabled until CSCvw77702 is fixed on both IOS and IOS-XE
@@ -689,10 +690,21 @@ class-map type inspect match-any bypass-cm
            int ${priorityIfNameTable[p]}
              ip dhcp client route track ${p+40}
       -->
+      event manager applet trackwired_${p+40}
+        event track ${p+40} state any
+         action 1.0 cli command "enable"
+         action 2.0 cli command "configure terminal"
+         action 3.0 if $_track_state eq "down"
+         action 4.0     cli command "no ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}"
+         action 5.0     syslog msg "Default route removed due to track state change."
+         action 6.0 else
+         action 7.0     cli command "ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}"
+         action 8.0     syslog msg "Default route added due to track state change."
+         action 9.0 end 
       <#-- This will enable the client route track via EEM, since config causes Registration failure-->
       <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
       event manager applet client_route_track_${eventAppName}
-        event timer watchdog time 120
+        event timer watchdog time 60
         action 1 cli command "en"
         action 2 cli command "show cgna profile name cg-nms-register | i disabled"
         action 3 string match "*Profile disabled*" "$_cli_result"
@@ -732,6 +744,12 @@ class-map type inspect match-any bypass-cm
     </#if>
   </#list>
 </#if>
+
+event manager applet wan_failover
+  event track 111 state down
+  action 0.1 syslog msg "WAN connectivity change, clearing NAT translations"
+  action 0.2 cli command "enable"
+  action 1.0 cli command "clear ip nat translation *"
 
 <#-- Umbrella DNS -->
 <#if isUmbrella == "true">
@@ -1644,7 +1662,12 @@ event manager applet ssh_crypto_key authorization bypass
 </#if> <#-- end of dumpAllVariables -->
 <#-- END OF LOGGING ONLY --------------------- -->
 
-
+<#-- Location History -->
+<#if config.enableLocationTracking>
+  event manager environment _gps_poll_interval ${config.locStreamRate}
+  event manager environment _gps_threshold ${config.distThreshold}
+  event manager policy fnd-push-gps.tcl type user
+</#if>
 
 
 </#compress>
