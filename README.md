@@ -1,9 +1,9 @@
 
 # eCVD-Templates
 
-This repository contains eCVD templates for Cisco IoT Operations Dashboard (IoT OD). These templates are based on user feedback and testing performed by the Cisco Validated Design (CVD) team, and are meant to used with Cisco IoT OD.
+This repository contains eCVD templates for Cisco IoT Operations Dashboard (IoT OD) Edge Device Manager (EDM). These templates are based on user feedback and testing performed by the Cisco Validated Design (CVD) team, and are meant to be used with Cisco IoT OD.
 
-[Cisco IoT Operations Dashboard](https://developer.cisco.com/docs/iotod/) is a device management platform to manage Cisco industrial network devices such as IR1800, IR1101, IR829, IR809, and IR807. Devices are onboarded using [Cisco Plug and Play Connect](https://www.cisco.com/c/en/us/buy/smart-accounts/plug-play-connect.html).
+[Cisco IoT Operations Dashboard](https://developer.cisco.com/docs/iotod/) is a device management platform to manage Cisco industrial network devices such as IR1800, IR1101, IR829, IR809, and IR807. Devices are onboarded using [Cisco Plug and Play Connect](https://www.cisco.com/c/en/us/buy/smart-accounts/plug-play-connect.html). Recently, support was added to IoT OD for switches - like IE3400, IE3300 - but not for template-based configuration management. Switches are only enabled to consume IoT OD services like Cisco Cyber Vision (CCV), or Secure Equipment Access (SEA), but not to be managed by EDM. We recommend to manage switches with solutions such as Cisco Catalyst Center (previously called DNA-C).
 
 # How it works
 
@@ -14,7 +14,8 @@ IoT OD will present the user with a graphical configuration template that is bui
 # UPT
 
 Written in XML with JSON payload. Make sure to validate full syntax is correct before moving to production with https://github.com/etychon/iotoc-userPropertyTypes-validator
-The UPT is part of the core product and cannot be changed by the user. It is provided here under the `UPT` directory as a reference for all variable names and types.
+For the moment, the UPT is part of the core product and cannot be changed by the user (but this is about to change in 2024). 
+It is provided here under the `UPT` directory as a reference for all variable names and types.
 
 # Templates
 
