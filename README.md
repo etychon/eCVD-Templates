@@ -27,6 +27,12 @@ The ultimate output of a template is a Cisco IOS configuration that will be push
 
 How to use templates provided here in Cisco IoT Operations Dashbord is explained in [Cisco DevNet IoT OD documentation](https://developer.cisco.com/docs/iotod/#!manage-templates-and-groups/add-and-manage-configurations).
 
+# Templates Future
+
+Going forward the plan is to have fully managed templates that won't be editable by the user. This will allow for seamless template upgrades without loosing local user changes and customizations. However customization will still be possible by adding custom configuration CLI items. 
+
+This change will mark a clear demarcation point between Cisco-provided template, and user-provided changes and customization reducing the friction zone between the two. 
+
 # Templates (Version 2)
 
 This repo contains the new v2 templates for IR829 and IR1101. You can differentiate them as they have `v2` in their name (ie: `eCVD-IR1101-v2.ftl`)
