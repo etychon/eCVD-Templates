@@ -1,5 +1,5 @@
 <#-- ---- Begin eCVD ADVANCED template for IR829 -----
-     ---- Version 2.02 -----------------------
+     ---- Version 2.03 -----------------------
      -----------------------------------------
      -- August 2023 Release                 --
      -- Support single and dual Radio       --
@@ -880,7 +880,7 @@ template will need to be adjusted -->
         event timer countdown time 15
         action 600 cli command "enable"
         action 610 cli command "conf t"
-        action 620 cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100"
+        action 620 cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if1}"
         action 630 cli command "no event manager applet remove-cell0-route-failproof-cli"
         action 640 cli command "exit"
         action 650 cli command "write mem"
@@ -1056,7 +1056,7 @@ template will need to be adjusted -->
     <#if isSecondCell?has_content && isSecondCell == "true" && APN2?has_content>
         event manager applet change_apn_cell2
         event timer countdown time 10
-        action 5 syslog msg "Changing APN Profile for Cellular0/3/0"
+        action 5 syslog msg "Changing APN Profile for ${cell_if2}"
         action 10 cli command "enable"
         action 15 cli command "${cell_if2} lte profile create 1 ${APN2}" pattern "confirm"
         action 20 cli command "y"

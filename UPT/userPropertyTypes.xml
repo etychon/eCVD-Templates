@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- Version 1.41        -->
+<!-- Version 1.42        -->
 <cgms xmlns="http://www.w3schools.com"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://www.w3schools.com propertyTypes.xsd">
@@ -1510,7 +1510,7 @@
       <defaultValue>ip</defaultValue>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'twType' per device", "value": "${far.fwType}" },
+      <seedValues>[{ "key": "Provide 'fwProtocol' per device", "value": "${far.fwProtocol}" },
         { "key": "TCP", "value":"tcp" },
         { "key": "UDP", "value":"udp" },
         { "key": "IP", "value":"ip"},
@@ -1762,8 +1762,77 @@
       Sections : WAN Uplink>WAN Uplink 1, WAN Uplink>WAN Uplink 2, WAN Uplink>WAN Uplink 3
       Security>Umbrella, DHCP, Device Management>Users, Device Management>Device Reset
       DNS/NTP
-      TODO:
     -->
+
+    <propertyType>
+      <name>Users</name>
+      <displayName>Users</displayName>
+      <description>Add users</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Management>Users</section>
+      <required>0</required>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <validationType>non-empty</validationType>
+      <dataType>table</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <tableColumns>[{ "colKey": "userName", "colLabel": "User Name" }, {"colKey": "userPassword", "colLabel": "User Password"}, {"colKey": "userPriv", "colLabel": "Privilege Level"}]</tableColumns>
+      <tableNumRows>6</tableNumRows>
+      <uniqueTableColumnKeyValues>["userName"]</uniqueTableColumnKeyValues>
+    </propertyType>
+
+    <propertyType>
+      <name>userName</name>
+      <displayName>User Name</displayName>
+      <description>User Name</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Management>Users</section>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>string</dataType>
+      <minLength>4</minLength>
+      <maxLength>8</maxLength>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'userName' per device", "value": "${far.userName}" }]</seedValues>
+      <disallowedValues>["admin"]</disallowedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>userPassword</name>
+      <displayName>Password</displayName>
+      <description>Password</description>
+      <issecure>1</issecure>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <section>Device Management>Users</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <minLength>6</minLength>
+      <maxLength>8</maxLength>
+      <dataType>string</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>[{ "key": "Provide 'userPassword' per device", "value": "${far.userPassword}" }]</seedValues>
+    </propertyType>
+
+    <propertyType>
+      <name>userPriv</name>
+      <displayName>Privilege Level</displayName>
+      <description>Privilege Level</description>
+      <exportAsTemplateKeys>1</exportAsTemplateKeys>
+      <sectionLevelInTree>1</sectionLevelInTree>
+      <section>Device Management>Users</section>
+      <required>0</required>
+      <validationType>non-empty</validationType>
+      <dataType>array</dataType>
+      <deviceSpecific>1</deviceSpecific>
+      <seedValues>
+        [
+          { "key": "Provide 'userPriv' per device", "value": "${far.userPriv}" },
+          { "key": "Admin", "value":"15" },
+          { "key": "User", "value":"5" }
+        ]
+      </seedValues>
+    </propertyType>
 
     <propertyType>
       <name>wanUplink1InterfaceNew</name>
@@ -2338,7 +2407,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[ { "key": "Provide 'recoveryTimer' per device", "value": "${far.recoveryTimer}" },
+      <seedValues>[ { "key": "Provide 'deviceResetTimer' per device", "value": "${far.deviceResetTimer}" },
         { "key": "15 min", "value": "15" },
         { "key": "30 min", "value": "30" },
         { "key": "1 hour", "value": "60" },
@@ -3513,69 +3582,6 @@
       <seedValues>[{ "key": "Provide 'canbusBaudrateBPS' per device", "value": "${far.canbusBaudrateBPS}"}]</seedValues>
     </propertyType>
 
-    <propertyType>
-      <name>Users</name>
-      <displayName>Users</displayName>
-      <description>Add users</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Device Management>Users</section>
-      <required>0</required>
-      <sectionLevelInTree>1</sectionLevelInTree>
-      <validationType>non-empty</validationType>
-      <dataType>table</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <tableColumns>[{ "colKey": "userName", "colLabel": "User Name" }, {"colKey": "userPassword", "colLabel": "User Password"}, {"colKey": "userPriv", "colLabel": "Privilege Level"}]</tableColumns>
-      <tableNumRows>6</tableNumRows>
-    </propertyType>
-
-    <propertyType>
-      <name>userName</name>
-      <displayName>User Name</displayName>
-      <description>User Name</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Device Management>Users</section>
-      <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
-      <validationType>non-empty</validationType>
-      <dataType>string</dataType>
-      <minLength>4</minLength>
-      <maxLength>8</maxLength>
-      <deviceSpecific>1</deviceSpecific>
-    </propertyType>
-
-    <propertyType>
-      <name>userPassword</name>
-      <displayName>Password</displayName>
-      <description>Password</description>
-      <issecure>1</issecure>
-      <sectionLevelInTree>1</sectionLevelInTree>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Device Management>Users</section>
-      <required>0</required>
-      <validationType>non-empty</validationType>
-      <minLength>6</minLength>
-      <maxLength>8</maxLength>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-    </propertyType>
-
-    <propertyType>
-      <name>userPriv</name>
-      <displayName>Privilege Level</displayName>
-      <description>Privilege Level</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <sectionLevelInTree>1</sectionLevelInTree>
-      <section>Device Management>Users</section>
-      <required>0</required>
-      <validationType>non-empty</validationType>
-      <dataType>array</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[
-        { "key": "Admin", "value":"15" },
-        { "key": "User", "value":"5" }]
-      </seedValues>
-    </propertyType>
-
     <!-- 1800 WGB Variables -->
 
     <propertyType>
@@ -3622,7 +3628,7 @@
 
     <propertyType>
       <name>wifiDeploymentMode</name>
-      <displayName>Select Wi-Fi Mode</displayName>
+      <displayName>Wi-Fi Mode</displayName>
       <description>WiFi Mode</description>
       <exportAsTemplateKeys>1</exportAsTemplateKeys>
       <sectionLevelInTree>1</sectionLevelInTree>
@@ -3631,9 +3637,10 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Work Group Bridge", "value":"wgb" },
-        { "key": "Controller", "value":"controller" },
-        { "key": "Work Group Bridge with Hotspot", "value":"dualwgb" }]
+      <seedValues>[
+        { "key": "Controller (CAPWAP)", "value": "controller" },
+        { "key": "Work Group Bridge", "value": "wgb" },
+        { "key": "Work Group Bridge with Hotspot", "value": "dualwgb" }]
       </seedValues>
       <hiddenCondition>[{"field":"wifi:wifi_wifimodesettings","value":""},
         {"field":"wifi:wifi_wifiuplinksettings","value":""},
@@ -4058,7 +4065,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[ { "key": "Provide 'clockTZ' per device", "value": "${far.localclockTZ}" },
+      <seedValues>[ { "key": "Provide 'clockTZ' per device", "value": "${far.clockTZ}" },
         { "key": "UTC+12 ANAT", "value": "anat" },
         { "key": "UTC+11 SBT", "value": "sbt" },
         { "key": "UTC+10 AEST", "value": "aest" },
@@ -5907,6 +5914,7 @@
       <deviceSpecific>1</deviceSpecific>
       <tableColumns>[{ "colKey": "userName", "colLabel": "User Name" }, {"colKey": "userPassword", "colLabel": "User Password"}, {"colKey": "userPriv", "colLabel": "Privilege Level"}]</tableColumns>
       <tableNumRows>6</tableNumRows>
+      <uniqueTableColumnKeyValues>["userName"]</uniqueTableColumnKeyValues>
     </propertyType>
 
     <propertyType>
@@ -5923,6 +5931,7 @@
       <maxLength>8</maxLength>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'userName' per device", "value": "${far.userName}" }]</seedValues>
+      <disallowedValues>["admin"]</disallowedValues>
     </propertyType>
 
     <propertyType>
@@ -7405,19 +7414,6 @@
       <seedValues>[{ "key": "Provide 'dhcpExcludeRangeEnd' per device", "value": "${far.dhcpExcludeRangeEnd}" }]</seedValues>
     </propertyType>
 
-    <propertyType>
-      <name>dhcpHelperIP</name>
-      <displayName>DHCP Helper IP Address</displayName>
-      <description>IPv4 Address of the DHCP Helper</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>DHCP>Advanced Settings>IP DHCP Helper Address</section>
-      <required>0</required>
-      <validationType>ipv4</validationType>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'dhcpHelperIP' per device", "value": "${far.dhcpHelperIP}" }]</seedValues>
-    </propertyType>
-
     <!-- ###############################################  -->
     <!-- VARIABLES for 2.1 Ethernet Sec  renamed from LAN -->
     <!-- ###############################################  -->
@@ -7548,71 +7544,6 @@
       <dataType>string</dataType>
       <deviceSpecific>1</deviceSpecific>
       <seedValues>[{ "key": "Provide 'fastEthernet4Description' per device", "value": "${far.fastEthernet4Description}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>Users</name>
-      <displayName>Users</displayName>
-      <description>Add users</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Device Management>Users</section>
-      <required>0</required>
-      <sectionLevelInTree>1</sectionLevelInTree>
-      <validationType>non-empty</validationType>
-      <dataType>table</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <tableColumns>[{ "colKey": "userName", "colLabel": "User Name" }, {"colKey": "userPassword", "colLabel": "User Password"}, {"colKey": "userPriv", "colLabel": "Privilege Level"}]</tableColumns>
-      <tableNumRows>6</tableNumRows>
-    </propertyType>
-
-    <propertyType>
-      <name>userName</name>
-      <displayName>User Name</displayName>
-      <description>User Name</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Device Management>Users</section>
-      <sectionLevelInTree>1</sectionLevelInTree>
-      <required>0</required>
-      <validationType>non-empty</validationType>
-      <dataType>string</dataType>
-      <minLength>4</minLength>
-      <maxLength>8</maxLength>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'userName' per device", "value": "${far.userName}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>userPassword</name>
-      <displayName>Password</displayName>
-      <description>Password</description>
-      <issecure>1</issecure>
-      <sectionLevelInTree>1</sectionLevelInTree>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <section>Device Management>Users</section>
-      <required>0</required>
-      <validationType>non-empty</validationType>
-      <minLength>6</minLength>
-      <maxLength>8</maxLength>
-      <dataType>string</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'userPassword' per device", "value": "${far.userPassword}" }]</seedValues>
-    </propertyType>
-
-    <propertyType>
-      <name>userPriv</name>
-      <displayName>Privilege Level</displayName>
-      <description>Privilege Level</description>
-      <exportAsTemplateKeys>1</exportAsTemplateKeys>
-      <sectionLevelInTree>1</sectionLevelInTree>
-      <section>Device Management>Users</section>
-      <required>0</required>
-      <validationType>non-empty</validationType>
-      <dataType>array</dataType>
-      <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'userPriv' per device", "value": "${far.userPriv}" },
-        { "key": "Admin", "value":"15" },
-        { "key": "User", "value":"5" }]
-      </seedValues>
     </propertyType>
 
     <propertyType>
@@ -8281,7 +8212,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'topExpModuleSerial1Media' per device", "value": "${far.topExpModuleSerial1Media}" },
+      <seedValues>[{ "key": "Provide 'topExpModuleSerial1RelayMode' per device", "value": "${far.topExpModuleSerial1RelayMode}" },
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
@@ -8745,7 +8676,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'topExpModuleSerial2Media' per device", "value": "${far.topExpModuleSerial2Media}" },
+      <seedValues>[{ "key": "Provide 'topExpModuleSerial2RelayMode' per device", "value": "${far.topExpModuleSerial2RelayMode}" },
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
@@ -9208,7 +9139,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'topExpModuleSerial3Media' per device", "value": "${far.topExpModuleSerial3Media}" },
+      <seedValues>[{ "key": "Provide 'topExpModuleSerial3RelayMode' per device", "value": "${far.topExpModuleSerial3RelayMode}" },
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
@@ -9672,7 +9603,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'topExpModuleSerial4Media' per device", "value": "${far.topExpModuleSerial4Media}" },
+      <seedValues>[{ "key": "Provide 'topExpModuleSerial4RelayMode' per device", "value": "${far.topExpModuleSerial4RelayMode}" },
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
@@ -10135,7 +10066,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'bottomExpModuleSerial1Media' per device", "value": "${far.bottomExpModuleSerial1Media}" },
+      <seedValues>[{ "key": "Provide 'bottomExpModuleSerial1RelayMode' per device", "value": "${far.bottomExpModuleSerial1RelayMode}" },
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
@@ -10599,7 +10530,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'bottomExpModuleSerial2Media' per device", "value": "${far.bottomExpModuleSerial2Media}" },
+      <seedValues>[{ "key": "Provide 'bottomExpModuleSerial2RelayMode' per device", "value": "${far.bottomExpModuleSerial2RelayMode}" },
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
@@ -11063,7 +10994,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'bottomExpModuleSerial3Media' per device", "value": "${far.bottomExpModuleSerial3Media}" },
+      <seedValues>[{ "key": "Provide 'bottomExpModuleSerial3RelayMode' per device", "value": "${far.bottomExpModuleSerial3RelayMode}" },
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>
@@ -11526,7 +11457,7 @@
       <validationType>non-empty</validationType>
       <dataType>array</dataType>
       <deviceSpecific>1</deviceSpecific>
-      <seedValues>[{ "key": "Provide 'bottomExpModuleSerial4Media' per device", "value": "${far.bottomExpModuleSerial4Media}" },
+      <seedValues>[{ "key": "Provide 'bottomExpModuleSerial4RelayMode' per device", "value": "${far.bottomExpModuleSerial4RelayMode}" },
         { "key": "IOx", "value":"iox" },
         { "key": "Reverse Telnet", "value":"rt" }]
       </seedValues>

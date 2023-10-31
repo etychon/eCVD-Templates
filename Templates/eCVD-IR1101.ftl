@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD template for IR1101 -----
-     ---- Version 2.05 -----------------------
+     ---- Version 2.06 -----------------------
      -----------------------------------------
      -- August 2023 Release                 --
      -- REQUIRES Latest Bootstrap           --
@@ -142,6 +142,7 @@
 <#-- Dual SIM Variables for WAN Uplink 1 -->
 <#if wan_link1_interface == "cellular1" || wan_link1_interface == "cellular2">
   <#if far.wan1SecondSimEnabledDLTE == "true">
+  <#assign placeholder = far.wan1SecondAPNDLTE!"">
   <#assign placeholder = far.wan1SecondAPNUsernameDLTE!"">
   <#assign placeholder = far.wan1SecondAPNPasswordDLTE!"">
   <#assign placeholder = far.wan1SecondSIMPinDLTE!"">
@@ -181,6 +182,7 @@
   <#-- Dual SIM Variables for WAN Uplink 2-->
   <#if wan_link2_interface == "cellular1" || wan_link2_interface == "cellular2">
     <#if far.wan2SecondSimEnabledDLTE == "true">
+    <#assign placeholder = far.wan2SecondAPNDLTE!"">
     <#assign placeholder = far.wan2SecondAPNUsernameDLTE!"">
     <#assign placeholder = far.wan2SecondAPNPasswordDLTE!"">
     <#assign placeholder = far.wan2SecondSIMPinDLTE!"">
@@ -222,6 +224,7 @@
   <#-- Dual SIM Variables for WAN Uplink 3-->
   <#if wan_link3_interface == "cellular1" || wan_link3_interface == "cellular2">
     <#if far.wan3SecondSimEnabledDLTE == "true">
+    <#assign placeholder = far.wan3SecondAPNDLTE!"">
     <#assign placeholder = far.wan3SecondAPNUsernameDLTE!"">
     <#assign placeholder = far.wan3SecondAPNPasswordDLTE!"">
     <#assign placeholder = far.wan3SecondSIMPinDLTE!"">

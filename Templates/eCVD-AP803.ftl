@@ -1,6 +1,6 @@
 <#-- Default Access point Configuration -->
 <#-- eCVD AP803 ADVANCED template -->
-<#-- version 1.81 -->
+<#-- version 1.82 -->
 
 <#if far.bootStrap>
     aaa new-model
@@ -13,6 +13,7 @@
     path flash:
     maximum 3
     !
+    no enable secret
     !
     username ${deviceDefault.apAdminUsername} privilege 15 secret ${deviceDefault.apAdminPassword}
     <#-- create users as defined in the template -->
@@ -122,11 +123,10 @@
     !
 <#-- This will be triggered if only Hotspot is enabled-->
    <#else>
-interface BVI1
-      description Cisco IoT OD eCVD Advanced AP, no WGB, ${deviceDefault.apIpAddress} should match DHCP
-      ip address dhcp
-    !
-
+      interface BVI1
+        description Cisco IoT OD eCVD Advanced AP, no WGB, ${deviceDefault.apIpAddress} should match DHCP
+        ip address dhcp
+      !
       dot11 ssid ${far.wifiSsid}
         vlan 1
         authentication open
@@ -182,9 +182,9 @@ interface BVI1
         encapsulation dot1Q 1
         bridge-group 10
         no ip route-cache
- interface GigabitEthernet0.20
-      encapsulation dot1Q 20 native
-      no ip route-cache
+      interface GigabitEthernet0.20
+        encapsulation dot1Q 20 native
+        no ip route-cache
     !
     !
     interface GigabitEthernet0.1
@@ -209,23 +209,38 @@ interface BVI1
     ip http secure-port 8443
     !ip http secure-trustpoint LDevID
     !
+    line con 0
+      length 0
+    !
     wsma agent exec
-    profile exec
+      profile exec
+      profile execHttp
     !
     wsma agent config
-    profile config
+      profile config
+      profile configHttp
     !
     wsma agent filesys
-    profile filesys
+      profile filesys
+      profile filesysHttp
     !
     wsma profile listener exec
-    transport https path /wsma/exec
+      transport https path /wsma/exec
     !
     wsma profile listener config
-    transport https path /wsma/config
+      transport https path /wsma/config
     !
     wsma profile listener filesys
-    transport https path /wsma/filesys
+      transport https path /wsma/filesys
+    !
+    wsma profile listener execHttp
+      transport http path /wsma/exec
+    !
+    wsma profile listener configHttp
+      transport http path /wsma/config
+    !
+    wsma profile listener filesysHttp
+      transport http path /wsma/filesys
     !
     no banner exec
     !

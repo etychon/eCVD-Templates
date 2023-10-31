@@ -113,6 +113,10 @@ primaryRecoverySLAIP                  yes     yes     yes
 secondaryRecoverySLAIP                yes     yes     yes     
 isAutoRecovery                        yes     yes     yes     
 devicemanagement_autorecovery         yes     yes     yes     
+Users                                 yes     yes     no      
+userName                              yes     yes     no      
+userPassword                          yes     yes     no      
+userPriv                              yes     yes     no      
 wanUplink1InterfaceNew                yes     yes     no      
 wanUplink1DescriptionNew              yes     yes     no      
 wanUplink1SLANew                      yes     yes     no      
@@ -220,10 +224,6 @@ ignitionOffTimerSeconds               no      yes     no
 isIgnitionSense                       no      yes     no      
 isDeadReckoning                       no      yes     no      
 canbusBaudrateBPS                     no      yes     no      
-Users                                 no      yes     no      
-userName                              no      yes     no      
-userPassword                          no      yes     no      
-userPriv                              no      yes     no      
 isWifi                                no      yes     no      
 wifi                                  no      yes     no      
 wifiDeploymentMode                    no      yes     no      
