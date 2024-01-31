@@ -1,8 +1,8 @@
 <#--
      ---- Begin eCVD template for IR1800 -----
-     ---- Version 2.81 TEMPLATE ---------------
+     ---- Version 2.84 TEMPLATE ---------------
      -----------------------------------------
-     -- September 2023 Release                  --
+     -- December 2023 Release                --
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
      -- QoS, Port Forwarding, Static Route  --
@@ -26,7 +26,8 @@
         ${provisioningFailed("This template is for IR1800 and does not support ${pid}")}
     </#if>
 
-
+<#-- Cisco IoTOD Host variables-->
+    <#assign her_name = nms.herHost>
 
 <#-- PLATFORM SPECIFIC VARIABLES -->
     <#assign ether_if = "GigabitEthernet 0/0/0">
@@ -38,12 +39,10 @@
     <#assign wgb_if = "Vlan${wgb_vlan}">
 
     <#-- List all cellular interfaces/controllers for modular DUAL LTE router -->
-    <#assign cell_ifs = ["Cellular 0/1/0", "Cellular 0/3/0", "Cellular 0/4/0"]>
-    <#assign cell_contrs = ["Cellular 0/1/0", "Cellular 0/3/0", "Cellular 0/4/0"]>
     <#assign active_cell_if_primary = "">
-      <#assign active_cell_ifs = []>
-      <#assign all_present_cell_ifs = []>
-      <#if deviceDefault.interfaces("cell", "0")?has_content>
+    <#assign active_cell_ifs = []>
+    <#assign all_present_cell_ifs = []>
+    <#if deviceDefault.interfaces("cell", "0")?has_content>
         <#list deviceDefault.interfaces("cell", "0") as interface>
           <#list interface as propName, propValue>
             <#if propValue?has_content && propValue?is_string>
@@ -56,19 +55,12 @@
             </#if>
           </#list>
           <#assign all_present_cell_ifs += [interface.name?replace("Cellular", "Cellular ")]>
+            ! Found present ${interface.name?replace("Cellular", "Cellular ")} on device
         </#list>
-      </#if>
-
-      <#if active_cell_if_primary?has_content>
-        <#assign active_cell_contr = active_cell_if_primary>
-        <#if pid?contains("2LTE")>
-          <#assign active_cell_contr = active_cell_if_primary?replace("/[0-9]", "", "r")>
-        </#if>
-        <#assign cell_ifs = [active_cell_if_primary] + cell_ifs>
-        <#assign cell_contrs = [active_cell_contr] + cell_contrs>
-      </#if>
+    </#if>
 
     <#if (all_present_cell_ifs?size) gt 1>
+        ! Found 2nd present cell interface ${all_present_cell_ifs[1]} on device
     	<#assign cell_if2 = all_present_cell_ifs[1]>
     </#if>
 
@@ -732,7 +724,6 @@
         </#if>
 
         local-domain dns_bypass
-        no ip dns server
         dnscrypt
         udp-timeout 5
         !
@@ -740,10 +731,10 @@
         interface Vlan1
         ip nbar protocol-discovery
         !
+        no ip dns server
     </#if>
 
     !
-
 <#-- interface priorities -->
 
     <#assign used_int = []>
@@ -763,7 +754,7 @@
             <#assign isWGBIntTable += ["false"]>
         </#if>
 
-        <#if interfaces_list[x] == "cellular1" && !used_int?seq_contains(interfaces_list[x])>
+        <#if interfaces_list[x] == "cellular1" && !used_int?seq_contains(interfaces_list[x]) && all_present_cell_ifs?seq_contains(cell_if1)>
             <#assign used_int += [interfaces_list[x]]>
             <#if wan_descriptions[x] != "">
                 <#assign wan_cell1_description = wan_descriptions[x]>
@@ -777,7 +768,7 @@
             <#assign isWGBIntTable += ["false"]>
         </#if>
 
-        <#if interfaces_list[x] == "cellular2" && !used_int?seq_contains(interfaces_list[x])>
+        <#if interfaces_list[x] == "cellular2" && !used_int?seq_contains(interfaces_list[x]) && all_present_cell_ifs?seq_contains(cell_if2)>
             <#assign used_int += [interfaces_list[x]]>
             <#if wan_descriptions[x] != "">
                 <#assign wan_cell2_description = wan_descriptions[x]>
@@ -829,12 +820,8 @@
         <#-- Config for Cell interface are slightly different -->
             <#if isCellIntTable[p] == "true">
                 track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
-                ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${70+p} track ${p+40}
                 ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
-                <#-- This route is for backup purposes over cellular not tracking any routes -->
-                ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${80+p}
             <#else>
-                ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}
                 ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} dhcp
             </#if>
             ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
@@ -872,11 +859,11 @@
               action 6.0 else
               action 7.0     cli command "ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}"
               action 8.0     syslog msg "Default route added due to track state change."
-              action 9.0 end 
+              action 9.0 end
             <#-- This will enable the client route track via EEM, since config causes Registration failure-->
                 <#assign eventAppName = priorityIfNameTable[p]?replace(" ", "_")>
                 event manager applet client_route_track_${eventAppName}
-                event timer watchdog time 60
+                event timer watchdog time 120
                 action 1 cli command "en"
                 action 2 cli command "show cgna profile name cg-nms-register | i disabled"
                 action 3 string match "*Profile disabled*" "$_cli_result"
@@ -1269,16 +1256,6 @@ event manager applet wan_failover
         ip nat inside source route-map RM_WAN_ACL3 interface ${cell_if2} overload
     </#if>
 
-    ! Remove routes from Bootstrap that we don't want
-    event manager applet remove-cell0-route-failproof-cli
-    event timer countdown time 15
-    action 600 cli command "enable"
-    action 610 cli command "conf t"
-    action 620 cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if1} 100"
-    action 630 cli command "no event manager applet remove-cell0-route-failproof-cli"
-    action 640 cli command "exit"
-    action 650 cli command "write mem"
-
 
     !
 <#-- User defined static routes with either next hop or egress interface -->
@@ -1350,7 +1327,6 @@ event manager applet wan_failover
     transport input ssh
     !
     !
-<#-- ADDED LINES BELOW FOR ADVANCED -->
 <#-- Netflow -->
 
     <#if isNetflow?has_content && isNetflow == "true" && netflowCollectorIP?has_content>
@@ -1390,69 +1366,68 @@ event manager applet wan_failover
 <#-- ------------------------------------------ -->
 
 <#-- Modify Tunnel Priorities Based on User Selection -->
-<#assign herip = nms.herIP>
-<#assign her_name = nms.herHost>
 <#if modifyTunnelList?has_content>
   event manager applet modify_tunnel_priorities
-    event timer watchdog time 140
-    action 1.1 cli command "en"
-    action 1.2 cli command "sh cgna profile-state name cg-nms-register | i State"
-    action 1.3 string match "*Profile disabled*" "$_cli_result"
-    action 1.4 set register_present $_string_result
-    action 1.5 if $register_present eq "0"
-    action 1.6 exit
-    action 1.7 end
-    action 2.0 syslog msg "Changing Management Tunnel Priorities"
-    action 2.1 cli command "conf t"
-    action 2.11 cli command "no event manager applet MgmtTuRecvryRetry"
-    action 2.12 cli command "no event manager applet updateRoutesDualLte"
-    action 2.13 cli command "no event manager applet MgmtTuRecvry"
-    action 2.14 cli command "no event manager applet managementVpnConnectionDown"
-    action 2.15 cli command "no event manager applet checkManagementVpnActive"
-    action 2.16 cli command "no event manager applet cell_pnp_Cellular0/1/0"
-    action 2.17 cli command "no event manager applet cell_pnp_Cellular0/4/0"
-    action 2.18 cli command "no event manager applet cell_pnp_Cellular0/3/0"
-    action 2.19 cli command "no event manager applet cell_module_detected"
-    action 2.2 cli command "no ip route $herip 255.255.255.255 ${ether_if} dhcp"
-    action 2.3 cli command "no ip route $herip 255.255.255.255 ${cell_if2}"
-    action 2.4 cli command "no ip route $herip 255.255.255.255 ${cell_if1}"
-    action 2.5 cli command "crypto ikev2 client flexvpn Tunnel1"
-    action 2.6 cli command "no source 1"
-    action 2.7 cli command "no source 2"
-    action 2.8 cli command "no source 3"
-    action 2.81 cli command "no source 4"
-    action 2.9 cli command ""
+    event timer watchdog time 300
+    action 010  cli command "en"
+    action 020  cli command "sh cgna profile-state name cg-nms-register | i State"
+    action 030  string match "*Profile disabled*" "$_cli_result"
+    action 040  set register_present $_string_result
+   !action 045  syslog msg "register_present==>$register_present"
+    action 050  if $register_present eq "0"
+    action 060    exit
+    action 070  end
+    action 080  syslog msg "Changing Management Tunnel Priorities"
+    action 090  cli command "conf t"
+    action 100  cli command "no event manager applet MgmtTuRecvryRetry"
+    action 110  cli command "no event manager applet updateRoutesDualLte"
+    action 120  cli command "no event manager applet MgmtTuRecvry"
+    action 130  cli command "no event manager applet managementVpnConnectionDown"
+    action 140  cli command "no event manager applet checkManagementVpnActive"
+    action 141  cli command "no event manager applet cell_module_detected"
+    action 146  cli command "no event manager applet cell_pnp_Cellular0/4/0"
+    action 147  cli command "no event manager applet cell_pnp_Cellular0/5/0"
+    action 150  cli command "no ip route $herip 255.255.255.255 ${ether_if} dhcp"
+    action 160  cli command "no ip route $herip 255.255.255.255 ${cell_if1}"
+    action 165  cli command "no ip route $herip 255.255.255.255 ${cell_if2}"
+    action 170  cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if1}"
+    action 175  cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if2}"
+    action 230  cli command "crypto ikev2 client flexvpn Tunnel1"
+    action 240  cli command "no source 1"
+    action 250  cli command "no source 2"
+    action 260  cli command "no source 3"
+    action 270  cli command "no source 4"
+    action 280  cli command ""
     <#assign source_num = 0>
-  <#list 0 .. (modifyTunnelList?size-1) as p>
-    <#assign source_num += 1>
-    action 3.${p} cli command "source ${source_num} ${modifyTunnelList[p]} track ${p+40}"
-  </#list>
-  <#list 0 .. (modifyTunnelList?size-1) as m>
-    <#-- Need the second m+40 for the AD of the route -->
-    <#-- Add DHCP in for the route via Ethernet-->
-    <#if isCellIntTable[m] == "true">
-      action 4.${m} cli command "ip route ${herip} 255.255.255.255 ${modifyTunnelList[m]} track ${m+40} ${m+40}"
-    <#else>
-      action 4.${m} cli command "ip route ${herip} 255.255.255.255 ${modifyTunnelList[m]} dhcp ${m+40}"
-    </#if>
-  </#list>
-    action 5.0 cli command "crypto ikev2 keyring Flex_key"
-    action 5.1 cli command "peer cloud-core-router"
-    action 5.2 cli command "no address"
-    action 5.3 cli command "hostname ${her_name}"
-    action 5.4 cli command "address 0.0.0.0 0.0.0.0"
-    action 5.5 cli command "exit"
-    action 5.6 cli command "exit"
-    action 5.7 cli command "crypto ikev2 client flexvpn Tunnel1"
-    action 5.8 cli command "no peer 1"
-    action 5.9 cli command "peer 1 fqdn ${her_name} dynamic"
-    action 6.0 cli command "exit"
-    action 8.0 cli command "no event manager applet modify_tunnel_priorities"
-    action 8.1 cli command "exit"
-    action 8.2 cli command "write mem"
+    <#list 0 .. (modifyTunnelList?size-1) as p>
+        <#assign source_num += 1>
+        action 290.${p} cli command "source ${source_num} ${modifyTunnelList[p]} track ${p+40}"
+    </#list>
+    action 300  cli command "crypto ikev2 keyring Flex_key"
+    action 310  cli command "peer cloud-core-router"
+    action 320  cli command "no address"
+    action 330  cli command "hostname ${her_name}"
+    action 340  cli command "address 0.0.0.0 0.0.0.0"
+    action 350  cli command "exit"
+    action 360  cli command "exit"
+    action 370  cli command "crypto ikev2 client flexvpn Tunnel1"
+    action 380  cli command "no peer 1"
+    action 390  cli command "peer 1 fqdn ${her_name} dynamic"
+    action 400  cli command "exit"
+    <#list 0 .. (modifyTunnelList?size-1) as p>
+        <#if isCellIntTable[p] == "true">
+            action 410.${p} cli command "ip route 0.0.0.0 0.0.0.0 ${modifyTunnelList[p]} ${70+p} track ${p+40}"
+        <#-- This route is for backup purposes over cellular not tracking any routes -->
+            action 410.${p}1 cli command "ip route 0.0.0.0 0.0.0.0 ${modifyTunnelList[p]} ${80+p}"
+        <#else>
+            action 410.${p} cli command "ip route 0.0.0.0 0.0.0.0 ${modifyTunnelList[p]} dhcp ${70+p}"
+        </#if>
+    </#list>
+    action 420  cli command "do clear ip nat translation *"
+    action 440  cli command "no event manager applet modify_tunnel_priorities"
+    action 450  cli command "exit"
+    action 460  cli command "write mem"
 </#if>
-
-
 
 <#-- Generate RSA keys for SSH -->
 
@@ -1624,7 +1599,7 @@ event manager applet wan_failover
         <#if dlte_int_enable[x] == "true">
             track ${x+80} interface ${dlte_interfaces[x]} line-protocol
             ip route ${dlte_ips[x]} 255.255.255.255 ${dlte_interfaces[x]} track ${x+80}
-            ip route ${dlte_ips[x]} 255.255.255.255 Null0 3 
+            ip route ${dlte_ips[x]} 255.255.255.255 Null0 3
             controller ${dlte_interfaces[x]}
             lte modem link-recovery disable
             ip sla ${x+20}
@@ -1647,9 +1622,9 @@ event manager applet wan_failover
             no event manager applet LTE_SLA_MEASURE_${x}
             event manager applet LTE_SLA_MEASURE_${x}
             event timer watchdog time 120 maxrun 99
-            action 1.10 cli command "enable"    
+            action 1.10 cli command "enable"
             action 1.12 track read ${x+20}
-            action 1.14 if $_track_state eq "down"    
+            action 1.14 if $_track_state eq "down"
             action 1.16  cli command "config t"
             action 1.18  counter name "SLA_violations_${x}" op inc value 1
             action 1.20  cli command "event manager environment LTE_SLA_VIOLATIONS_${x} $_counter_value_remain"
@@ -1661,7 +1636,7 @@ event manager applet wan_failover
             action 1.32 regexp "([0-9]+\/)" "$RTT3" RTT2
             action 1.34 string trimright "$RTT2" "\/"
             action 1.36 set RTT "$_string_result"
-            action 1.38 if $RTT gt "$LTE_RTT_THRESH_${x}" 
+            action 1.38 if $RTT gt "$LTE_RTT_THRESH_${x}"
             action 1.40  cli command "config t"
             action 1.42  counter name "RTT_violations_${x}" op inc value 1
             action 1.44  cli command "event manager environment LTE_RTT_VIOLATIONS_${x} $_counter_value_remain"
@@ -1673,13 +1648,13 @@ event manager applet wan_failover
             action 2.12 regexp "([0-9]+\/)" "$Jitter3" Jitter2
             action 2.14 string trimright "$Jitter2" "\/"
             action 2.16 set Jitter "$_string_result"
-            action 2.18 if $Jitter gt "$LTE_JITTER_THRESH_${x}" 
+            action 2.18 if $Jitter gt "$LTE_JITTER_THRESH_${x}"
             action 2.20  cli command "config t"
             action 2.22  counter name "Jitter_violations_${x}" op inc value 1
             action 2.24  cli command "event manager environment LTE_JITTER_VIOLATIONS_${x} $_counter_value_remain"
             action 2.26  cli command "end"
             action 2.28  syslog msg "Jitter violation ocurred. Current total violations: $LTE_JITTER_VIOLATIONS_${x}"
-            action 2.30 end 
+            action 2.30 end
             action 2.32 if $LTE_PRIMARY_PREEMPT_TIME_${x} ne "0"
             action 2.34  cli command "sh controller ${dlte_interfaces[x]} | i active SIM"
             action 2.36  string index "$_cli_result" 4
@@ -1704,7 +1679,7 @@ event manager applet wan_failover
             action 3.32    cli command "event manager environment LTE_JITTER_VIOLATIONS_${x} 0"
             action 3.34    cli command "end"
             action 3.36    cli command "clear interface ${dlte_interfaces[x]}"
-            action 3.38    cli command "${dlte_interfaces[x]} lte sim activate slot 0" 
+            action 3.38    cli command "${dlte_interfaces[x]} lte sim activate slot 0"
             action 3.40    cli command "clear ip route *"
             action 3.42   end
             action 3.44  end
@@ -1724,30 +1699,30 @@ event manager applet wan_failover
             action 1.14 string index "$_cli_result" 4
             action 1.16 if $_string_result eq "0"
             action 1.18  set activate "1"
-            action 1.20 else 
+            action 1.20 else
             action 1.22  set activate "0"
             action 1.24 end
             action 1.26 counter name "SLA_violations_${x}" op nop
-            action 1.28 if $_counter_value_remain eq "3" 
+            action 1.28 if $_counter_value_remain eq "3"
             action 1.30  increment LTE_SIM_FAILOVER_COUNT_${x}
             action 1.32  cli command "config t"
             action 1.34  cli command "event manager environment LTE_SIM_FAILOVER_COUNT_${x} $LTE_SIM_FAILOVER_COUNT_${x}"
             action 1.36  cli command "event manager environment LTE_SECONDARY_ACTIVE_TIME_${x} 0"
             action 1.38  cli command "end"
             action 1.40  cli command "clear interface ${dlte_interfaces[x]}"
-            action 1.42  cli command "${dlte_interfaces[x]} lte sim activate slot $activate" 
+            action 1.42  cli command "${dlte_interfaces[x]} lte sim activate slot $activate"
             action 1.44  cli command "clear ip route *"
             action 1.46  syslog msg "SIM failover. Activating SIM in slot $activate due to SLA down"
             action 1.48 end
             action 2.10 counter name "RTT_violations_${x}" op nop
             action 2.12 if $_counter_value_remain eq "4"
-            action 2.14  increment LTE_SIM_FAILOVER_COUNT_${x} 
+            action 2.14  increment LTE_SIM_FAILOVER_COUNT_${x}
             action 2.16  cli command "config t"
             action 2.18  cli command "event manager environment LTE_SIM_FAILOVER_COUNT_${x} $LTE_SIM_FAILOVER_COUNT_${x}"
             action 2.20  cli command "event manager environment LTE_SECONDARY_ACTIVE_TIME_${x} 0"
             action 2.22  cli command "end"
             action 2.24  cli command "clear interface ${dlte_interfaces[x]}"
-            action 2.26  cli command "${dlte_interfaces[x]} lte sim activate slot $activate" 
+            action 2.26  cli command "${dlte_interfaces[x]} lte sim activate slot $activate"
             action 2.28  cli command "clear ip route *"
             action 2.30  syslog msg "SIM failover. Activating SIM in slot $activate due to RTT violations"
             action 2.32 end
@@ -1756,10 +1731,10 @@ event manager applet wan_failover
             action 3.14  increment LTE_SIM_FAILOVER_COUNT_${x}
             action 3.16  cli command "config t"
             action 3.18  cli command "event manager environment LTE_SIM_FAILOVER_COUNT_${x} $LTE_SIM_FAILOVER_COUNT_${x}"
-            action 3.20  cli command "event manager environment LTE_SECONDARY_ACTIVE_TIME_${x} 0"  
+            action 3.20  cli command "event manager environment LTE_SECONDARY_ACTIVE_TIME_${x} 0"
             action 3.22  cli command "end"
             action 3.24  cli command "clear interface ${dlte_interfaces[x]}"
-            action 3.26  cli command "${dlte_interfaces[x]} lte sim activate slot $activate" 
+            action 3.26  cli command "${dlte_interfaces[x]} lte sim activate slot $activate"
             action 3.28  cli command "clear ip route *"
             action 3.30  syslog msg "SIM failover. Activating SIM in slot $activate due to Jitter violations"
             action 3.32 end
@@ -1791,7 +1766,7 @@ event manager applet wan_failover
                         <#assign subi = 0>
                         <#list value as val>
                             <#list val as subkey, subvalue>
-                                action ${i} cli command "${subParm}.${key} [${subi}] ${subkey} = ${subvalue}"
+                                action ${i} cli command "${subParm}.${key} [${subi}] ${subkey} = ${subvalue!"*null*"}"
                                 <#assign i = i + 1>
                             </#list>
                             <#assign subi = subi + 1>
@@ -1820,6 +1795,12 @@ event manager applet wan_failover
         <#assign primary_controller = far.primaryControllerIP>
         <#if far.secondaryControllerIP?has_content>
           <#assign secondary_controller = far.secondaryControllerIP>
+        </#if>
+        <#if far.wifi6Mode?has_content>
+          <#assign apMode = far.wifi6Mode>
+          <#if apMode != "CAPWAP">
+            <#stop 'Please check if Wi-Fi6 module is plugged in and set to CAPWAP mode.'>
+          </#if>
         </#if>
       </#if>
     <#elseif wifidepmode == "dualwgb">

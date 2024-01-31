@@ -1,7 +1,7 @@
 <#-- ---- Begin eCVD ADVANCED template for IR829 -----
-     ---- Version 2.03 -----------------------
+     ---- Version 2.04 -----------------------
      -----------------------------------------
-     -- August 2023 Release                 --
+     -- December 2023 Release               --
      -- Support single and dual Radio       --
      -- Site to Site VPN                    --
 -->
@@ -24,16 +24,19 @@
         ${provisioningFailed("This template is for IR829 and does not support ${pid}")}
     </#if>
 
+<#-- Cisco IoTOD Host variables-->
+    <#assign her_name = nms.herHost>
+
 <#-- PLATFORM SPECIFIC VARIABLES -->
     <#assign ether_if = "vlan10">
     <#if pid?contains("2LTE")>
         <#assign cell_if1 = "Cellular 0/0">
         <#assign cell_if2 = "Cellular 1/0">
     <#else>
+        <#-- Keep cell_if2 undefined for non 2LTE pids-->
         <#assign cell_if1 = "Cellular 0">
     </#if>
     <#assign cell_if1_contr = "Cellular 0">
-    <#assign isGpsEnabled = "true">
     <#assign wgb_vlan = "50">
     <#assign wgb_if = "Vlan${wgb_vlan}">
     <#assign vpnTunnelIntf = "Tunnel2">
@@ -90,7 +93,6 @@
     </#if>
 
     <#assign isFirstCell = "false">
-    <#assign isGpsEnabled = "true">
     <#if section.wan_cellular1?has_content && section.wan_cellular1 == "true">
         <#assign isFirstCell = "true">
         <#if far.apn1?has_content && far.apn1 != "null">
@@ -99,7 +101,7 @@
     </#if>
 
     <#assign isSecondCell = "false">
-    <#if section.wan_cellular2?has_content && section.wan_cellular2 == "true">
+    <#if cell_if2?? && section.wan_cellular2?has_content && section.wan_cellular2 == "true">
         <#assign isSecondCell = "true">
         <#if far.apn2?has_content && far.apn2 != "null">
             <#assign APN2 = far.apn2>
@@ -439,13 +441,9 @@
         <#-- Config for Cell interface are slightly different -->
             <#if isCellIntTable[p] == "true">
                 track ${p+10} interface ${priorityIfNameTable[p]} line-protocol
-                ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${70+p} track ${p+40}
                 ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} track ${p+10}
-                <#-- This route is for backup purposes over cellular not tracking any routes -->
-                ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${80+p}
             <#else>
-                ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}
-                ip route ${ipslaDestIPaddress[p]} 255.255.255.255 dhcp
+                ip route ${ipslaDestIPaddress[p]} 255.255.255.255 ${priorityIfNameTable[p]} dhcp
             </#if>
             ip route ${ipslaDestIPaddress[p]} 255.255.255.255 Null0 3
             ip sla ${p+40}
@@ -468,6 +466,15 @@
                  event manager applet trackwired_${p+40}
                   event track ${p+40} state any
                    action 1.0 cli command "enable"
+                <#if isWGBIntTable[p] == "true">
+                    action 1.1  cli command "sh cgna profile-state name cg-nms-ap-register | i State"
+                    action 1.2  string match "*Profile disabled*" "$_cli_result"
+                    action 1.3  set ap_register_disabled $_string_result
+                   !action 1.4  syslog msg "ap_register_disabled ==> $ap_register_disabled"
+                    action 1.5  if $ap_register_disabled eq "0"
+                    action 1.6    exit
+                    action 1.7  end
+                </#if>
                    action 2.0 cli command "configure terminal"
                    action 3.0 if $_track_state eq "down"
                    action 4.0     cli command "no ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}"
@@ -475,7 +482,7 @@
                    action 6.0 else
                    action 7.0     cli command "ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}"
                    action 8.0     syslog msg "Default route added due to track state change."
-                   action 9.0 end 
+                   action 9.0 end
             </#if>
             !
             <#if isWGBIntTable[p] == "true">
@@ -525,7 +532,7 @@
         !
         ip nat inside source route-map RM_WGB_ACL interface ${wgb_if} overload
     </#if>
-    
+
     event manager applet wan_failover
        event track 111 state down
        action 0.1 syslog msg "WAN connectivity change, clearing NAT translations"
@@ -690,14 +697,9 @@
 <#-- --- END OF QoS CONFIG ----------------------------- -->
 
 <#-- Enable GPS  -->
-    <#if isGpsEnabled?has_content && isGpsEnabled == "true">
-        gyroscope-reading enable
-        controller ${cell_if1_contr}
-        lte gps mode standalone
-        lte gps nmea ip
-    </#if>
     !
     <#if config.enableLocationTracking>
+        gyroscope-reading enable
         event manager environment _gps_poll_interval ${config.locStreamRate}
         event manager environment _gps_threshold ${config.distThreshold}
         event manager policy fnd-push-gps.tcl type user
@@ -874,18 +876,6 @@ template will need to be adjusted -->
         </#list>
     </#if>
 
-    <#if isFirstCell == "true">
-        ! Remove routes from Bootstrap that we don't want
-        event manager applet remove-cell0-route-failproof-cli
-        event timer countdown time 15
-        action 600 cli command "enable"
-        action 610 cli command "conf t"
-        action 620 cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if1}"
-        action 630 cli command "no event manager applet remove-cell0-route-failproof-cli"
-        action 640 cli command "exit"
-        action 650 cli command "write mem"
-    </#if>
-
     <#if isPrimaryHeadEndEnable == "true" && herIpAddress?has_content>
         ip route ${herIpAddress}  255.255.255.255 ${ether_if} dhcp
         <#if isSecondaryHeadEndEnable == "true" && backupHerIpAddress?has_content>
@@ -1019,7 +1009,68 @@ template will need to be adjusted -->
 <#-- ------------------------------------------ -->
 <#-- ------------------------------------------ -->
 
-<#-- generare RSA keys for SSH -->
+<#-- Modify Tunnel Priorities Based on User Selection -->
+    event manager applet modify_tunnel_priorities
+    event timer watchdog time 300
+    action 010  cli command "en"
+    action 020  cli command "sh cgna profile-state name cg-nms-register | i State"
+    action 030  string match "*Profile disabled*" "$_cli_result"
+    action 040  set register_present $_string_result
+   !action 045  syslog msg "register_present==>$register_present"
+    action 050  if $register_present eq "0"
+    action 060    exit
+    action 070  end
+    action 080  syslog msg "Changing Management Tunnel Priorities"
+    action 090  cli command "conf t"
+    action 100  cli command "no event manager applet MgmtTuRecvryRetry"
+    action 110  cli command "no event manager applet updateRoutesDualLte"
+    action 120  cli command "no event manager applet MgmtTuRecvry"
+    action 130  cli command "no event manager applet managementVpnConnectionDown"
+    action 140  cli command "no event manager applet checkManagementVpnActive"
+    action 150  cli command "no ip route $herip 255.255.255.255 ${ether_if} dhcp"
+    action 160  cli command "no ip route $herip 255.255.255.255 ${cell_if1}"
+    action 170  cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if1}"
+    <#if cell_if2??>
+        action 165  cli command "no ip route $herip 255.255.255.255 ${cell_if2}"
+        action 175  cli command "no ip route 0.0.0.0 0.0.0.0 ${cell_if2}"
+    </#if>
+    action 230  cli command "crypto ikev2 client flexvpn Tunnel1"
+    action 240  cli command "no source 1"
+    action 250  cli command "no source 2"
+    action 260  cli command "no source 3"
+    action 270  cli command "no source 4"
+    action 280  cli command ""
+    <#assign source_num = 0>
+    <#list 0 .. (priorityIfNameTable?size-1) as p>
+        <#assign source_num += 1>
+        action 290.${p}  cli command "source ${source_num} ${priorityIfNameTable[p]} track ${p+40}"
+    </#list>
+    action 300  cli command "crypto ikev2 keyring Flex_key"
+    action 310  cli command "peer cloud-core-router"
+    action 320  cli command "no address"
+    action 330  cli command "hostname ${her_name}"
+    action 340  cli command "address 0.0.0.0 0.0.0.0"
+    action 350  cli command "exit"
+    action 360  cli command "exit"
+    action 370  cli command "crypto ikev2 client flexvpn Tunnel1"
+    action 380  cli command "no peer 1"
+    action 390  cli command "peer 1 fqdn ${her_name} dynamic"
+    action 400  cli command "exit"
+    <#list 0 .. (priorityIfNameTable?size-1) as p>
+        <#if isCellIntTable[p] == "true">
+            action 410.${p} cli command "ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${70+p} track ${p+40}"
+        <#-- This route is for backup purposes over cellular not tracking any routes -->
+            action 410.${p}1 cli command "ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} ${80+p}"
+        <#else>
+            action 410.${p} cli command "ip route 0.0.0.0 0.0.0.0 ${priorityIfNameTable[p]} dhcp ${70+p}"
+        </#if>
+    </#list>
+    action 420  cli command "do clear ip nat translation *"
+    action 440  cli command "no event manager applet modify_tunnel_priorities"
+    action 450  cli command "exit"
+    action 460  cli command "write mem"
+
+<#-- Generate RSA keys for SSH -->
 
     event manager applet ssh_crypto_key authorization bypass
     event timer watchdog time 30 maxrun 60
@@ -1133,7 +1184,7 @@ the route -->
                         <#assign subi = 0>
                         <#list value as val>
                             <#list val as subkey, subvalue>
-                                action ${i} cli command "${subParm}.${key} [${subi}] ${subkey} = ${subvalue}"
+                                action ${i} cli command "${subParm}.${key} [${subi}] ${subkey} = ${subvalue!"*null*"}"
                                 <#assign i = i + 1>
                             </#list>
                             <#assign subi = subi + 1>

@@ -7675,9 +7675,8 @@
         {"field":"serial:serial_base:baseAsync1LocalIP","value":"false"},
         {"field":"serial:serial_base:baseAsync1LocalPort","value":"false"},
         {"field":"serial:serial_base:baseAsync1PacketMax","value":"false"},
-        {"field":"serial:serial_base:baseAsync1SpecialCharacter","value":"false"},
-        {"field":"serial:serial_base:baseAsync1SpecialCharacter","value":"true"},
-        {"field":"serial:serial_base:baseAsync1LocalIP","value":"true"}]
+        {"field":"serial:serial_base:baseAsync1RelayMode","value":"false"},
+        {"field":"serial:serial_base:baseAsync1SpecialCharacter","value":"false"}]
       </hiddenCondition>
     </propertyType>
 
