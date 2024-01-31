@@ -1,5 +1,7 @@
-
 # eCVD-Templates
+
+> [!CAUTION]  
+> This repository is not maintained anymore.
 
 This repository contains eCVD templates for Cisco IoT Operations Dashboard (IoT OD) Edge Device Manager (EDM). These templates are based on user feedback and testing performed by the Cisco Validated Design (CVD) team, and are meant to be used with Cisco IoT OD.
 
