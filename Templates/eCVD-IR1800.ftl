@@ -1,6 +1,6 @@
 <#--
      ---- Begin eCVD template for IR1800 -----
-     ---- Version 2.84 TEMPLATE ---------------
+     ---- Version 2.85 TEMPLATE ---------------
      -----------------------------------------
      -- December 2023 Release                --
      -- Support single and dual Radio       --
@@ -876,6 +876,23 @@
                 action 7.3 cli command "exit"
                 action 8.0 cli command "no event manager applet client_route_track_${eventAppName}"
                 action 8.1 cli command "exit"
+                <#-- NOTE: Below cmd will run in ios priviledge exec mode-->
+                action 8.2 cli command "show event manager policy active | i no_config_replace.tcl"
+               !action 8.3 syslog msg "'show event manager policy active | i no_config_replace.tcl' output ==>[$_cli_result]"
+                action 8.4 string match "*no_config_replace.tcl*" "$_cli_result"
+                <#-- Exit if rollback script is running before writing to mem-->
+                action 8.5 if $_string_result eq "1"
+                action 8.6  syslog msg "The no_config_replace.tcl EEM script is actively running. Will skip 'wr mem' command"
+                action 8.7  exit
+                action 8.8 end
+                action 8.81 cli command "show conf lock"
+               !action 8.82 syslog msg "'show conf lock' output ==>[$_cli_result]"
+                action 8.83 string match "*Configuration mode is not locked*" "$_cli_result"
+                <#-- Exit if device config lock is active before writing to mem-->
+                action 8.84 if $_string_result ne "1"
+                action 8.85  syslog msg "The device configuration terminal is currently locked. Will skip 'wr mem' command"
+                action 8.86  exit
+                action 8.87 end
                 action 9.0 cli command "write mem"
             </#if>
             <#if isWGBIntTable[p] == "true">
@@ -1426,7 +1443,24 @@ event manager applet wan_failover
     action 420  cli command "do clear ip nat translation *"
     action 440  cli command "no event manager applet modify_tunnel_priorities"
     action 450  cli command "exit"
-    action 460  cli command "write mem"
+    <#-- NOTE: Below cmd will run in ios priviledge exec mode-->
+    action 451  cli command "show event manager policy active | i no_config_replace.tcl"
+   !action 452  syslog msg "'show event manager policy active | i no_config_replace.tcl' output ==>[$_cli_result]"
+    action 453  string match "*no_config_replace.tcl*" "$_cli_result"
+    <#-- Exit if rollback script is running before writing to mem-->
+    action 454  if $_string_result eq "1"
+    action 455    syslog msg "The no_config_replace.tcl EEM script is actively running. Will skip 'wr mem' command"
+    action 456    exit
+    action 457  end
+    action 461  cli command "show conf lock"
+   !action 462  syslog msg "'show conf lock' output ==>[$_cli_result]"
+    action 463  string match "*Configuration mode is not locked*" "$_cli_result"
+    <#-- Exit if device config lock is active before writing to mem-->
+    action 464  if $_string_result ne "1"
+    action 465    syslog msg "The device configuration terminal is currently locked. Will skip 'wr mem' command"
+    action 466    exit
+    action 467  end
+    action 470  cli command "write mem"
 </#if>
 
 <#-- Generate RSA keys for SSH -->
@@ -1441,6 +1475,23 @@ event manager applet wan_failover
     action 3.2   cli command "config t"
     action 3.3   cli command "crypto key generate rsa usage-keys label SSHKEY modulus 2048"
     action 3.4   cli command "end"
+    <#-- NOTE: Below cmd will run in ios priviledge exec mode-->
+    action 3.41  cli command "show event manager policy active | i no_config_replace.tcl"
+   !action 3.42  syslog msg "'show event manager policy active | i no_config_replace.tcl' output ==>[$_cli_result]"
+    action 3.43  string match "*no_config_replace.tcl*" "$_cli_result"
+    <#-- Exit if rollback script is running before writing to mem-->
+    action 3.44  if $_string_result eq "1"
+    action 3.45    syslog msg "The no_config_replace.tcl EEM script is actively running. Will skip 'wr mem' command"
+    action 3.46    exit
+    action 3.47  end
+    action 3.481 cli command "show conf lock"
+   !action 3.482 syslog msg "'show conf lock' output ==>[$_cli_result]"
+    action 3.483 string match "*Configuration mode is not locked*" "$_cli_result"
+    <#-- Exit if device config lock is active before writing to mem-->
+    action 3.484 if $_string_result ne "1"
+    action 3.485   syslog msg "The device configuration terminal is currently locked. Will skip 'wr mem' command"
+    action 3.486   exit
+    action 3.487 end
     action 3.5   cli command "write mem" pattern "confirm|#"
     action 3.6   regexp "confirm" "$_cli_result"
     action 3.7   if $_regexp_result eq "1"
